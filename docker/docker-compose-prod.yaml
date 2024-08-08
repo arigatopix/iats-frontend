@@ -1,0 +1,15 @@
+services:
+  frontend:
+    image: ${REGISTRY_NAME}:${IMAGE_TAG}
+    container_name: iats-frontend-container
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+    networks:
+      - n2devskill
+networks:
+  n2devskill:
+    external: true
+    name: n2devskill
