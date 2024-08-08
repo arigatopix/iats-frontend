@@ -45,7 +45,7 @@ pipeline {
                 sshagent([prodCredentials]) {
                     script {
                         // Update docker-compose file with new image tag
-                        sh "sed -i 's#arigatopix/iats-backend:.*#arigatopix/iats-backend:${env.BUILD_TAG}#' docker-compose-prod.yaml"
+                        sh "sed -i 's#arigatopix/iats-frontend:.*#arigatopix/iats-frontend:${env.BUILD_TAG}#' docker-compose-prod.yaml"
 
                         // Copy existing .env file from production server
                         sh "scp -o StrictHostKeyChecking=no ${server}:${APP_PATH}/.env ./.env"
