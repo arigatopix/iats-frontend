@@ -11,10 +11,11 @@ COPY ../ .
 CMD npm run build
 
 FROM nginx:1.27.0-alpine as production
+
 ENV NODE_ENV production
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-
 COPY ../nginx.conf /etc/nginx/conf.d/nginx.conf
+
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 CMD ["nginx", "-g", "daemon off;"]
