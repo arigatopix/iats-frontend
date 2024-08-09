@@ -18,8 +18,8 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred-arigatopix')
         GIT_SSH_CREDENTIALS = credentials('github-arigatopix')
         prodCredentials = 'devskill-server-credentials'
-        user = 'n2itchallenge'
-        serverIP = '172.30.200.193'
+        user = credentials('n2itchallenge-server-user')
+        serverIP = credentials('n2itchallenge-server-ip')
         server = "${user}@${serverIP}"
         buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
@@ -69,7 +69,7 @@ pipeline {
 
     post {
         success {
-            notifyLINE('🎉',"succeed > ${serverIP}")
+            notifyLINE('🎉',"succeed > https://${serverIP}")
         }
         failure {
             notifyLINE('😰', 'failed')
