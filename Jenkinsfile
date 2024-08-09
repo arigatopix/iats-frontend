@@ -19,7 +19,8 @@ pipeline {
         GIT_SSH_CREDENTIALS = credentials('github-arigatopix')
         prodCredentials = 'devskill-server-credentials'
         user = 'n2itchallenge'
-        server = "${user}@172.30.200.193"
+        serverIP = '172.30.200.193'
+        server = "${user}@${serverIP}"
         buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
     }
@@ -68,7 +69,7 @@ pipeline {
 
     post {
         success {
-            notifyLINE('🎉','succeed')
+            notifyLINE('🎉',"succeed > ${serverIP}")
         }
         failure {
             notifyLINE('😰', 'failed')
