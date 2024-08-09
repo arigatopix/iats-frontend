@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 
-const API_KEY = "asdfsadf";
-
 function App() {
   const [message, setMessage] = useState("");
   useEffect(() => {
@@ -18,7 +16,6 @@ function App() {
   return (
     <>
       <h1>Hello world</h1>
-      <p>{API_KEY}</p>
       <p>{message}</p>
     </>
   );
