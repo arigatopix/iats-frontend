@@ -39,7 +39,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AppLayout />}>
-              <Route index element={<Navigate replace to="projects" />}></Route>
+              <Route index element={<Navigate replace to="tickets" />}></Route>
               <Route path="projects" element={<Projects />}></Route>
               <Route path="projects/:projectId" element={<Project />}></Route>
               <Route path="tickets" element={<Tickets />}></Route>

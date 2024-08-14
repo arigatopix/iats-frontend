@@ -3,14 +3,14 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle` 
 :root {
   /* Indigo */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  --color-brand-50: #e4d1f2;
+  --color-brand-100: #d6baeb;
+  --color-brand-200: #bb8cde;
+  --color-brand-500: #7718bc;
+  --color-brand-600: #5f1396;
+  --color-brand-700: #531184;
+  --color-brand-800: #3c0c5e;
+  --color-brand-900: #300a4b;
 
   /* Grey */
   --color-grey-0: #fff;
@@ -72,7 +72,7 @@ html {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Noto Sans Thai", system-ui;
   color: var(--color-grey-700);
 
   transition: color 0.3s, background-color 0.3s;

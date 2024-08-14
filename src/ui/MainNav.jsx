@@ -1,9 +1,5 @@
-import { HiOutlineHome, HiOutlineUser } from "react-icons/hi";
-import {
-  HiOutlineCalendarDays,
-  HiOutlineCog6Tooth,
-  HiOutlineHomeModern,
-} from "react-icons/hi2";
+import { HiOutlineHome } from "react-icons/hi";
+import { HiOutlineCalendarDays } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -57,15 +53,15 @@ function MainNav() {
     <nav>
       <NavList>
         <li>
-          <StyledNavLink to="projects">
+          <StyledNavLink to="tickets">
             <HiOutlineHome />
-            <span>Home</span>
+            <span>ข้อมูลการเดินทาง</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to="tickets">
+          <StyledNavLink to="projects">
             <HiOutlineCalendarDays />
-            <span>Tickets</span>
+            <span>จัดการโครงการ</span>
           </StyledNavLink>
         </li>
       </NavList>
