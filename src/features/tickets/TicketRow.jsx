@@ -65,8 +65,12 @@ function TicketRow({ ticket }) {
         <div>{country}</div>
         <Tag type={statusToTagName[status]}>{parseStatus(status)}</Tag>
         <div>
-          <Button onClick={() => navigate(`/tickets/${ticketId}`)}>
-            แก้ไข
+          <Button
+            size="small"
+            variation="secondary"
+            onClick={() => navigate(`/tickets/${ticketId}`)}
+          >
+            รายละเอียด
           </Button>
         </div>
       </Table.Row>

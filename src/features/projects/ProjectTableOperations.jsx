@@ -15,8 +15,8 @@ function ProjectTableOperations() {
   return (
     <TableOperations>
       <Button>เพิ่มโครงการ</Button>
-      <Search placeholder="ค้นหาชื่อโครงการ" filterField="projectName" />
-      <SortBy options={sortOptions} />
+      {/* <SortBy options={sortOptions} /> */}
+      <Search placeholder="ค้นหาชื่อโครงการ" searchField="projectName" />
     </TableOperations>
   );
 }

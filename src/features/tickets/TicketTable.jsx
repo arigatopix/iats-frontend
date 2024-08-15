@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import Empty from "../../ui/Empty";
 import { useTickets } from "./useTickets";
 import TicketRow from "./TicketRow";
+import { searchBy } from "../../utils/helpers";
 
 function TicketTable() {
   const { tickets, isLoading, error } = useTickets();
@@ -19,8 +20,7 @@ function TicketTable() {
 
   const filterValue = searchParams.get("status") || "all";
 
-  // TODO
-  const searchByName = searchParams.get("name");
+  const searchTerm = searchParams.get("name");
 
   // FILTER
   let filteredTickets;
@@ -38,13 +38,16 @@ function TicketTable() {
   });
 
   // SEARCH
+  const searched = searchTerm
+    ? searchBy(sortedTickets, "first_name", searchTerm)
+    : sortedTickets;
 
   return (
     <Menus>
-      <Table columns="0.6fr 1fr 2.2fr 1fr 1fr 0.5fr">
+      <Table columns="0.6fr 1fr 2.2fr 1fr 1fr 1fr">
         <Table.Header>
           <div>เลขที่เดินทาง</div>
-          <div>ข้อมูลผู้เดินทาง</div>
+          <div>ชื่อผู้เดินทาง</div>
           <div>ข้อมูลโครงการ</div>
           <div>ประเทศ</div>
           <div>สถานะ</div>
@@ -52,7 +55,7 @@ function TicketTable() {
         </Table.Header>
 
         <Table.Body
-          data={sortedTickets}
+          data={searched}
           render={ticket => <TicketRow key={ticket.id} ticket={ticket} />}
         />
       </Table>

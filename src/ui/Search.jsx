@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import Input from "./Input";
 
-function Search({ placeholder, filterField }) {
+function Search({ placeholder, searchField }) {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const init = searchParams.get(searchField) || "";
 
   function handleChange(e) {
     e.preventDefault();
@@ -10,23 +12,19 @@ function Search({ placeholder, filterField }) {
     const { value } = e.target;
 
     if (!value) {
-      console.log(value);
-      searchParams.delete(filterField);
+      searchParams.delete(searchField);
       setSearchParams(searchParams);
       return;
     }
 
-    searchParams.set(filterField, value);
+    searchParams.set(searchField, value);
 
     setSearchParams(searchParams);
   }
-  // TODO
-  // คนพิมพ์
-  // ใส่ url name = ?
-  // ใน table เอา name ไปใช้
+
   return (
     <div>
-      <Input placeholder={placeholder} onChange={handleChange} />
+      <Input placeholder={placeholder} onChange={handleChange} value={init} />
     </div>
   );
 }

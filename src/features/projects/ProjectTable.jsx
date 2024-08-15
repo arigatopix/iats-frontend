@@ -5,30 +5,23 @@ import { useSearchParams } from "react-router-dom";
 import Empty from "../../ui/Empty";
 import ProjectRow from "./ProjectRow";
 import { useProjects } from "./useProjects";
+import { searchBy } from "../../utils/helpers";
 
 function ProjectTable() {
   const { projects, isLoading, error } = useProjects();
 
   const [searchParams] = useSearchParams();
 
-  // if (isLoading || error) return <Spinner />;
+  if (isLoading || error) return <Spinner />;
 
-  // if (!tickets.length) return <Empty resourceName="tickets" />;
+  if (!projects.length) return <Empty resourceName="tickets" />;
 
   // const sortBy = searchParams.get("sortBy") || "date_start-asc";
 
   // const filterValue = searchParams.get("status") || "all";
 
   // // TODO ค้นหาชื่อ
-  // const searchByName = searchParams.get("name");
-
-  // // FILTER
-  // let filteredTickets;
-  // if (filterValue === "all") filteredTickets = tickets;
-  // if (filterValue === "unconfirmed")
-  //   filteredTickets = tickets.filter(ticket => ticket.status !== "confirmed");
-  // if (filterValue === "confirmed")
-  //   filteredTickets = tickets.filter(ticket => ticket.status === "confirmed");
+  const searchTerm = searchParams.get("projectName");
 
   // // SORT
   // const [field, direction] = sortBy.split("-");
@@ -38,6 +31,9 @@ function ProjectTable() {
   // });
 
   // SEARCH
+  const searched = searchTerm
+    ? searchBy(projects, "name", searchTerm)
+    : projects;
 
   return (
     <Menus>
@@ -51,7 +47,7 @@ function ProjectTable() {
         </Table.Header>
 
         <Table.Body
-          data={projects}
+          data={searched}
           render={project => <ProjectRow key={project.id} project={project} />}
         />
       </Table>

@@ -35,3 +35,8 @@ export const formatDateTH = date => {
     locale: th,
   });
 };
+
+export const searchBy = (objects, field, searchString) => {
+  const string = searchString.toLowerCase();
+  return objects.filter(obj => obj[field].toLowerCase().includes(string));
+};

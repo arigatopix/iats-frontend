@@ -29,9 +29,9 @@ function TicketTableOperations() {
 
   return (
     <TableOperations>
-      <Search placeholder="ค้นหาชื่อ" filterField="name" />
       <Filter filterField="status" options={filterOptions} />
-      <SortBy options={sortOptions} />
+      {/* <SortBy options={sortOptions} /> */}
+      <Search placeholder="ค้นหาชื่อ" searchField="name" />
     </TableOperations>
   );
 }
