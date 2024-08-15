@@ -18,7 +18,7 @@ function Login() {
     <LoginLayout>
       <Logo />
 
-      <Heading as="h4">เข้าสู่ระบบ InterATs</Heading>
+      <Heading as="h4">ระบบติดตามงานด้านวิเทศสัมพันธ์</Heading>
       <LoginForm />
     </LoginLayout>
   );

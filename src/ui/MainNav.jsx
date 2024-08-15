@@ -55,7 +55,7 @@ function MainNav() {
         <li>
           <StyledNavLink to="tickets">
             <HiOutlineHome />
-            <span>ข้อมูลการเดินทาง</span>
+            <span>ข้อมูลผู้เดินทาง</span>
           </StyledNavLink>
         </li>
         <li>

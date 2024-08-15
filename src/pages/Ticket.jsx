@@ -1,5 +1,7 @@
+import TicketDetail from "../features/tickets/TicketDetail";
+
 function Ticket() {
-  return <div>Ticket detail</div>;
+  return <TicketDetail />;
 }
 
 export default Ticket;

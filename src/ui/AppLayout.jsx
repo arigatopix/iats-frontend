@@ -2,12 +2,18 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import Footer from "./Footer";
 
 const StyledAppLayout = styled.div`
   display: grid;
   grid-template-columns: 26rem 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-auto-rows: auto;
   height: 100vh;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Main = styled.main`
@@ -36,6 +42,8 @@ export default function AppLayout() {
           <Outlet />
         </Container>
       </Main>
+
+      <Footer />
     </StyledAppLayout>
   );
 }
