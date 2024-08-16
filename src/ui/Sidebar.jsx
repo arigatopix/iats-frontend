@@ -9,23 +9,28 @@ const StyledSidebar = styled.aside`
   border-right: 1px solid var(--color-grey-100);
 
   grid-row: 1 / -1;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3.2rem;
-
-  @media (max-width: 820px) {
-    display: none;
-  }
 `;
 
 function Sidebar() {
   return (
     <StyledSidebar>
-      <Logo />
+      <Container>
+        <Logo />
 
-      <MainNav />
+        <MainNav />
 
-      {/* <Uploader /> */}
+        {/* <Uploader /> */}
+      </Container>
     </StyledSidebar>
   );
 }

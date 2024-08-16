@@ -1,5 +1,12 @@
+import HamburgerMenu from "./HamburgerMenu";
+
 function HeaderBrand() {
-  return <p>ระบบติดตามงานด้านนิเวศสัมพันธ์</p>;
+  return (
+    <>
+      <HamburgerMenu />
+      <span>ระบบติดตามงานด้านนิเวศสัมพันธ์</span>
+    </>
+  );
 }
 
 export default HeaderBrand;
