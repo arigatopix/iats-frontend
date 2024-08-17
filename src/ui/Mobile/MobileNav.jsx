@@ -10,10 +10,6 @@ const NavList = styled.ul`
 `;
 
 const StyledNavLink = styled(NavLink)`
-  & span {
-    display: ${props => (props.$size === "small" ? "none" : "block")};
-  }
-
   &:link,
   &:visited {
     display: flex;
@@ -52,20 +48,18 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-function MainNav({ $size }) {
+function MainNav() {
   return (
     <nav>
       <NavList>
         <li>
-          <StyledNavLink $size={$size} to="tickets">
+          <StyledNavLink to="tickets">
             <HiOutlineHome />
-            <span>ข้อมูลผู้เดินทาง</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink $size={$size} to="projects">
+          <StyledNavLink to="projects">
             <HiOutlineCalendarDays />
-            <span>จัดการโครงการ</span>
           </StyledNavLink>
         </li>
       </NavList>
