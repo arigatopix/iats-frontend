@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Table from "../../ui/Table";
+import Stacked from "../../ui/Stacked";
 import Button from "../../ui/Button";
 import { useNavigate } from "react-router-dom";
 import { formatDateTH } from "../../utils/helpers";
@@ -9,36 +10,8 @@ const WrapButton = styled.div`
   gap: 0.5rem;
 `;
 
-const Stacked = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-
-  & span:first-child {
-    font-weight: 500;
-  }
-
-  & span:last-child {
-    color: var(--color-grey-500);
-    font-size: 1.2rem;
-  }
-`;
-function parseStatus(status) {
-  switch (status) {
-    case "confirmed":
-      return "ยืนยัน";
-    default:
-      return "รอยืนยัน";
-  }
-}
-
 function ProjectRow({ project }) {
   const navigate = useNavigate();
-
-  const statusToTagName = {
-    unconfirmed: "silver",
-    confirmed: "green",
-  };
 
   if (project) {
     const {
