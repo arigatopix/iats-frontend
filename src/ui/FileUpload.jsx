@@ -67,7 +67,6 @@ function FileUpload({ id, control, disabled = false }) {
         }
 
         append({
-          id: data.id,
           title: fileTitle,
           url: `${supabaseUrl}/storage/v1/object/public/iats-bucket/project_files/${fileName}`,
         });

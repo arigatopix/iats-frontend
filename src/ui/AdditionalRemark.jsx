@@ -59,7 +59,9 @@ function AdditionalRemark({ control, disabled, name, label, resourceName }) {
             <li key={item.id}>
               <FormAdditional>
                 <Controller
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field }) => (
+                    <Input {...field} disabled={disabled} />
+                  )}
                   name={`${name}.${index}.remark`}
                   control={control}
                 />
