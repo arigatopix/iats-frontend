@@ -24,6 +24,60 @@ function ProjectDetail() {
       },
     ],
     projectAdditionalRemarks: [{ id: 1, remark: "test" }],
+    tickets: [
+      {
+        id: 1,
+        employeeId: "503015",
+        title: "นาย",
+        name: "ธีรัช แก้วศรีทัศน์",
+        title_eng: "Mr.",
+        name_eng: "Teeruch Kaewsritas",
+        position: "ชผ.",
+        department: "กบล.",
+        phone_number: "0966635951",
+        email: "email@exmaple.com",
+        contact_name: "นาย เอ กบิล",
+        remark: "ทำนู้นนี่",
+        additionalRemarkTicket: [
+          {
+            remark: "ขอประกันเพิ่ม",
+          },
+        ],
+        status: "unconfirmed",
+        files: [
+          {
+            title: "file1",
+            url: "https://asdfd",
+          },
+        ],
+      },
+
+      {
+        id: 2,
+        title: "นาย",
+        name: "ศุภชัย เอกอุ่น",
+        title_eng: "Mr.",
+        name_eng: "",
+        position: "ผวก.",
+        department: "",
+        phone_number: "",
+        email: "",
+        contact_name: "นาย เอ กบิล",
+        remark: "ทำนู้นนี่",
+        additionalRemarkTicket: [
+          {
+            remark: "ขอประกันเพิ่ม",
+          },
+        ],
+        status: "unconfirmed",
+        files: [
+          {
+            title: "file2",
+            url: "https://asdfd",
+          },
+        ],
+      },
+    ],
   };
   return (
     <>

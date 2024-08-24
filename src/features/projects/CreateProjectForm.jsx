@@ -1,16 +1,16 @@
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
-import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
-import Box from "../../ui/Box";
 import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
 import FileUpload from "../../ui/FileUpload";
-import { HiOutlineMegaphone } from "react-icons/hi2";
+import { HiOutlineMegaphone, HiOutlineUser } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
+import CreateProjcetTicketsForm from "./CreateProjcetTicketsForm";
+import { fromToday, getToday } from "../../utils/helpers";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -32,11 +32,11 @@ function CreateProjectForm({ projectToEdit = {} }) {
         name: "",
         description: "",
         country: "",
-        date_start: "",
-        date_end: "",
-        remark: "",
+        date_start: getToday(),
+        date_end: fromToday(2),
         projectAttachments: [],
         projectAdditionalRemarks: [],
+        tickets: [],
       };
 
   const { handleSubmit, register, control, reset, getValues } = useForm({
@@ -85,15 +85,6 @@ function CreateProjectForm({ projectToEdit = {} }) {
           </FormRowVertical>
         </StyledFormGrid>
 
-        <FormRowVertical label="ข้อมูลประกอบการเดินทาง" error="">
-          <Textarea
-            type="text"
-            {...register("remark")}
-            id="remark"
-            defaultValue=""
-          />
-        </FormRowVertical>
-
         <FileUpload
           id="projectAttachments"
           control={control}
@@ -108,22 +99,22 @@ function CreateProjectForm({ projectToEdit = {} }) {
           resourceName="ข้อมูลประกอบการเดินทาง"
         />
 
-        <p>ข้อมูลคณะเดินทาง</p>
-        <ul>
-          <li>นายธีรัช แก้วศรีทัศน์ สถานะ รอยืนยัน</li>
-          <li>นายธีรัช แก้วศรีทัศน์ สถานะ รอยืนยัน</li>
-        </ul>
+        <CreateProjcetTicketsForm
+          name="tickets"
+          control={control}
+          disabled={isDisabled}
+        />
 
         <FormRow>
-          <Button
-            variation="secondary"
-            type="reset"
-            onClick={() => reset(defaultValues)}
-          >
+          <Button variation="secondary" onClick={() => reset(defaultValues)}>
             ยกเลิก
           </Button>
-          <Button variation="danger">ลบ</Button>
-          <Button>บันทึก</Button>
+          {isEditSession && (
+            <Button type="button" variation="danger">
+              ลบ
+            </Button>
+          )}
+          <Button>{isEditSession ? "แก้ไข" : "บันทึก"}</Button>
         </FormRow>
       </Form>
     </>
