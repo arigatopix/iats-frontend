@@ -8,10 +8,11 @@ import Checkbox from "../../ui/Checkbox";
 import FileUpload from "../../ui/FileUpload";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Box from "../../ui/Box";
 import Textarea from "../../ui/Textarea";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
+import ButtonIcon from "../../ui/ButtonIcon";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -24,7 +25,15 @@ const StyledFormGrid = styled.div`
   }
 `;
 
-function CreateTicketForm({ ticketToEdit = {} }) {
+const WrapFormRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
   const [confirmed, setConfirmed] = useState(false);
 
   const { id: editId, ...editValues } = ticketToEdit;
@@ -32,6 +41,7 @@ function CreateTicketForm({ ticketToEdit = {} }) {
   const defaultValues = isEditSession
     ? editValues
     : {
+        employeeId: "",
         title: "",
         name: "",
         title_eng: "",
@@ -42,13 +52,22 @@ function CreateTicketForm({ ticketToEdit = {} }) {
         email: "",
         contact_name: "",
         remark: "",
-        status: "",
+        status: "unconfirmed",
         ticketAdditionalRemarks: [],
         ticketAttachments: [],
       };
 
   const { handleSubmit, register, control, reset, getValues } = useForm({
     defaultValues,
+  });
+
+  const {
+    handleSubmit: handleSubmitSearchEmployee,
+    register: registerSearchEmployee,
+  } = useForm({
+    defaultValues: {
+      employeeId: "",
+    },
   });
 
   useEffect(() => {
@@ -63,132 +82,182 @@ function CreateTicketForm({ ticketToEdit = {} }) {
       status: confirmed ? "confirmed" : "unconfirmed",
     };
 
-    console.log(dataForm);
+    if (!isEditSession) {
+      onConfirm(data);
+      onCloseModal?.();
+    } else {
+      console.log(dataForm);
+      // call patch api
+    }
+  }
+
+  function onSubmitSearchEmployee(data) {
+    console.log(data);
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormHeader>ข้อมูลผู้เดินทาง</FormHeader>
-      <StyledFormGrid $columns="0.1fr 1fr">
-        <FormRowVertical label="คำนำหน้าชื่อ" error="">
-          <Input
-            disabled={isDisabled}
-            className="input__title"
-            type="text"
-            {...register("title")}
-            id="title"
-          />
-        </FormRowVertical>
-        <FormRowVertical label="ชื่อ - นามสกุล" error="">
-          <Input
-            type="text"
-            {...register("name")}
-            disabled={isDisabled}
-            id="name"
-          />
-        </FormRowVertical>
-      </StyledFormGrid>
-      <StyledFormGrid $columns="0.1fr 1fr">
-        <FormRowVertical label="คำนำหน้าชื่อ (ภาษาอังกฤษ)" error="">
-          <Input
-            className="input__title"
-            type="text"
-            {...register("title_eng")}
-            disabled={isDisabled}
-            id="title_eng"
-          />
-        </FormRowVertical>
-        <FormRowVertical label="ชื่อ - นามสกุล (ภาษาอังกฤษ)" error="">
-          <Input
-            type="text"
-            {...register("name_eng")}
-            disabled={isDisabled}
-            id="name_eng"
-          />
-        </FormRowVertical>
-      </StyledFormGrid>
-      <StyledFormGrid $columns="1fr 1fr">
-        <FormRowVertical label="ตำแหน่ง" error="">
-          <Input
-            type="text"
-            {...register("position")}
-            disabled={isDisabled}
-            id="position"
-          />
-        </FormRowVertical>
-        <FormRowVertical label="สังกัด" error="">
-          <Input
-            type="text"
-            {...register("department")}
-            disabled={isDisabled}
-            id="department"
-          />
-        </FormRowVertical>
-        <FormRowVertical label="เบอร์ติดต่อ" error="">
-          <Input
-            type="text"
-            {...register("phone_number")}
-            disabled={isDisabled}
-            id="phone_number"
-          />
-        </FormRowVertical>
-        <FormRowVertical label="E-mail" error="">
-          <Input
-            type="email"
-            {...register("email")}
-            disabled={isDisabled}
-            id="email"
-          />
-        </FormRowVertical>
-      </StyledFormGrid>
-      <FormRowVertical label="ผู้ประสานงาน/ผู้ให้ข้อมูล" error="">
-        <Input
-          type="text"
-          {...register("contact_name")}
-          disabled={isDisabled}
-          id="contact_name"
-        />
-      </FormRowVertical>
-      <FormRowVertical label="หมายเหตุ">
-        <Textarea {...register("remark")} disabled={isDisabled} id="remark" />
-      </FormRowVertical>
-
-      <FileUpload
-        disabled={isDisabled}
-        id="ticketAttachments"
-        control={control}
-      />
-
-      <AdditionalRemark
-        control={control}
-        disabled={isDisabled}
-        name="additionalRemarkTicket"
-        label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม"
-        resourceName="หมายเหตุ"
-      />
-
-      <Checkbox
-        checked={confirmed}
-        onChange={() => {
-          if (isDisabled) return;
-          setConfirmed(confirmed => !confirmed);
-        }}
-        id="status"
-      >
-        ยืนยันข้อมูลครบถ้วน ถูกต้อง
-      </Checkbox>
-
-      <FormRow>
-        <Button
-          variation="secondary"
-          type="reset"
-          onClick={() => reset(defaultValues)}
+    <>
+      {!isEditSession && (
+        <Form
+          onSubmit={handleSubmitSearchEmployee(onSubmitSearchEmployee)}
+          type={onCloseModal ? "modal" : "regular"}
         >
-          ยกเลิก
-        </Button>
-        <Button>บันทึก</Button>
-      </FormRow>
-    </Form>
+          <WrapFormRow>
+            <FormRow label="ค้นหาด้วยรหัสพนักงาน" error="">
+              <Input
+                type="text"
+                id="search-employee"
+                {...registerSearchEmployee("employeeId")}
+              />
+            </FormRow>
+            <ButtonIcon type="button">
+              <HiOutlineMagnifyingGlass />
+            </ButtonIcon>
+          </WrapFormRow>
+        </Form>
+      )}
+
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        type={onCloseModal ? "modal" : "regular"}
+      >
+        <FormHeader>ข้อมูลผู้เดินทาง</FormHeader>
+
+        <StyledFormGrid $columns="0.1fr 1fr">
+          <FormRowVertical label="คำนำหน้าชื่อ" error="">
+            <Input
+              disabled={isDisabled}
+              className="input__title"
+              type="text"
+              {...register("title")}
+              id="title"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="ชื่อ - นามสกุล" error="">
+            <Input
+              type="text"
+              {...register("name")}
+              disabled={isDisabled}
+              id="name"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="คำนำหน้าชื่อ (ภาษาอังกฤษ)" error="">
+            <Input
+              className="input__title"
+              type="text"
+              {...register("title_eng")}
+              disabled={isDisabled}
+              id="title_eng"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="ชื่อ - นามสกุล (ภาษาอังกฤษ)" error="">
+            <Input
+              type="text"
+              {...register("name_eng")}
+              disabled={isDisabled}
+              id="name_eng"
+            />
+          </FormRowVertical>
+        </StyledFormGrid>
+
+        <StyledFormGrid $columns="1fr 1fr">
+          <FormRowVertical label="รหัสพนักงาน" error="">
+            <Input
+              type="text"
+              {...register("employeeId")}
+              disabled
+              id="employeeId"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="ตำแหน่ง" error="">
+            <Input
+              type="text"
+              {...register("position")}
+              disabled={isDisabled}
+              id="position"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="สังกัด" error="">
+            <Input
+              type="text"
+              {...register("department")}
+              disabled={isDisabled}
+              id="department"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="เบอร์ติดต่อ" error="">
+            <Input
+              type="text"
+              {...register("phone_number")}
+              disabled={isDisabled}
+              id="phone_number"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="E-mail" error="">
+            <Input
+              type="email"
+              {...register("email")}
+              disabled={isDisabled}
+              id="email"
+            />
+          </FormRowVertical>
+          <FormRowVertical label="ผู้ประสานงาน/ผู้ให้ข้อมูล" error="">
+            <Input
+              type="text"
+              {...register("contact_name")}
+              disabled={isDisabled}
+              id="contact_name"
+            />
+          </FormRowVertical>
+        </StyledFormGrid>
+        <FormRowVertical label="หมายเหตุ">
+          <Textarea {...register("remark")} disabled={isDisabled} id="remark" />
+        </FormRowVertical>
+
+        {!onCloseModal && (
+          <>
+            <FileUpload
+              disabled={isDisabled}
+              id="ticketAttachments"
+              control={control}
+            />
+
+            <AdditionalRemark
+              control={control}
+              disabled={isDisabled}
+              name="additionalRemarkTicket"
+              label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม"
+              resourceName="หมายเหตุ"
+            />
+
+            <Checkbox
+              checked={confirmed}
+              onChange={() => {
+                if (isDisabled) return;
+                setConfirmed(confirmed => !confirmed);
+              }}
+              id="status"
+            >
+              ยืนยันข้อมูลครบถ้วน ถูกต้อง
+            </Checkbox>
+          </>
+        )}
+
+        <FormRow>
+          <Button
+            type="button"
+            variation="secondary"
+            onClick={() => {
+              reset(defaultValues);
+              setConfirmed(getValues("status") === "confirmed");
+            }}
+          >
+            ยกเลิก
+          </Button>
+          <Button>บันทึก</Button>
+        </FormRow>
+      </Form>
+    </>
   );
 }
 

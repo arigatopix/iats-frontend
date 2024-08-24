@@ -2,8 +2,8 @@ import styled from "styled-components";
 import Table from "../../ui/Table";
 import Button from "../../ui/Button";
 import { useNavigate } from "react-router-dom";
-import Tag from "../../ui/Tag";
 import { formatDateTH } from "../../utils/helpers";
+import TicketTagStatus from "./TicketTagStatus";
 
 const Stacked = styled.div`
   display: flex;
@@ -19,22 +19,9 @@ const Stacked = styled.div`
     font-size: 1.2rem;
   }
 `;
-function parseStatus(status) {
-  switch (status) {
-    case "confirmed":
-      return "ยืนยัน";
-    default:
-      return "รอยืนยัน";
-  }
-}
 
 function TicketRow({ ticket }) {
   const navigate = useNavigate();
-
-  const statusToTagName = {
-    unconfirmed: "silver",
-    confirmed: "green",
-  };
 
   if (ticket) {
     const {
@@ -63,7 +50,7 @@ function TicketRow({ ticket }) {
           </span>
         </Stacked>
         <div>{country}</div>
-        <Tag type={statusToTagName[status]}>{parseStatus(status)}</Tag>
+        <TicketTagStatus status={status} />
         <div>
           <Button
             size="small"

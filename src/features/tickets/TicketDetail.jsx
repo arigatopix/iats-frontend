@@ -40,6 +40,9 @@ function TicketDetail() {
         <Heading as="h1">หมายเลขเดินทาง #{ticketId} </Heading>
         <ButtonText onClick={() => navigate(-1)}>&larr; กลับ</ButtonText>
       </Row>
+
+      {/* TODO เพิ่มข้อมูลโครงการ */}
+
       <CreateTicketForm ticketToEdit={ticket} />
     </>
   );
