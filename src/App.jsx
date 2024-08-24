@@ -21,6 +21,7 @@ import Projects from "./pages/Projects";
 import Tickets from "./pages/Tickets";
 import Ticket from "./pages/Ticket";
 import Project from "./pages/Project";
+import ProjectCreate from "./pages/ProjectCreate";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route index element={<Navigate replace to="tickets" />}></Route>
               <Route path="projects" element={<Projects />}></Route>
+              <Route path="projects/create" element={<ProjectCreate />}></Route>
               <Route path="projects/:projectId" element={<Project />}></Route>
               <Route path="tickets" element={<Tickets />}></Route>
               <Route path="tickets/:ticketId" element={<Ticket />}></Route>
