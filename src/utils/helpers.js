@@ -1,4 +1,4 @@
-import { formatDistance, parseISO, format } from "date-fns";
+import { formatDistance, parseISO, format, add } from "date-fns";
 import { differenceInDays } from "date-fns";
 import { th } from "date-fns/locale";
 
@@ -39,4 +39,10 @@ export const formatDateTH = date => {
 export const searchBy = (objects, field, searchString) => {
   const string = searchString.toLowerCase();
   return objects.filter(obj => obj[field].toLowerCase().includes(string));
+};
+
+export const fromToday = (numDays, withTime = false) => {
+  const date = add(new Date(), { days: numDays });
+  if (!withTime) date.setUTCHours(0, 0, 0, 0);
+  return date.toISOString().slice(0, -1);
 };

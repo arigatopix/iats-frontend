@@ -91,7 +91,7 @@ function TableRow({ children }) {
 }
 
 function TableBody({ data, render }) {
-  if (!data) return <Empty>ยังไม่มีข้อมูล</Empty>;
+  if (!data || data.length === 0) return <Empty>ยังไม่มีข้อมูล</Empty>;
   return <StyledBody>{data.map(render)}</StyledBody>;
 }
 
