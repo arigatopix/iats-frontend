@@ -25,6 +25,7 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
   const { fields, append, remove } = useFieldArray({
     control,
     name,
+    rules: { minLength: 1 },
   });
 
   return (

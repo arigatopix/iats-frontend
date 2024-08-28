@@ -5,12 +5,13 @@ import FormRow from "../../ui/FormRow";
 import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
 import FileUpload from "../../ui/FileUpload";
-import { HiOutlineMegaphone, HiOutlineUser } from "react-icons/hi2";
+import { HiOutlineMegaphone } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import CreateProjcetTicketsForm from "./CreateProjcetTicketsForm";
 import { fromToday, getToday } from "../../utils/helpers";
+import { useState } from "react";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -32,16 +33,19 @@ function CreateProjectForm({ projectToEdit = {} }) {
         name: "",
         description: "",
         country: "",
-        date_start: getToday(),
-        date_end: fromToday(2),
+        date_start: new Date().toISOString().slice(0, 10),
+        date_end: new Date().toISOString().slice(0, 10),
         projectAttachments: [],
         projectAdditionalRemarks: [],
         tickets: [],
       };
 
-  const { handleSubmit, register, control, reset, getValues } = useForm({
-    defaultValues,
-  });
+  const { handleSubmit, register, control, reset, getValues, formState } =
+    useForm({
+      defaultValues,
+    });
+
+  const { errors } = formState;
 
   const isDisabled = false;
 
@@ -55,30 +59,59 @@ function CreateProjectForm({ projectToEdit = {} }) {
         <FormHeader>
           <HiOutlineMegaphone /> <span>ข้อมูลโครงการ</span>
         </FormHeader>
-        <FormRowVertical label="ชื่อโครงการ" error="">
-          <Input type="text" {...register("name")} id="name" />
+        <FormRowVertical label="ชื่อโครงการ" error={errors?.name?.message}>
+          <Input
+            type="text"
+            {...register("name", {
+              required: "กรุณาระบุชื่อโครงการ",
+            })}
+            id="name"
+          />
         </FormRowVertical>
 
-        <FormRowVertical label="รายละเอียด" error="">
-          <Input type="text" {...register("description")} id="description" />
+        <FormRowVertical
+          label="รายละเอียด"
+          error={errors?.description?.message}
+        >
+          <Input
+            type="text"
+            {...register("description", {
+              required: "กรุณาระบุรายละเอียด",
+            })}
+            id="description"
+          />
         </FormRowVertical>
 
         <StyledFormGrid $columns="1fr 1fr 1fr">
-          <FormRowVertical label="ประเทศ" error="">
-            <Input type="text" {...register("country")} id="country" />
+          <FormRowVertical label="ประเทศ" error={errors?.country?.message}>
+            <Input
+              type="text"
+              {...register("country", {
+                required: "กรุณาระบุประเทศที่จะเดินทางไป",
+              })}
+              id="country"
+            />
           </FormRowVertical>
-          <FormRowVertical label="วันที่ไป" error="">
+          <FormRowVertical label="วันที่ไป" error={errors?.date_start?.message}>
             <Input
               type="date"
-              {...register("date_start")}
+              {...register("date_start", {
+                required: "กรุณาระบุวันเดินทางไป",
+              })}
               id="date_start"
               name="date_start"
             />
           </FormRowVertical>
-          <FormRowVertical label="วันที่กลับ" error="">
+
+          <FormRowVertical label="วันที่กลับ" error={errors?.date_end?.message}>
             <Input
               type="date"
-              {...register("date_end")}
+              {...register("date_end", {
+                required: "กรุณาระบุวันเดินทางกลับ",
+                validate: value =>
+                  value >= getValues().date_start ||
+                  "วันเดินทางกลับต้องมากกว่าวันที่ไป",
+              })}
               id="date_end"
               name="date_end"
             />

@@ -4,6 +4,8 @@ import Stacked from "../../ui/Stacked";
 import Button from "../../ui/Button";
 import { useNavigate } from "react-router-dom";
 import { formatDateTH } from "../../utils/helpers";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const WrapButton = styled.div`
   display: flex;
@@ -45,9 +47,22 @@ function ProjectRow({ project }) {
           >
             แก้ไข
           </Button>
-          <Button size="small" variation="danger" onClick={() => {}}>
-            ลบ
-          </Button>
+
+          <Modal>
+            <Modal.Open opens={`delete-${projectId}`}>
+              <Button size="small" variation="danger">
+                ลบ
+              </Button>
+            </Modal.Open>
+
+            <Modal.Window name={`delete-${projectId}`}>
+              <ConfirmDelete
+                resourceName="โครงการ"
+                onConfirm={() => console.log(projectId)}
+                disabled={false}
+              />
+            </Modal.Window>
+          </Modal>
         </WrapButton>
       </Table.Row>
     );
