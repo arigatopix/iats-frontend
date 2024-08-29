@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import supabase, { supabaseUrl } from "../services/supabase";
+import { supabaseUrl } from "../services/supabase";
 import FileInput from "./FileInput";
 import Table from "./Table";
 import Input from "./Input";
@@ -10,6 +10,8 @@ import FormRow from "./FormRow";
 import Button from "./Button";
 import { useFieldArray } from "react-hook-form";
 import FormHeader from "./FormHeader";
+import { useUpload } from "../hooks/useUpload";
+import SpinnerMini from "./SpinnerMini";
 
 const WrapFileUpload = styled.section`
   margin-top: 3rem;
@@ -31,53 +33,46 @@ const WrapIconButton = styled.div`
 function FileUpload({ id, control, disabled = false }) {
   const [file, setFile] = useState(null);
   const [fileTitle, setFileTitle] = useState("");
-  const [status, setStatus] = useState("pending");
+
+  const { fileUpload, isUploading } = useUpload();
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: id,
   });
 
+  const isDisable = disabled || isUploading;
+
   function handleFileChange(e) {
     const files = e.target?.files;
     if (files) {
       setFile(files[0]);
       setFileTitle(files[0]?.name);
-      setStatus("pending");
     }
   }
 
   async function handleUpload(e) {
     e.preventDefault();
     if (file) {
-      try {
-        setStatus("uploading");
+      const fileName = `${Math.random()}-${file.name}`.replace("/", "");
 
-        const fileName = `${Math.random()}-${file.name}`.replace("/", "");
+      fileUpload(
+        {
+          fileName,
+          file,
+          folder: "project_files",
+        },
+        {
+          onSuccess: data => {
+            append({
+              title: fileTitle,
+              url: `${supabaseUrl}/storage/v1/object/public/${data.fullPath}`,
+            });
 
-        const { data, error } = await supabase.storage
-          .from("iats-bucket/project_files")
-          .upload(fileName, file, {
-            upsert: true,
-          });
-
-        if (error) {
-          console.log("error", error.message);
-          throw new Error(error.message);
+            setFile(null);
+          },
         }
-
-        append({
-          title: fileTitle,
-          url: `${supabaseUrl}/storage/v1/object/public/iats-bucket/project_files/${fileName}`,
-        });
-
-        setStatus("success");
-
-        setFile(null);
-      } catch (error) {
-        console.log(error.message);
-        setStatus("fail");
-      }
+      );
     }
   }
 
@@ -85,7 +80,7 @@ function FileUpload({ id, control, disabled = false }) {
     <WrapFileUpload>
       <FormHeader>อัพโหลดไฟล์ที่เกี่ยวข้อง</FormHeader>
       <FormRow label="">
-        <FileInput id={id} onChange={handleFileChange} disabled={disabled} />
+        <FileInput id={id} onChange={handleFileChange} disabled={isDisable} />
       </FormRow>
 
       {file && (
@@ -95,18 +90,23 @@ function FileUpload({ id, control, disabled = false }) {
               id="fileTitle"
               value={fileTitle}
               onChange={e => setFileTitle(e.target.value)}
+              disabled={isDisable}
             />
           </FormRow>
 
-          <Button onClick={handleUpload}>อัปโหลด</Button>
+          <Button onClick={handleUpload} disabled={isDisable}>
+            {!isUploading ? "อัปโหลด" : <SpinnerMini />}
+          </Button>
 
-          <Button variation="secondary" onClick={() => setFile(null)}>
+          <Button
+            variation="secondary"
+            disabled={isDisable}
+            onClick={() => setFile(null)}
+          >
             ยกเลิก
           </Button>
         </WrapFormRow>
       )}
-
-      <Result status={status} />
 
       <Table columns="1fr auto">
         <Table.Header>
@@ -120,7 +120,7 @@ function FileUpload({ id, control, disabled = false }) {
               file={file}
               index={index}
               remove={remove}
-              disabled={disabled}
+              disabled={isDisable}
             />
           )}
         />
@@ -148,16 +148,4 @@ const FileRow = ({ file, index, remove, disabled }) => {
       </WrapIconButton>
     </Table.Row>
   );
-};
-
-const Result = ({ status }) => {
-  if (status === "success") {
-    return <p>✅ File uploaded successfully!</p>;
-  } else if (status === "fail") {
-    return <p>❌ File upload failed!</p>;
-  } else if (status === "uploading") {
-    return <p>⏳ Uploading selected file...</p>;
-  } else {
-    return null;
-  }
 };
