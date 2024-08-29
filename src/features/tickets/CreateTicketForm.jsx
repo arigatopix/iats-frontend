@@ -76,20 +76,31 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
 
   const isDisabled = confirmed;
 
-  function onSubmit(data) {
-    const dataForm = {
-      ...data,
-      status: confirmed ? "confirmed" : "unconfirmed",
-    };
-
-    if (!isEditSession) {
-      onConfirm(data);
-      onCloseModal?.();
-    } else {
-      console.log(dataForm);
-      // call patch api
+  const onSubmit = async event => {
+    if (event) {
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+      if (typeof event.stopPropagation === "function") {
+        event.stopPropagation();
+      }
     }
-  }
+
+    return handleSubmit(async data => {
+      const dataForm = {
+        ...data,
+        status: confirmed ? "confirmed" : "unconfirmed",
+      };
+
+      if (!isEditSession) {
+        onConfirm(data);
+        onCloseModal?.();
+      } else {
+        console.log(dataForm);
+        // call patch api
+      }
+    })(event);
+  };
 
   function onSubmitSearchEmployee(data) {
     console.log(data);
@@ -117,10 +128,7 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
         </Form>
       )}
 
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        type={onCloseModal ? "modal" : "regular"}
-      >
+      <Form onSubmit={onSubmit} type={onCloseModal ? "modal" : "regular"}>
         <FormHeader>ข้อมูลผู้เดินทาง</FormHeader>
 
         <StyledFormGrid $columns="0.1fr 1fr">
