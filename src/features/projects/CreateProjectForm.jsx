@@ -157,7 +157,11 @@ function CreateProjectForm({ projectToEdit = {} }) {
         />
 
         <FormRow>
-          <Button variation="secondary" onClick={() => reset(defaultValues)}>
+          <Button
+            type="button"
+            variation="secondary"
+            onClick={() => reset(defaultValues)}
+          >
             ยกเลิก
           </Button>
           {isEditSession && (

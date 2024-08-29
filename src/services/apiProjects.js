@@ -11,6 +11,21 @@ async function getProjects() {
   return data;
 }
 
+async function getProject(id) {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*)")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Project not found");
+  }
+
+  return data;
+}
+
 async function deleteProject(id) {
   const { data, error } = await supabase.from("projects").delete().eq("id", id);
 
@@ -27,7 +42,7 @@ async function createProject(newProject) {
 
   const { projectAttachments, projectAdditionalRemarks, tickets } = newProject;
 
-  const { data: projectData, error } = await supabase
+  const { data: createdProject, error } = await supabase
     .from("projects")
     .insert({
       name,
@@ -36,17 +51,14 @@ async function createProject(newProject) {
       date_start,
       date_end,
     })
-    .select();
-
-  console.log(projectData);
+    .single();
 
   if (error) {
     console.error(error);
     throw new Error("Project could not be created");
   }
 
-  const projectId = projectData[0].id;
-  const createdProject = projectData[0];
+  const projectId = createdProject.id;
 
   // check foreign
   // projectAdditionalRemarks
@@ -154,4 +166,4 @@ async function createTickets(project_id, tickets) {
   return data;
 }
 
-export { getProjects, deleteProject, createProject };
+export { getProjects, getProject, deleteProject, createProject };
