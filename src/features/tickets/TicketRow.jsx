@@ -27,8 +27,7 @@ function TicketRow({ ticket }) {
     const {
       id: ticketId,
       title,
-      first_name: firstName,
-      last_name: lastName,
+      name,
       status,
       projects: {
         name: projectName,
@@ -41,7 +40,7 @@ function TicketRow({ ticket }) {
     return (
       <Table.Row>
         <div>{ticketId}</div>
-        <div>{`${title}${firstName} ${lastName}`}</div>
+        <div>{`${title}${name}`}</div>
         <Stacked>
           <span>{`${projectName} `}</span>
           <span>
