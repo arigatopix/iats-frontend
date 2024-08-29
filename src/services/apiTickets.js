@@ -15,4 +15,19 @@ async function getTickets() {
   return data;
 }
 
-export { getTickets };
+async function getTicket(id) {
+  const { data, error } = await supabase
+    .from("tickets")
+    .select("*, ticketAdditionalRemarks(*), ticketAttachments(*), projects(*)")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Ticket not found");
+  }
+
+  return data;
+}
+
+export { getTickets, getTicket };

@@ -3,41 +3,32 @@ import CreateTicketForm from "./CreateTicketForm";
 import Row from "../../ui/Row";
 import Heading from "../../ui/Heading";
 import ButtonText from "../../ui/ButtonText";
+import { useTicket } from "./useTicket";
+import Spinner from "../../ui/Spinner";
+import styled from "styled-components";
+import TicketTagStatus from "./TicketTagStatus";
+
+const HeadingGroup = styled.div`
+  display: flex;
+  gap: 2.4rem;
+  align-items: center;
+`;
 
 function TicketDetail() {
   const { ticketId } = useParams();
+
+  const { ticket, isLoading, error } = useTicket();
+
   const navigate = useNavigate();
 
-  const ticket = {
-    id: 1,
-    title: "นาย",
-    name: "ธีรัช แก้วศรีทัศน์",
-    title_eng: "Mr.",
-    name_eng: "Teeruch Kaewsritas",
-    position: "ชผ.",
-    department: "กบล.",
-    phone_number: "0966635951",
-    email: "email@exmaple.com",
-    contact_name: "นาย เอ กบิล",
-    remark: "ทำนู้นนี่",
-    additionalRemarkTicket: [
-      {
-        remark: "ขอประกันเพิ่ม",
-      },
-    ],
-    status: "unconfirmed",
-    files: [
-      {
-        title: "file1",
-        url: "https://asdfd",
-      },
-    ],
-  };
-
+  if (isLoading || error) return <Spinner />;
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">หมายเลขเดินทาง #{ticketId} </Heading>
+        <HeadingGroup>
+          <Heading as="h1">หมายเลขเดินทาง #{ticketId} </Heading>
+          <TicketTagStatus status={ticket.status} />
+        </HeadingGroup>
         <ButtonText onClick={() => navigate(-1)}>&larr; กลับ</ButtonText>
       </Row>
 
