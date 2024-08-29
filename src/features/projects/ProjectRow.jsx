@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDateTH } from "../../utils/helpers";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import { useDeleteProject } from "./useDeleteProject";
 
 const WrapButton = styled.div`
   display: flex;
@@ -14,6 +15,8 @@ const WrapButton = styled.div`
 
 function ProjectRow({ project }) {
   const navigate = useNavigate();
+
+  const { deleteProject, isDeleting } = useDeleteProject();
 
   if (project) {
     const {
@@ -58,8 +61,8 @@ function ProjectRow({ project }) {
             <Modal.Window name={`delete-${projectId}`}>
               <ConfirmDelete
                 resourceName="โครงการ"
-                onConfirm={() => console.log(projectId)}
-                disabled={false}
+                onConfirm={() => deleteProject(projectId)}
+                disabled={isDeleting}
               />
             </Modal.Window>
           </Modal>

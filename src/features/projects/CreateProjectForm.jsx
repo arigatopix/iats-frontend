@@ -10,8 +10,11 @@ import { useForm } from "react-hook-form";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import CreateProjcetTicketsForm from "./CreateProjcetTicketsForm";
-import { fromToday, getToday } from "../../utils/helpers";
-import { useState } from "react";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import { useDeleteProject } from "./useDeleteProject";
+import { useNavigate } from "react-router-dom";
+import { useCreateProject } from "./useCreateProject";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -25,6 +28,8 @@ const StyledFormGrid = styled.div`
 `;
 
 function CreateProjectForm({ projectToEdit = {} }) {
+  const navigate = useNavigate();
+
   const { id: editId, ...editValues } = projectToEdit;
   const isEditSession = Boolean(editId);
   const defaultValues = isEditSession
@@ -47,10 +52,23 @@ function CreateProjectForm({ projectToEdit = {} }) {
 
   const { errors } = formState;
 
-  const isDisabled = false;
+  const { createProject, isCreating } = useCreateProject();
+
+  const { deleteProject, isDeleting } = useDeleteProject();
+
+  const isDisabled = isDeleting || isCreating;
 
   function onSubmit(data) {
     console.log(data);
+
+    if (isEditSession) {
+      // edit
+    } else {
+      // create
+      createProject(data, {
+        onSuccess: navigate(-1),
+      });
+    }
   }
 
   return (
@@ -143,10 +161,27 @@ function CreateProjectForm({ projectToEdit = {} }) {
             ยกเลิก
           </Button>
           {isEditSession && (
-            <Button type="button" variation="danger">
-              ลบ
-            </Button>
+            <Modal>
+              <Modal.Open opens={`delete-${editId}`}>
+                <Button variation="danger" type="button">
+                  ลบ
+                </Button>
+              </Modal.Open>
+
+              <Modal.Window name={`delete-${editId}`}>
+                <ConfirmDelete
+                  resourceName="โครงการ"
+                  onConfirm={() => {
+                    deleteProject(editId, {
+                      onSuccess: navigate(-1),
+                    });
+                  }}
+                  disabled={isDisabled}
+                />
+              </Modal.Window>
+            </Modal>
           )}
+
           <Button>{isEditSession ? "แก้ไข" : "บันทึก"}</Button>
         </FormRow>
       </Form>
