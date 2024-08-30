@@ -1,33 +1,70 @@
+import axios from "axios";
 import { createTickets } from "./apiTickets";
 import supabase from "./supabase";
 
-async function getProjects() {
-  const { data, error } = await supabase.from("projects").select("*");
+const baseURL = `${import.meta.env.VITE_API_URL}/api`;
 
-  if (error) {
-    console.error(error);
+// async function getProjects() {
+//   const { data, error } = await supabase.from("projects").select("*");
+
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Projects could not be loaded");
+//   }
+
+//   return data;
+// }
+
+async function getProjects() {
+  try {
+    const response = await axios.get(`${baseURL}/projects`);
+
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Projects could not be loaded");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
     throw new Error("Projects could not be loaded");
   }
-
-  return data;
 }
 
 async function getProject(id) {
-  const { data, error } = await supabase
-    .from("projects")
-    .select(
-      "*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*, ticketAttachments(*), ticketAdditionalRemarks(*))"
-    )
-    .eq("id", id)
-    .single();
+  try {
+    const response = await axios.get(`${baseURL}/projects/${id}`);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Project not found");
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Project not found");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
+
+// async function getProject(id) {
+//   const { data, error } = await supabase
+//     .from("projects")
+//     .select(
+//       "*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*, ticketAttachments(*), ticketAdditionalRemarks(*))"
+//     )
+//     .eq("id", id)
+//     .single();
+
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Project not found");
+//   }
+
+//   return data;
+// }
 
 async function deleteProject(id) {
   const { data, error } = await supabase.from("projects").delete().eq("id", id);

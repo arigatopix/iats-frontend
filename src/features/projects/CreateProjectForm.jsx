@@ -32,6 +32,7 @@ function CreateProjectForm({ projectToEdit = {} }) {
   const navigate = useNavigate();
 
   const { id: editId, ...editValues } = projectToEdit;
+  console.log(editValues);
   const isEditSession = Boolean(editId);
   const defaultValues = isEditSession
     ? editValues
@@ -41,8 +42,8 @@ function CreateProjectForm({ projectToEdit = {} }) {
         country: "",
         date_start: new Date().toISOString().slice(0, 10),
         date_end: new Date().toISOString().slice(0, 10),
-        projectAttachments: [],
-        projectAdditionalRemarks: [],
+        project_attachments: [],
+        project_additional_remarks: [],
         tickets: [],
       };
 
@@ -135,7 +136,7 @@ function CreateProjectForm({ projectToEdit = {} }) {
         </StyledFormGrid>
 
         <FileUpload
-          id="projectAttachments"
+          id="project_attachments"
           control={control}
           disabled={isDisabled}
         />
@@ -143,7 +144,7 @@ function CreateProjectForm({ projectToEdit = {} }) {
         <AdditionalRemark
           control={control}
           disabled={isDisabled}
-          name="projectAdditionalRemarks"
+          name="project_additional_remarks"
           label="ข้อมูลประกอบการเดินทาง"
           resourceName="ข้อมูลประกอบการเดินทาง"
         />
