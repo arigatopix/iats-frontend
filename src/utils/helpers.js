@@ -46,3 +46,54 @@ export const fromToday = (numDays, withTime = false) => {
   if (!withTime) date.setUTCHours(0, 0, 0, 0);
   return date.toISOString().slice(0, -1);
 };
+
+export const parseEmployee = employeeResponse => {
+  const {
+    emp_id,
+    title_s_desc,
+    first_name,
+    last_name,
+    dept_short,
+    stell_text_short,
+    eng_name_full,
+    email,
+    tel_mobile,
+  } = employeeResponse;
+
+  // eng_name_full.start;
+
+  const { title_eng, name_eng } = parseEnglishName(eng_name_full);
+
+  const employee = {
+    employeeId: emp_id,
+    title: title_s_desc,
+    name: `${first_name} ${last_name}`,
+    title_eng: `${title_eng}`,
+    name_eng,
+    department: dept_short,
+    email,
+    position: stell_text_short,
+    phone_number: tel_mobile,
+  };
+  return employee;
+};
+
+function parseEnglishName(eng_name_full) {
+  let title_eng = "";
+  let name_eng = "";
+
+  if (eng_name_full.startsWith("MISS ")) {
+    title_eng = "MISS";
+    name_eng = eng_name_full.slice(5).trim();
+  } else if (eng_name_full.startsWith("MR.")) {
+    title_eng = "MR.";
+    name_eng = eng_name_full.slice(3).trim();
+  } else if (eng_name_full.startsWith("MRS.")) {
+    title_eng = "MRS.";
+    name_eng = eng_name_full.slice(4).trim();
+  } else {
+    throw new Error("Unknown title in the name");
+  }
+
+  return { title_eng, name_eng };
+}
