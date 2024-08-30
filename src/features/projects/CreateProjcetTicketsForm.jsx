@@ -76,7 +76,15 @@ export default CreateProjcetTicketsForm;
 function TicketRow({ ticket, index, remove, disabled }) {
   const { deleteTicket } = useDeleteTicket();
 
-  const { id, title, name, status, position, department, employeeId } = ticket;
+  const {
+    id,
+    title,
+    name,
+    status,
+    position,
+    department,
+    employee_id: employeeId,
+  } = ticket;
 
   return (
     <Table.Row>
