@@ -4,7 +4,6 @@ import axios from "axios";
 
 const apiKey = "4p5pbs0ITasWFEqSyFfauqLez2juSPFk";
 const url = `${import.meta.env.VITE_API_URL}/api/employee`;
-// const url =`${import.meta.env.VITE_API_URL}/get-employee-detail-m`
 
 async function getEmployee(emp_id) {
   try {
