@@ -15,7 +15,9 @@ async function getProjects() {
 async function getProject(id) {
   const { data, error } = await supabase
     .from("projects")
-    .select("*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*)")
+    .select(
+      "*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*, ticketAttachments(*), ticketAdditionalRemarks(*))"
+    )
     .eq("id", id)
     .single();
 
