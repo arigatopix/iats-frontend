@@ -12,7 +12,6 @@ export function useProject() {
   } = useQuery({
     queryKey: ["project", projectId],
     queryFn: () => getProject(projectId),
-    retry: false,
   });
 
   return { project, isLoading, error };

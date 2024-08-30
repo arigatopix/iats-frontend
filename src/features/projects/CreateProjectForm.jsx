@@ -15,6 +15,7 @@ import ConfirmDelete from "../../ui/ConfirmDelete";
 import { useDeleteProject } from "./useDeleteProject";
 import { useNavigate } from "react-router-dom";
 import { useCreateProject } from "./useCreateProject";
+import { useEditProject } from "./useEditProject";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -54,20 +55,17 @@ function CreateProjectForm({ projectToEdit = {} }) {
 
   const { createProject, isCreating } = useCreateProject();
 
+  const { editProject, isEditing } = useEditProject();
+
   const { deleteProject, isDeleting } = useDeleteProject();
 
-  const isDisabled = isDeleting || isCreating;
+  const isDisabled = isDeleting || isCreating || isEditing;
 
   function onSubmit(data) {
-    console.log(data);
-
     if (isEditSession) {
-      // edit
+      editProject({ project: data, editId });
     } else {
-      // create
-      createProject(data, {
-        onSuccess: navigate(-1),
-      });
+      createProject(data);
     }
   }
 
