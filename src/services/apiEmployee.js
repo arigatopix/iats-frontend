@@ -1,27 +1,24 @@
-const baseURL =
-  process.env.NODE_ENV === "production"
-    ? "https://servicehub.pea.co.th:8443"
-    : "/api";
+import axios from "axios";
+
+// Create an instance of axios with custom configuration
 
 const apiKey = "4p5pbs0ITasWFEqSyFfauqLez2juSPFk";
 
 async function getEmployee(emp_id) {
   try {
-    const response = await fetch(
-      `${baseURL}/get-employee-detail-m?emp_id=${emp_id}`,
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/get-employee-detail-m`,
       {
-        method: "GET",
+        params: { emp_id },
         headers: {
-          apiKey: apiKey,
+          apiKey,
         },
       }
     );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const { data } = response.data;
 
-    const { data } = await response.json();
+    console.log(import.meta.env.VITE_API_KEY);
 
     if (!data.ServiceStatus) {
       throw new Error(data.ServiceMessage);
@@ -29,8 +26,8 @@ async function getEmployee(emp_id) {
 
     return data.dataDetail[0];
   } catch (error) {
-    console.error("Error fetching employee details:", error.message);
-    throw error;
+    console.error("Error fetching employee details:", error);
+    throw error; // Re-throw the error to be handled by the caller
   }
 }
 
