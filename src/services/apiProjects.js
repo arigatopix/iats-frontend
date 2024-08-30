@@ -1,3 +1,4 @@
+import { createTickets } from "./apiTickets";
 import supabase from "./supabase";
 
 async function getProjects() {
@@ -136,37 +137,6 @@ async function createProjectAttachments(project_id, projectAttachments) {
   return data;
 }
 
-async function createTickets(project_id, tickets) {
-  const created = tickets.map(el => {
-    return {
-      project_id,
-      title: el.title,
-      name: el.name,
-      title_eng: el.title_eng,
-      name_eng: el.name_eng,
-      email: el.email,
-      phone_number: el.phone_number,
-      position: el.position,
-      department: el.department,
-      contact_name: el.contact_name,
-      status: el.status,
-      remark: el.remark,
-    };
-  });
-
-  const { data, error } = await supabase
-    .from("tickets")
-    .insert(created)
-    .select();
-
-  if (error) {
-    console.error(error);
-    throw new Error("attachments could not be created");
-  }
-
-  return data;
-}
-
 async function removeProjectAdditionalRemarks(projectId) {
   return await supabase
     .from("projectAdditionalRemarks")
@@ -220,7 +190,7 @@ async function editProject({ project, editId }) {
   );
 
   if (errorProjectAttachments) {
-    console.error(projectAttachments);
+    console.error(errorProjectAttachments);
     throw new Error("projectAttachments could not be delete");
   }
 

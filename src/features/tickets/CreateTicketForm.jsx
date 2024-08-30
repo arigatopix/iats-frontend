@@ -13,6 +13,10 @@ import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import ButtonIcon from "../../ui/ButtonIcon";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { useEditTicket } from "./useEditTicket";
+import { parseEmployee } from "../../utils/helpers";
+import { getEmployee } from "../../services/apiEmployee";
+import { useCreateTicket } from "./useCreateTicket";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -33,8 +37,19 @@ const WrapFormRow = styled.div`
   margin-bottom: 2rem;
 `;
 
-function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
+function CreateTicketForm({
+  ticketToEdit = {},
+  onCloseModal,
+  onConfirm,
+  projectId = null,
+}) {
   const [confirmed, setConfirmed] = useState(false);
+
+  const [searchEmployeeId, setSearchEmployeeId] = useState("");
+
+  const [searchEmployeeError, setSearchEmployeeError] = useState("");
+
+  const { createTicket } = useCreateTicket();
 
   const { id: editId, ...editValues } = ticketToEdit;
   const isEditSession = Boolean(editId);
@@ -57,24 +72,27 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
         ticketAttachments: [],
       };
 
-  const { handleSubmit, register, control, reset, getValues } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    reset,
+    getValues,
+    formState,
+    setValue,
+  } = useForm({
     defaultValues,
   });
 
-  const {
-    handleSubmit: handleSubmitSearchEmployee,
-    register: registerSearchEmployee,
-  } = useForm({
-    defaultValues: {
-      employeeId: "",
-    },
-  });
+  const { errors } = formState;
+
+  const { editTicket, isEditing } = useEditTicket();
 
   useEffect(() => {
     setConfirmed(getValues("status") === "confirmed");
   }, [getValues]);
 
-  const isDisabled = confirmed;
+  const isDisabled = confirmed || isEditing;
 
   const onSubmit = async event => {
     if (event) {
@@ -94,34 +112,69 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
 
       if (!isEditSession) {
         onConfirm(data);
+
+        if (projectId) {
+          createTicket({ projectId, ticket: data });
+        }
+
         onCloseModal?.();
       } else {
         console.log(dataForm);
-        // call patch api
+        editTicket({ ticket: dataForm, editId });
       }
     })(event);
   };
 
-  function onSubmitSearchEmployee(data) {
-    console.log(data);
+  async function handleSearchEmployee() {
+    try {
+      setSearchEmployeeError("");
+
+      const employeeResponse = await getEmployee(searchEmployeeId);
+
+      if (employeeResponse) {
+        const {
+          employeeId,
+          title,
+          name,
+          title_eng,
+          name_eng,
+          department,
+          email,
+          position,
+          phone_number,
+        } = parseEmployee(employeeResponse);
+
+        setValue("employeeId", employeeId);
+        setValue("title", title);
+        setValue("name", name);
+        setValue("name_eng", name_eng);
+        setValue("title_eng", title_eng);
+        setValue("department", department);
+        setValue("email", email);
+        setValue("position", position);
+        setValue("phone_number", phone_number);
+
+        setSearchEmployeeId("");
+      }
+    } catch (error) {
+      setSearchEmployeeError(error.message);
+    }
   }
 
   return (
     <>
       {!isEditSession && (
-        <Form
-          onSubmit={handleSubmitSearchEmployee(onSubmitSearchEmployee)}
-          type={onCloseModal ? "modal" : "regular"}
-        >
+        <Form type={onCloseModal ? "modal" : "regular"}>
           <WrapFormRow>
-            <FormRow label="ค้นหาด้วยรหัสพนักงาน" error="">
+            <FormRow label="ค้นหาด้วยรหัสพนักงาน" error={searchEmployeeError}>
               <Input
                 type="text"
                 id="search-employee"
-                {...registerSearchEmployee("employeeId")}
+                onChange={e => setSearchEmployeeId(e.target.value)}
+                value={searchEmployeeId}
               />
             </FormRow>
-            <ButtonIcon type="button">
+            <ButtonIcon type="button" onClick={handleSearchEmployee}>
               <HiOutlineMagnifyingGlass />
             </ButtonIcon>
           </WrapFormRow>
@@ -132,19 +185,23 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
         <FormHeader>ข้อมูลผู้เดินทาง</FormHeader>
 
         <StyledFormGrid $columns="0.1fr 1fr">
-          <FormRowVertical label="คำนำหน้าชื่อ" error="">
+          <FormRowVertical label="คำนำหน้าชื่อ" error={errors?.title?.message}>
             <Input
               disabled={isDisabled}
               className="input__title"
               type="text"
-              {...register("title")}
+              {...register("title", {
+                required: "กรุณาระบุคำนำหน้าชื่อ",
+              })}
               id="title"
             />
           </FormRowVertical>
-          <FormRowVertical label="ชื่อ - นามสกุล" error="">
+          <FormRowVertical label="ชื่อ - นามสกุล" error={errors?.name?.message}>
             <Input
               type="text"
-              {...register("name")}
+              {...register("name", {
+                required: "กรุณาระบุชื่อ - นามสกุล",
+              })}
               disabled={isDisabled}
               id="name"
             />
@@ -169,15 +226,18 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
         </StyledFormGrid>
 
         <StyledFormGrid $columns="1fr 1fr">
-          <FormRowVertical label="รหัสพนักงาน" error="">
+          <FormRowVertical
+            label="รหัสพนักงาน"
+            error={errors?.employeeId?.message}
+          >
             <Input
               type="text"
               {...register("employeeId")}
-              disabled
+              disabled={isEditSession}
               id="employeeId"
             />
           </FormRowVertical>
-          <FormRowVertical label="ตำแหน่ง" error="">
+          <FormRowVertical label="ตำแหน่ง">
             <Input
               type="text"
               {...register("position")}
@@ -185,7 +245,7 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
               id="position"
             />
           </FormRowVertical>
-          <FormRowVertical label="สังกัด" error="">
+          <FormRowVertical label="สังกัด">
             <Input
               type="text"
               {...register("department")}
@@ -201,10 +261,12 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
               id="phone_number"
             />
           </FormRowVertical>
-          <FormRowVertical label="E-mail" error="">
+          <FormRowVertical label="E-mail" error={errors?.email?.message}>
             <Input
               type="email"
-              {...register("email")}
+              {...register("email", {
+                required: "กรุณาระบุ E-Mail",
+              })}
               disabled={isDisabled}
               id="email"
             />
@@ -233,7 +295,7 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
             <AdditionalRemark
               control={control}
               disabled={isDisabled}
-              name="additionalRemarkTicket"
+              name="ticketAdditionalRemarks"
               label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม"
               resourceName="หมายเหตุ"
             />
@@ -241,7 +303,6 @@ function CreateTicketForm({ ticketToEdit = {}, onCloseModal, onConfirm }) {
             <Checkbox
               checked={confirmed}
               onChange={() => {
-                if (isDisabled) return;
                 setConfirmed(confirmed => !confirmed);
               }}
               id="status"

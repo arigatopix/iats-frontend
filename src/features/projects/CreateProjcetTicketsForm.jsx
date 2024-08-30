@@ -8,6 +8,8 @@ import styled from "styled-components";
 import { useFieldArray } from "react-hook-form";
 import Modal from "../../ui/Modal";
 import CreateTicketForm from "../tickets/CreateTicketForm";
+import { useDeleteTicket } from "../tickets/useDeleteTicket";
+import { useParams } from "react-router-dom";
 
 const WrapButton = styled.div`
   display: flex;
@@ -22,10 +24,13 @@ const StyledFormHeader = styled(FormHeader)`
 `;
 
 function CreateProjcetTicketsForm({ control, name, disabled }) {
+  const { projectId } = useParams();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name,
     rules: { minLength: 1 },
+    keyName: "fieldId",
   });
 
   return (
@@ -37,7 +42,7 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
             <Button type="button">เพิ่มรายชื่อ</Button>
           </Modal.Open>
           <Modal.Window name="ticket-form">
-            <CreateTicketForm onConfirm={append} />
+            <CreateTicketForm onConfirm={append} projectId={projectId} />
           </Modal.Window>
         </Modal>
       </StyledFormHeader>
@@ -53,7 +58,7 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
           data={fields}
           render={(ticket, index) => (
             <TicketRow
-              key={ticket.id}
+              key={ticket.fieldId}
               ticket={ticket}
               remove={remove}
               index={index}
@@ -69,7 +74,9 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
 export default CreateProjcetTicketsForm;
 
 function TicketRow({ ticket, index, remove, disabled }) {
-  const { title, name, status, position, department, employeeId } = ticket;
+  const { deleteTicket } = useDeleteTicket();
+
+  const { id, title, name, status, position, department, employeeId } = ticket;
 
   return (
     <Table.Row>
@@ -91,7 +98,15 @@ function TicketRow({ ticket, index, remove, disabled }) {
           </Modal.Window>
         </Modal>
 
-        <Button size="small" variation="danger" onClick={() => remove(index)}>
+        <Button
+          size="small"
+          variation="danger"
+          onClick={() => {
+            remove(index);
+
+            if (id) deleteTicket(id);
+          }}
+        >
           ลบ
         </Button>
       </WrapButton>
