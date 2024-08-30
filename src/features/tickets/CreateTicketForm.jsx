@@ -56,7 +56,7 @@ function CreateTicketForm({
   const defaultValues = isEditSession
     ? editValues
     : {
-        employeeId: "",
+        employee_id: "",
         title: "",
         name: "",
         title_eng: "",
@@ -133,7 +133,7 @@ function CreateTicketForm({
 
       if (employeeResponse) {
         const {
-          employeeId,
+          employee_id,
           title,
           name,
           title_eng,
@@ -144,7 +144,7 @@ function CreateTicketForm({
           phone_number,
         } = parseEmployee(employeeResponse);
 
-        setValue("employeeId", employeeId);
+        setValue("employee_id", employee_id);
         setValue("title", title);
         setValue("name", name);
         setValue("name_eng", name_eng);
@@ -228,13 +228,13 @@ function CreateTicketForm({
         <StyledFormGrid $columns="1fr 1fr">
           <FormRowVertical
             label="รหัสพนักงาน"
-            error={errors?.employeeId?.message}
+            error={errors?.employee_id?.message}
           >
             <Input
               type="text"
-              {...register("employeeId")}
+              {...register("employee_id")}
               disabled={isEditSession}
-              id="employeeId"
+              id="employee_id"
             />
           </FormRowVertical>
           <FormRowVertical label="ตำแหน่ง">
