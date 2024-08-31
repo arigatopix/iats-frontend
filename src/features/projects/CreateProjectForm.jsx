@@ -32,7 +32,6 @@ function CreateProjectForm({ projectToEdit = {} }) {
   const navigate = useNavigate();
 
   const { id: editId, ...editValues } = projectToEdit;
-  console.log(editValues);
   const isEditSession = Boolean(editId);
   const defaultValues = isEditSession
     ? editValues

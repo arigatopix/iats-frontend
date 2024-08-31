@@ -119,7 +119,6 @@ function CreateTicketForm({
 
         onCloseModal?.();
       } else {
-        console.log(dataForm);
         editTicket({ ticket: dataForm, editId });
       }
     })(event);
