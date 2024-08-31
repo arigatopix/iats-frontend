@@ -65,7 +65,7 @@ export const parseEmployee = employeeResponse => {
   const { title_eng, name_eng } = parseEnglishName(eng_name_full);
 
   const employee = {
-    employee_id: emp_id,
+    employee_id: emp_id.toString(),
     title: title_s_desc,
     name: `${first_name} ${last_name}`,
     title_eng: `${title_eng}`,
