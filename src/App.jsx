@@ -5,7 +5,6 @@ import Bookings from "./pages/Bookings";
 import Cabins from "./pages/Cabins";
 import PageNotFound from "./pages/PageNotFound";
 import Settings from "./pages/Settings";
-import Users from "./pages/Users";
 import Login from "./pages/Login";
 
 import GlobalStyles from "./styles/GlobalStyles";
@@ -39,7 +38,13 @@ function App() {
         <GlobalStyles />
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<Navigate replace to="tickets" />}></Route>
               <Route path="projects" element={<Projects />}></Route>
               <Route path="projects/create" element={<ProjectCreate />}></Route>
@@ -51,7 +56,6 @@ function App() {
               <Route path="bookings/:bookingId" element={<Booking />}></Route>
               <Route path="checkin/:bookingId" element={<Checkin />}></Route>
               <Route path="cabins" element={<Cabins />}></Route>
-              <Route path="users" element={<Users />}></Route>
               <Route path="settings" element={<Settings />}></Route>
               <Route path="account" element={<Account />}></Route>
               */}
