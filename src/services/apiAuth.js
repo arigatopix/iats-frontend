@@ -1,11 +1,15 @@
+import { getEmployee } from "./apiEmployee";
+import { appURL } from "./axios";
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function login() {
   let { data, error } = await supabase.auth.signInWithOAuth({
     provider: "keycloak",
+    options: {
+      scopes: "openid",
+      redirectTo: `${appURL}/tickets`,
+    },
   });
-
-  console.log(data);
 
   if (error) throw new Error(error.message);
 
@@ -24,30 +28,25 @@ export async function getCurrentUser() {
 
   if (errorGetUser) throw new Error(errorGetUser.message);
 
-  return data?.user;
+  const employee_id = data?.user?.user_metadata.provider_id.split(":")[2];
+
+  const emp = await getEmployee(employee_id);
+
+  const user = {
+    ...data?.user,
+    employee_id,
+    name: `${emp?.first_name} ${emp.last_name}`,
+    position: emp.stell_text_short,
+    department: emp.dept_short,
+  };
+
+  return user;
 }
 
 export async function logout() {
   const { error } = await supabase.auth.signOut();
 
   if (error) throw new Error(error.message);
-}
-
-export async function signup({ fullName, email, password }) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        fullName,
-        avatar: "",
-      },
-    },
-  });
-
-  if (error) throw new Error(error.message);
-
-  return data;
 }
 
 export async function updateCurrentUser({ password, fullName, avatar }) {

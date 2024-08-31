@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import HeaderMenu from "./HeaderMenu";
-import UserAvatar from "../features/authentication/UserAvatar";
 import HeaderBrand from "./HeaderBrand";
 
 const StyledHeader = styled.header`
@@ -19,7 +18,6 @@ function Header() {
   return (
     <StyledHeader>
       <HeaderBrand />
-      {/* <UserAvatar /> */}
       <HeaderMenu />
     </StyledHeader>
   );
