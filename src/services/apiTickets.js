@@ -1,33 +1,39 @@
+import axios from "axios";
+import { baseURL } from "./axios";
 import supabase from "./supabase";
 
 async function getTickets() {
-  const { data, error } = await supabase
-    .from("tickets")
-    .select(
-      "id, name, email, phone_number, position, department, title, status, projects(name, date_start, date_end, country)"
-    );
+  try {
+    const response = await axios.get(`${baseURL}/tickets`);
 
-  if (error) {
-    console.error(error);
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Cabins could not be loaded");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
     throw new Error("Cabins could not be loaded");
   }
-
-  return data;
 }
 
 async function getTicket(id) {
-  const { data, error } = await supabase
-    .from("tickets")
-    .select("*, ticketAdditionalRemarks(*), ticketAttachments(*), projects(*)")
-    .eq("id", id)
-    .single();
+  try {
+    const response = await axios.get(`${baseURL}/tickets/${id}`);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Ticket not found");
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Cabins could not be loaded");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error("Cabins could not be loaded");
   }
-
-  return data;
 }
 
 async function editTicket({ ticket, editId }) {
@@ -115,17 +121,23 @@ async function editTicket({ ticket, editId }) {
 }
 
 async function removeTicketAdditionalRemarks(ticketId) {
-  return await supabase
-    .from("ticketAdditionalRemarks")
-    .delete()
-    .eq("ticket_id", ticketId);
+  try {
+    await axios.delete(`${baseURL}/ticket-additional-remarks/${ticketId}`);
+    return null;
+  } catch (error) {
+    console.error(error.message);
+    return error.message;
+  }
 }
 
 async function removeTicketAttachments(ticketId) {
-  return await supabase
-    .from("ticketAttachments")
-    .delete()
-    .eq("ticket_id", ticketId);
+  try {
+    await axios.delete(`${baseURL}/ticket-attachments/${ticketId}`);
+    return null;
+  } catch (error) {
+    console.error(error.message);
+    return error.message;
+  }
 }
 
 async function createTicketAdditionalRemarks(
@@ -139,17 +151,22 @@ async function createTicketAdditionalRemarks(
     };
   });
 
-  const { data, error } = await supabase
-    .from("ticketAdditionalRemarks")
-    .insert(remarks)
-    .select();
+  try {
+    const response = await axios.post(`${baseURL}/ticket-additional-remarks`, {
+      remarks,
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Remarks could not be created");
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("Remarks could not be created");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
 async function createTicketAttachments(ticket_id, ticketAttachments) {
@@ -161,28 +178,77 @@ async function createTicketAttachments(ticket_id, ticketAttachments) {
     };
   });
 
-  const { data, error } = await supabase
-    .from("ticketAttachments")
-    .insert(attachments)
-    .select();
+  try {
+    const response = await axios.post(`${baseURL}/ticket-attachments`, {
+      attachments,
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("attachments could not be created");
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("Remarks could not be created");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
 async function deleteTicket(id) {
-  const { data, error } = await supabase.from("tickets").delete().eq("id", id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Ticket could not be deleted");
+  try {
+    await axios.delete(`${baseURL}/tickets/${id}`);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
+}
 
-  return data;
+async function createTicket({ projectId: project_id, ticket }) {
+  const {
+    title,
+    name,
+    title_eng,
+    name_eng,
+    email,
+    phone_number,
+    position,
+    department,
+    contact_name,
+    status,
+    remark,
+    employee_id,
+  } = ticket;
+
+  try {
+    const response = await axios.post(`${baseURL}/tickets`, {
+      project_id,
+      title,
+      name,
+      title_eng,
+      name_eng,
+      email,
+      phone_number,
+      position,
+      department,
+      contact_name,
+      status,
+      remark,
+      employee_id,
+    });
+
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("Ticket could not be created");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error("Ticket could not be created");
+  }
 }
 
 async function createTickets(project_id, tickets) {
@@ -200,64 +266,23 @@ async function createTickets(project_id, tickets) {
       contact_name: el.contact_name,
       status: el.status,
       remark: el.remark,
-      employee_id: el.employeeId,
+      employee_id: el.employee_id,
     };
   });
 
-  const { data, error } = await supabase
-    .from("tickets")
-    .insert(created)
-    .select();
-
-  if (error) {
+  try {
+    const response = await axios.post(`${baseURL}/tickets`, {
+      tickets: created,
+    });
+    const { data } = response;
+    if (response.statusText !== "Created") {
+      throw new Error("Ticket could not be created");
+    }
+    return data;
+  } catch (error) {
     console.error(error);
     throw new Error("Ticket could not be created");
   }
-
-  return data;
-}
-
-async function createTicket({ projectId: project_id, ticket }) {
-  const {
-    title,
-    name,
-    title_eng,
-    name_eng,
-    email,
-    phone_number,
-    position,
-    department,
-    contact_name,
-    status,
-    remark,
-    employeeId: employee_id,
-  } = ticket;
-
-  const { data, error } = await supabase
-    .from("tickets")
-    .insert({
-      project_id,
-      title,
-      name,
-      title_eng,
-      name_eng,
-      email,
-      phone_number,
-      position,
-      department,
-      contact_name,
-      status,
-      remark,
-      employee_id,
-    })
-    .select();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Ticket could not be created");
-  }
-
-  return data;
 }
 
 export {

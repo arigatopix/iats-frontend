@@ -1,19 +1,6 @@
 import axios from "axios";
 import { createTickets } from "./apiTickets";
-import supabase from "./supabase";
-
-const baseURL = `${import.meta.env.VITE_API_URL}/api`;
-
-// async function getProjects() {
-//   const { data, error } = await supabase.from("projects").select("*");
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Projects could not be loaded");
-//   }
-
-//   return data;
-// }
+import { baseURL } from "./axios";
 
 async function getProjects() {
   try {
@@ -49,85 +36,79 @@ async function getProject(id) {
   }
 }
 
-// async function getProject(id) {
-//   const { data, error } = await supabase
-//     .from("projects")
-//     .select(
-//       "*, projectAdditionalRemarks(*), projectAttachments(*), tickets(*, ticketAttachments(*), ticketAdditionalRemarks(*))"
-//     )
-//     .eq("id", id)
-//     .single();
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error("Project not found");
-//   }
-
-//   return data;
-// }
-
 async function deleteProject(id) {
-  const { data, error } = await supabase.from("projects").delete().eq("id", id);
+  try {
+    const response = await axios.delete(`${baseURL}/projects/${id}`);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Project could not be deleted");
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Project could not be deleted");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
 async function createProject(newProject) {
   const { name, description, country, date_start, date_end } = newProject;
 
-  const { projectAttachments, projectAdditionalRemarks, tickets } = newProject;
+  const { project_attachments, project_additional_remarks, tickets } =
+    newProject;
 
-  const { data, error } = await supabase
-    .from("projects")
-    .insert({
+  try {
+    const response = await axios.post(`${baseURL}/projects`, {
       name,
       description,
       country,
       date_start,
       date_end,
-    })
-    .select();
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Project could not be created");
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("Project could not be created");
+    }
+
+    const createdProject = data;
+
+    const projectId = createdProject.id;
+
+    // check foreign
+    // project_additional_remarks
+    if (project_additional_remarks.length) {
+      const remarks = await createProjectAdditionalRemarks(
+        projectId,
+        project_additional_remarks
+      );
+
+      createdProject.project_additional_remarks = remarks;
+    }
+
+    // projectAttachments
+    if (project_attachments.length) {
+      const attachments = await createProjectAttachments(
+        projectId,
+        project_attachments
+      );
+      createdProject.project_attachments = attachments;
+    }
+
+    // tickets
+    if (tickets.length) {
+      const createdTickets = await createTickets(projectId, tickets);
+      createdProject.tickets = createdTickets;
+    }
+
+    return createProject;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  const createdProject = data[0];
-  const projectId = createdProject.id;
-
-  // check foreign
-  // projectAdditionalRemarks
-  if (projectAdditionalRemarks.length) {
-    const remarks = await createProjectAdditionalRemarks(
-      projectId,
-      projectAdditionalRemarks
-    );
-
-    createdProject.projectAdditionalRemarks = remarks;
-  }
-
-  // projectAttachments
-  if (projectAttachments.length) {
-    const attachments = await createProjectAttachments(
-      projectId,
-      projectAttachments
-    );
-    createdProject.projectAttachments = attachments;
-  }
-
-  // tickets
-  if (tickets.length) {
-    const createdTickets = await createTickets(projectId, tickets);
-    createdProject.tickets = createdTickets;
-  }
-
-  return createProject;
 }
 
 async function createProjectAdditionalRemarks(
@@ -141,17 +122,22 @@ async function createProjectAdditionalRemarks(
     };
   });
 
-  const { data, error } = await supabase
-    .from("projectAdditionalRemarks")
-    .insert(remarks)
-    .select();
+  try {
+    const response = await axios.post(`${baseURL}/project-additional-remarks`, {
+      remarks,
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Remarks could not be created");
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("Remarks could not be created");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
 async function createProjectAttachments(project_id, projectAttachments) {
@@ -163,31 +149,40 @@ async function createProjectAttachments(project_id, projectAttachments) {
     };
   });
 
-  const { data, error } = await supabase
-    .from("projectAttachments")
-    .insert(attachments)
-    .select();
+  try {
+    const response = await axios.post(`${baseURL}/project-attachments`, {
+      attachments,
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("attachments could not be created");
+    const { data } = response;
+
+    if (response.statusText !== "Created") {
+      throw new Error("attachments could not be created");
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
 async function removeProjectAdditionalRemarks(projectId) {
-  return await supabase
-    .from("projectAdditionalRemarks")
-    .delete()
-    .eq("project_id", projectId);
+  try {
+    await axios.delete(`${baseURL}/project-additional-remarks/${projectId}`);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
 }
 
 async function removeProjectAttachments(projectId) {
-  return await supabase
-    .from("projectAttachments")
-    .delete()
-    .eq("project_id", projectId);
+  try {
+    await axios.delete(`${baseURL}/project-attachments/${projectId}`);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
 }
 
 async function editProject({ project, editId }) {
@@ -195,20 +190,17 @@ async function editProject({ project, editId }) {
 
   const { projectAttachments, projectAdditionalRemarks, tickets } = project;
 
-  const { data, error } = await supabase
-    .from("projects")
-    .update({
-      name,
-      description,
-      country,
-      date_start,
-      date_end,
-    })
-    .eq("id", editId)
-    .select();
+  const response = await axios.patch(`${baseURL}/projects/${editId}`, {
+    name,
+    description,
+    country,
+    date_start,
+    date_end,
+  });
 
-  if (error) {
-    console.error(error);
+  const { data } = response;
+
+  if (response.statusText !== "OK") {
     throw new Error("Project could not be update");
   }
 
