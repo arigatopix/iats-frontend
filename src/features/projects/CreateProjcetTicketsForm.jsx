@@ -33,6 +33,16 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
     keyName: "fieldId",
   });
 
+  function handleConfirm(data) {
+    const isDuplicate =
+      data.employee_id !== "" &&
+      fields.map(el => el.employee_id).includes(data.employee_id);
+
+    if (isDuplicate) return;
+
+    append(data);
+  }
+
   return (
     <div>
       <StyledFormHeader>
@@ -42,7 +52,7 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
             <Button type="button">เพิ่มรายชื่อ</Button>
           </Modal.Open>
           <Modal.Window name="ticket-form">
-            <CreateTicketForm onConfirm={append} projectId={projectId} />
+            <CreateTicketForm onConfirm={handleConfirm} projectId={projectId} />
           </Modal.Window>
         </Modal>
       </StyledFormHeader>
@@ -76,19 +86,11 @@ export default CreateProjcetTicketsForm;
 function TicketRow({ ticket, index, remove, disabled }) {
   const { deleteTicket } = useDeleteTicket();
 
-  const {
-    id,
-    title,
-    name,
-    status,
-    position,
-    department,
-    employee_id: employeeId,
-  } = ticket;
+  const { id, title, name, status, position, department, employee_id } = ticket;
 
   return (
     <Table.Row>
-      <p>{employeeId ? employeeId : <span>&mdash;</span>}</p>
+      <p>{employee_id ? employee_id : <span>&mdash;</span>}</p>
       <Stacked>
         <span>{`${title}${name}`}</span>
         <span>{`${position} ${department}`}</span>
