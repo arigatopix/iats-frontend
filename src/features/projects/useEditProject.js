@@ -15,7 +15,8 @@ export function useEditProject() {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
       });
-      queryClient.setQueryData(["project", data.id.toString()], data);
+
+      queryClient.invalidateQueries(["project", data.id.toString()]);
 
       navigate("/projects");
     },

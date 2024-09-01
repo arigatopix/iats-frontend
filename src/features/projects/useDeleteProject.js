@@ -13,6 +13,9 @@ export function useDeleteProject() {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["tickets"],
+      });
     },
     onError: error => {
       toast.error(error.message);

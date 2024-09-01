@@ -17,6 +17,8 @@ import { useEditTicket } from "./useEditTicket";
 import { parseEmployee } from "../../utils/helpers";
 import { getEmployee } from "../../services/apiEmployee";
 import { useCreateTicket } from "./useCreateTicket";
+import { useUser } from "../authentication/useUser";
+import { useNavigate } from "react-router-dom";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -50,6 +52,12 @@ function CreateTicketForm({
   const [searchEmployeeError, setSearchEmployeeError] = useState("");
 
   const { createTicket } = useCreateTicket();
+
+  const navigate = useNavigate();
+
+  const {
+    user: { role },
+  } = useUser();
 
   const { id: editId, ...editValues } = ticketToEdit;
 
@@ -121,7 +129,18 @@ function CreateTicketForm({
 
         onCloseModal?.();
       } else {
-        editTicket({ ticket: dataForm, editId });
+        editTicket(
+          { ticket: dataForm, editId },
+          {
+            onSuccess: () => {
+              if (onCloseModal) {
+                onCloseModal?.();
+              } else {
+                navigate("/tickets");
+              }
+            },
+          }
+        );
       }
     })(event);
   };
@@ -129,6 +148,8 @@ function CreateTicketForm({
   async function handleSearchEmployee() {
     try {
       setSearchEmployeeError("");
+
+      if (searchEmployeeId === "") return;
 
       const employeeResponse = await getEmployee(searchEmployeeId);
 
@@ -304,7 +325,11 @@ function CreateTicketForm({
             <Checkbox
               checked={confirmed}
               onChange={() => {
-                setConfirmed(confirmed => !confirmed);
+                if (role === "admin" || role === "manager" || !confirmed) {
+                  setConfirmed(confirmed => !confirmed);
+                }
+
+                if (role === "user" && confirmed) return;
               }}
               id="status"
             >

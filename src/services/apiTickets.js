@@ -77,32 +77,22 @@ async function editTicket({ ticket, editId }) {
       throw new Error("Project could not be update");
     }
 
-    const editedTicket = data;
-
     // check foreign
     if (ticket_additional_remarks.length) {
       // remove first
       await removeTicketAdditionalRemarksByTicketId(editId);
 
-      const remarks = await createTicketAdditionalRemarks(
-        editId,
-        ticket_additional_remarks
-      );
-
-      editedTicket.ticket_additional_remarks = remarks;
+      await createTicketAdditionalRemarks(editId, ticket_additional_remarks);
     }
 
     if (ticket_attachments.length) {
       // remove first
       await removeTicketAttachmentByTicketId(editId);
-      const attachments = await createTicketAttachments(
-        editId,
-        ticket_attachments
-      );
-      editedTicket.ticket_attachments = attachments;
+
+      await createTicketAttachments(editId, ticket_attachments);
     }
 
-    return editedTicket;
+    return data;
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
@@ -128,7 +118,7 @@ async function createTicketAdditionalRemarks(
     const { data } = response;
 
     if (response.statusText !== "Created") {
-      throw new Error("Remarks could not be created");
+      throw new Error("Ticket Remarks could not be created");
     }
 
     return data;
@@ -155,12 +145,12 @@ async function createTicketAttachments(ticket_id, ticketAttachments) {
     const { data } = response;
 
     if (response.statusText !== "Created") {
-      throw new Error("Remarks could not be created");
+      throw new Error("Ticket Attachments not created");
     }
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    console.error("Ticket Attachments not created");
     throw new Error(error.message);
   }
 }

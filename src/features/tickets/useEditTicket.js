@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editTicket as editTicketService } from "../../services/apiTickets";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 export function useEditTicket() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     data: searchedEmployee,
@@ -19,9 +19,7 @@ export function useEditTicket() {
         queryKey: ["tickets"],
       });
 
-      queryClient.setQueryData(["ticket", data.id.toString()], data);
-
-      navigate("/tickets");
+      queryClient.invalidateQueries(["ticket", data.id.toString()]);
     },
     onError: error => {
       toast.error(error.message);

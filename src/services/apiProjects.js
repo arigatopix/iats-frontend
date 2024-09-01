@@ -2,6 +2,7 @@ import axios from "axios";
 import { createTickets } from "./apiTickets";
 import { baseURL } from "./axios";
 import { removeProjectAdditionalRemarksByProjectId } from "./apiRemark";
+import { removeProjectAttachmentByProjectId } from "./apiAttatchments";
 
 async function getProjects() {
   try {
@@ -170,11 +171,7 @@ async function createProjectAttachments(project_id, projectAttachments) {
 
 async function editProject({ project, editId }) {
   const { name, description, country, date_start, date_end } = project;
-  const {
-    project_attachments = [],
-    project_additional_remarks = [],
-    tickets,
-  } = project;
+  const { project_attachments = [], project_additional_remarks = [] } = project;
 
   try {
     const response = await axios.patch(`${baseURL}/projects/${editId}`, {
@@ -191,38 +188,22 @@ async function editProject({ project, editId }) {
       throw new Error("Project could not be update");
     }
 
-    const editedProject = data;
-
     // check foreign
     if (project_additional_remarks.length) {
       // remove first
       await removeProjectAdditionalRemarksByProjectId(editId);
 
-      const remarks = await createProjectAdditionalRemarks(
-        editId,
-        project_additional_remarks
-      );
-
-      editedProject.project_additional_remarks = remarks;
+      await createProjectAdditionalRemarks(editId, project_additional_remarks);
     }
 
     // projectAttachments
     if (project_attachments.length) {
-      await removeProjectAdditionalRemarksByProjectId(editId);
+      await removeProjectAttachmentByProjectId(editId);
 
-      const attachments = await createProjectAttachments(
-        editId,
-        project_attachments
-      );
-      editedProject.project_attachments = attachments;
+      await createProjectAttachments(editId, project_attachments);
     }
 
-    // tickets
-    if (tickets.length) {
-      editedProject.tickets = tickets;
-    }
-
-    return editedProject;
+    return data;
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
