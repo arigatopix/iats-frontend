@@ -32,10 +32,7 @@ async function removeTicketAdditionalRemarks(id) {
 
 async function removeProjectAdditionalRemarksByProjectId(projectId) {
   try {
-    // TODO get มาดูว่ามีข้อมูลมั้ย ค่อยลบ
-    const { data } = await axios.get(
-      `${baseURL}/project-additional-remarks/${projectId}`
-    );
+    const data = await getProjectAdditionalRemarks(projectId);
 
     if (data.length) {
       await axios.delete(`${baseURL}/project-additional-remarks/${projectId}`);
@@ -46,12 +43,20 @@ async function removeProjectAdditionalRemarksByProjectId(projectId) {
   }
 }
 
+async function getProjectAdditionalRemarks(projectId) {
+  try {
+    const { data } = await axios.get(
+      `${baseURL}/project-additional-remarks/${projectId}`
+    );
+    return data;
+  } catch (error) {
+    return [];
+  }
+}
+
 async function removeTicketAdditionalRemarksByTicketId(ticketId) {
   try {
-    // TODO get มาดูว่ามีข้อมูลมั้ย ค่อยลบ
-    const { data } = await axios.get(
-      `${baseURL}/ticket-additional-remarks/${ticketId}`
-    );
+    const data = await getTicketAdditionalRemarksByTicketId(ticketId);
 
     if (data.length) {
       await axios.delete(`${baseURL}/ticket-additional-remarks/${ticketId}`);
@@ -59,6 +64,17 @@ async function removeTicketAdditionalRemarksByTicketId(ticketId) {
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
+  }
+}
+
+async function getTicketAdditionalRemarksByTicketId(ticketId) {
+  try {
+    const { data } = await axios.get(
+      `${baseURL}/ticket-additional-remarks/${ticketId}`
+    );
+    return data;
+  } catch (error) {
+    return [];
   }
 }
 

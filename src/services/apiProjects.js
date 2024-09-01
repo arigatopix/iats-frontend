@@ -170,9 +170,6 @@ async function createProjectAttachments(project_id, projectAttachments) {
 
 async function editProject({ project, editId }) {
   const { name, description, country, date_start, date_end } = project;
-
-  console.log(project);
-
   const {
     project_attachments = [],
     project_additional_remarks = [],

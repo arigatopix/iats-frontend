@@ -32,10 +32,7 @@ async function removeTicketAttachments(id) {
 
 async function removeProjectAttachmentByProjectId(projectId) {
   try {
-    // TODO get มาดูว่ามีข้อมูลมั้ย ค่อยลบ
-    const { data } = await axios.get(
-      `${baseURL}/project-attachments/${projectId}`
-    );
+    const data = await getProjectAttachmentByProjectId(projectId);
 
     if (data.length) {
       await axios.delete(`${baseURL}/project-attachments/${projectId}`);
@@ -45,13 +42,20 @@ async function removeProjectAttachmentByProjectId(projectId) {
     throw new Error(error.message);
   }
 }
+async function getProjectAttachmentByProjectId(projectId) {
+  try {
+    const { data } = await axios.get(
+      `${baseURL}/project-attachments/${projectId}`
+    );
+    return data;
+  } catch (error) {
+    return [];
+  }
+}
 
 async function removeTicketAttachmentByTicketId(ticketId) {
   try {
-    // TODO get มาดูว่ามีข้อมูลมั้ย ค่อยลบ
-    const { data } = await axios.get(
-      `${baseURL}/ticket-attachments/${ticketId}`
-    );
+    const data = await getTicketAttachmentByTicketId(ticketId);
 
     if (data.length) {
       await axios.delete(`${baseURL}/ticket-attachments/${ticketId}`);
@@ -59,6 +63,17 @@ async function removeTicketAttachmentByTicketId(ticketId) {
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
+  }
+}
+
+async function getTicketAttachmentByTicketId(ticketId) {
+  try {
+    const { data } = await axios.get(
+      `${baseURL}/ticket-attachments/${ticketId}`
+    );
+    return data;
+  } catch (error) {
+    return [];
   }
 }
 
