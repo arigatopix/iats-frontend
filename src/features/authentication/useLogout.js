@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout as logoutService } from "../../services/apiAuth";
-import { useNavigate } from "react-router-dom";
+import { keycloakLogoutURL } from "../../services/axios";
 
 export function useLogout() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const {
@@ -13,7 +12,8 @@ export function useLogout() {
   } = useMutation({
     mutationFn: logoutService,
     onSuccess: () => {
-      navigate("/login", { replace: true });
+      window.location.href = `${keycloakLogoutURL}`;
+
       queryClient.removeQueries();
     },
   });

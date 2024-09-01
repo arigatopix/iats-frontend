@@ -1,5 +1,6 @@
+import axios from "axios";
 import { getEmployee } from "./apiEmployee";
-import { appURL } from "./axios";
+import { appURL, keycloakLogoutURL } from "./axios";
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function login() {
@@ -45,7 +46,6 @@ export async function getCurrentUser() {
 
 export async function logout() {
   const { error } = await supabase.auth.signOut();
-
   if (error) throw new Error(error.message);
 }
 
