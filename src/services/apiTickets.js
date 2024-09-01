@@ -53,8 +53,6 @@ async function editTicket({ ticket, editId }) {
     title_eng,
   } = ticket;
 
-  console.log("ticket", ticket);
-
   const { ticket_attachments = [], ticket_additional_remarks = [] } = ticket;
 
   try {

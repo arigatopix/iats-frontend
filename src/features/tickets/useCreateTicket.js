@@ -9,7 +9,6 @@ export function useCreateTicket() {
     mutationFn: ({ projectId, ticket }) =>
       createTicketService({ projectId, ticket }),
     onSuccess: data => {
-      console.log("useCreateticket", data);
       toast.success("เพิ่มผู้เดินทาสำเร็จ");
       queryClient.invalidateQueries({
         queryKey: ["projects"],

@@ -9,8 +9,6 @@ export function useDeleteAttachment() {
   const { mutate: deleteAttachment, isLoading: isDeleting } = useMutation({
     mutationFn: ({ id, type }) => deleteAttachmentService({ id, type }),
     onSuccess: ({ id, type }) => {
-      console.log(id, type);
-
       toast.success(`ลบ ${type} หมายเลข ${id} สำเร็จ`);
 
       if (type === "project_attachments") {

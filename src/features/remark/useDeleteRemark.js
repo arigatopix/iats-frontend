@@ -9,8 +9,6 @@ export function useDeleteRemark() {
   const { mutate: deleteRemark, isLoading: isDeleting } = useMutation({
     mutationFn: ({ id, type }) => deleteRemarkService({ id, type }),
     onSuccess: ({ id, type }) => {
-      console.log(id, type);
-
       toast.success(`ลบ ${type} หมายเลข ${id} สำเร็จ`);
 
       if (type === "project_additional_remarks") {

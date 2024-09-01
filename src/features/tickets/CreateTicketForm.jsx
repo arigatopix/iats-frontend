@@ -74,8 +74,6 @@ function CreateTicketForm({
         ticket_attachments: [],
       };
 
-  console.log(ticketToEdit);
-
   const {
     handleSubmit,
     register,
@@ -123,7 +121,6 @@ function CreateTicketForm({
 
         onCloseModal?.();
       } else {
-        console.log("dataForm", dataForm);
         editTicket({ ticket: dataForm, editId });
       }
     })(event);
