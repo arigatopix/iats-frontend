@@ -55,7 +55,7 @@ async function editTicket({ ticket, editId }) {
 
   console.log("ticket", ticket);
 
-  const { ticketAttachments, ticketAdditionalRemarks } = ticket;
+  const { ticket_attachments = [], ticket_additional_remarks = [] } = ticket;
 
   try {
     const response = await axios.patch(`${baseURL}/tickets/${editId}`, {
@@ -82,26 +82,26 @@ async function editTicket({ ticket, editId }) {
     const editedTicket = data;
 
     // check foreign
-    if (ticketAdditionalRemarks.length) {
+    if (ticket_additional_remarks.length) {
       // remove first
       await removeTicketAdditionalRemarksByTicketId(editId);
 
       const remarks = await createTicketAdditionalRemarks(
         editId,
-        ticketAdditionalRemarks
+        ticket_additional_remarks
       );
 
-      editedTicket.ticketAdditionalRemarks = remarks;
+      editedTicket.ticket_additional_remarks = remarks;
     }
 
-    if (ticketAttachments.length) {
+    if (ticket_attachments.length) {
       // remove first
       await removeTicketAttachmentByTicketId(editId);
       const attachments = await createTicketAttachments(
         editId,
-        ticketAttachments
+        ticket_attachments
       );
-      editedTicket.ticketAttachments = attachments;
+      editedTicket.ticket_attachments = attachments;
     }
 
     return editedTicket;

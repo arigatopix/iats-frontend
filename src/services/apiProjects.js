@@ -173,7 +173,11 @@ async function editProject({ project, editId }) {
 
   console.log(project);
 
-  const { project_attachments, project_additional_remarks, tickets } = project;
+  const {
+    project_attachments = [],
+    project_additional_remarks = [],
+    tickets,
+  } = project;
 
   try {
     const response = await axios.patch(`${baseURL}/projects/${editId}`, {

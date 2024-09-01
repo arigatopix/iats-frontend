@@ -52,7 +52,9 @@ function CreateTicketForm({
   const { createTicket } = useCreateTicket();
 
   const { id: editId, ...editValues } = ticketToEdit;
+
   const isEditSession = Boolean(editId);
+
   const defaultValues = isEditSession
     ? editValues
     : {
@@ -121,6 +123,7 @@ function CreateTicketForm({
 
         onCloseModal?.();
       } else {
+        console.log("dataForm", dataForm);
         editTicket({ ticket: dataForm, editId });
       }
     })(event);
