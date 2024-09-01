@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createTickets } from "./apiTickets";
 import { baseURL } from "./axios";
+import { removeProjectAdditionalRemarksByProjectId } from "./apiRemark";
 
 async function getProjects() {
   try {
@@ -167,89 +168,64 @@ async function createProjectAttachments(project_id, projectAttachments) {
   }
 }
 
-async function removeProjectAdditionalRemarks(projectId) {
-  try {
-    await axios.delete(`${baseURL}/project-additional-remarks/${projectId}`);
-  } catch (error) {
-    console.error(error.message);
-    throw new Error(error.message);
-  }
-}
-
-async function removeProjectAttachments(projectId) {
-  try {
-    await axios.delete(`${baseURL}/project-attachments/${projectId}`);
-  } catch (error) {
-    console.error(error.message);
-    throw new Error(error.message);
-  }
-}
-
 async function editProject({ project, editId }) {
   const { name, description, country, date_start, date_end } = project;
 
-  const { projectAttachments, projectAdditionalRemarks, tickets } = project;
+  console.log(project);
 
-  const response = await axios.patch(`${baseURL}/projects/${editId}`, {
-    name,
-    description,
-    country,
-    date_start,
-    date_end,
-  });
+  const { project_attachments, project_additional_remarks, tickets } = project;
 
-  const { data } = response;
+  try {
+    const response = await axios.patch(`${baseURL}/projects/${editId}`, {
+      name,
+      description,
+      country,
+      date_start,
+      date_end,
+    });
 
-  if (response.statusText !== "OK") {
-    throw new Error("Project could not be update");
+    const { data } = response;
+
+    if (response.statusText !== "OK") {
+      throw new Error("Project could not be update");
+    }
+
+    const editedProject = data;
+
+    // check foreign
+    if (project_additional_remarks.length) {
+      // remove first
+      await removeProjectAdditionalRemarksByProjectId(editId);
+
+      const remarks = await createProjectAdditionalRemarks(
+        editId,
+        project_additional_remarks
+      );
+
+      editedProject.project_additional_remarks = remarks;
+    }
+
+    // projectAttachments
+    if (project_attachments.length) {
+      await removeProjectAdditionalRemarksByProjectId(editId);
+
+      const attachments = await createProjectAttachments(
+        editId,
+        project_attachments
+      );
+      editedProject.project_attachments = attachments;
+    }
+
+    // tickets
+    if (tickets.length) {
+      editedProject.tickets = tickets;
+    }
+
+    return editedProject;
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
-
-  const editedProject = data[0];
-
-  // remove projectAdditionalRemarks
-  const { error: errorProjectAdditionalRemarks } =
-    await removeProjectAdditionalRemarks(editId);
-
-  if (errorProjectAdditionalRemarks) {
-    console.error(errorProjectAdditionalRemarks);
-    throw new Error("ProjectAdditionalRemarks could not be delete");
-  }
-
-  // remove projectAttachments
-  const { error: errorProjectAttachments } = await removeProjectAttachments(
-    editId
-  );
-
-  if (errorProjectAttachments) {
-    console.error(errorProjectAttachments);
-    throw new Error("projectAttachments could not be delete");
-  }
-
-  // check foreign
-  if (projectAdditionalRemarks.length) {
-    const remarks = await createProjectAdditionalRemarks(
-      editId,
-      projectAdditionalRemarks
-    );
-
-    editedProject.projectAdditionalRemarks = remarks;
-  }
-
-  // projectAttachments
-  if (projectAttachments.length) {
-    const attachments = await createProjectAttachments(
-      editId,
-      projectAttachments
-    );
-    editedProject.projectAttachments = attachments;
-  }
-
-  // tickets
-  if (tickets.length) {
-    editedProject.tickets = tickets;
-  }
-
-  return editedProject;
 }
 
 export { getProjects, getProject, deleteProject, createProject, editProject };

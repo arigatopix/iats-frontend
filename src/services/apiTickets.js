@@ -1,6 +1,7 @@
 import axios from "axios";
 import { baseURL } from "./axios";
-import supabase from "./supabase";
+import { removeTicketAttachmentByTicketId } from "./apiAttatchments";
+import { removeTicketAdditionalRemarksByTicketId } from "./apiRemark";
 
 async function getTickets() {
   try {
@@ -52,11 +53,12 @@ async function editTicket({ ticket, editId }) {
     title_eng,
   } = ticket;
 
+  console.log("ticket", ticket);
+
   const { ticketAttachments, ticketAdditionalRemarks } = ticket;
 
-  const { data, error } = await supabase
-    .from("tickets")
-    .update({
+  try {
+    const response = await axios.patch(`${baseURL}/tickets/${editId}`, {
       name,
       name_eng,
       email,
@@ -69,74 +71,43 @@ async function editTicket({ ticket, editId }) {
       employee_id,
       title,
       title_eng,
-    })
-    .eq("id", editId)
-    .select();
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Ticket could not be update");
-  }
+    const { data } = response;
 
-  const editedTicket = data[0];
+    if (response.statusText !== "OK") {
+      throw new Error("Project could not be update");
+    }
 
-  // remove projectAdditionalRemarks
-  const { error: errorTicketAdditionalRemarks } =
-    await removeTicketAdditionalRemarks(editId);
+    const editedTicket = data;
 
-  if (errorTicketAdditionalRemarks) {
-    console.error(errorTicketAdditionalRemarks);
-    throw new Error("Ticket additionalRemarks could not be delete");
-  }
+    // check foreign
+    if (ticketAdditionalRemarks.length) {
+      // remove first
+      await removeTicketAdditionalRemarksByTicketId(editId);
 
-  // remove projectAttachments
-  const { error: errorTicketAttachments } = await removeTicketAttachments(
-    editId
-  );
+      const remarks = await createTicketAdditionalRemarks(
+        editId,
+        ticketAdditionalRemarks
+      );
 
-  if (errorTicketAttachments) {
-    console.error(errorTicketAttachments);
-    throw new Error("ticket attachments could not be delete");
-  }
+      editedTicket.ticketAdditionalRemarks = remarks;
+    }
 
-  // check foreign
-  if (ticketAdditionalRemarks.length) {
-    const remarks = await createTicketAdditionalRemarks(
-      editId,
-      ticketAdditionalRemarks
-    );
+    if (ticketAttachments.length) {
+      // remove first
+      await removeTicketAttachmentByTicketId(editId);
+      const attachments = await createTicketAttachments(
+        editId,
+        ticketAttachments
+      );
+      editedTicket.ticketAttachments = attachments;
+    }
 
-    editedTicket.ticketAdditionalRemarks = remarks;
-  }
-
-  if (ticketAttachments.length) {
-    const attachments = await createTicketAttachments(
-      editId,
-      ticketAttachments
-    );
-    editedTicket.ticketAttachments = attachments;
-  }
-
-  return editedTicket;
-}
-
-async function removeTicketAdditionalRemarks(ticketId) {
-  try {
-    await axios.delete(`${baseURL}/ticket-additional-remarks/${ticketId}`);
-    return null;
+    return editedTicket;
   } catch (error) {
     console.error(error.message);
-    return error.message;
-  }
-}
-
-async function removeTicketAttachments(ticketId) {
-  try {
-    await axios.delete(`${baseURL}/ticket-attachments/${ticketId}`);
-    return null;
-  } catch (error) {
-    console.error(error.message);
-    return error.message;
+    throw new Error(error.message);
   }
 }
 
