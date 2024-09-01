@@ -12,6 +12,7 @@ import { useFieldArray } from "react-hook-form";
 import FormHeader from "./FormHeader";
 import { useUpload } from "../hooks/useUpload";
 import SpinnerMini from "./SpinnerMini";
+import { useDeleteAttachment } from "../features/attachment/useDeleteAttachment";
 
 const WrapFileUpload = styled.section`
   margin-top: 3rem;
@@ -39,6 +40,7 @@ function FileUpload({ id, control, disabled = false }) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: id,
+    keyName: "fieldId",
   });
 
   const isDisable = disabled || isUploading;
@@ -116,11 +118,12 @@ function FileUpload({ id, control, disabled = false }) {
           data={fields}
           render={(file, index) => (
             <FileRow
-              key={file.id}
+              key={file.fieldId}
               file={file}
               index={index}
               remove={remove}
               disabled={isDisable}
+              name={id}
             />
           )}
         />
@@ -131,7 +134,9 @@ function FileUpload({ id, control, disabled = false }) {
 
 export default FileUpload;
 
-const FileRow = ({ file, index, remove, disabled }) => {
+const FileRow = ({ file, index, remove, disabled, name }) => {
+  const { deleteAttachment } = useDeleteAttachment();
+
   return (
     <Table.Row>
       <p>{file.title}</p>
@@ -141,7 +146,13 @@ const FileRow = ({ file, index, remove, disabled }) => {
           <HiOutlinePaperClip />
         </ButtonIcon>
         {!disabled && (
-          <ButtonIcon onClick={() => remove(index)}>
+          <ButtonIcon
+            onClick={() => {
+              remove(index);
+
+              if (file.id) deleteAttachment({ id: file.id, type: name });
+            }}
+          >
             <HiOutlineTrash />
           </ButtonIcon>
         )}

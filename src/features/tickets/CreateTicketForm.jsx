@@ -68,9 +68,11 @@ function CreateTicketForm({
         contact_name: "",
         remark: "",
         status: "unconfirmed",
-        ticketAdditionalRemarks: [],
-        ticketAttachments: [],
+        ticket_additional_remarks: [],
+        ticket_attachments: [],
       };
+
+  console.log(ticketToEdit);
 
   const {
     handleSubmit,
@@ -287,14 +289,14 @@ function CreateTicketForm({
           <>
             <FileUpload
               disabled={isDisabled}
-              id="ticketAttachments"
+              id="ticket_attachments"
               control={control}
             />
 
             <AdditionalRemark
               control={control}
               disabled={isDisabled}
-              name="ticketAdditionalRemarks"
+              name="ticket_additional_remarks"
               label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม"
               resourceName="หมายเหตุ"
             />

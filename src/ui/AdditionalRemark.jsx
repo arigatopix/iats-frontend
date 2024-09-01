@@ -6,6 +6,7 @@ import { Controller, useFieldArray } from "react-hook-form";
 import Input from "./Input";
 import FormHeader from "./FormHeader";
 import Button from "./Button";
+import { useDeleteRemark } from "../features/remark/useDeleteRemark";
 
 const StyledAdditionalRemark = styled.section`
   margin-top: 3rem;
@@ -36,9 +37,12 @@ const FormAdditional = styled.div`
 `;
 
 function AdditionalRemark({ control, disabled, name, label, resourceName }) {
+  const { deleteRemark, isDeleting } = useDeleteRemark();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name,
+    keyName: "fieldId",
   });
 
   function handleAddRemark(e) {
@@ -56,7 +60,7 @@ function AdditionalRemark({ control, disabled, name, label, resourceName }) {
       ) : (
         <ul>
           {fields.map((item, index) => (
-            <li key={item.id}>
+            <li key={item.fieldId}>
               <FormAdditional>
                 <Controller
                   render={({ field }) => (
@@ -64,10 +68,17 @@ function AdditionalRemark({ control, disabled, name, label, resourceName }) {
                   )}
                   name={`${name}.${index}.remark`}
                   control={control}
+                  disabled={isDeleting}
                 />
 
                 {!disabled && (
-                  <ButtonIcon onClick={() => remove(index)}>
+                  <ButtonIcon
+                    onClick={() => {
+                      remove(index);
+
+                      if (item.id) deleteRemark({ id: item.id, type: name });
+                    }}
+                  >
                     <HiOutlineTrash />
                   </ButtonIcon>
                 )}
