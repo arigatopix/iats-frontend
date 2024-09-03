@@ -39,7 +39,7 @@ function TicketTable() {
 
   // SEARCH
   const searched = searchTerm
-    ? searchBy(sortedTickets, "first_name", searchTerm)
+    ? searchBy(sortedTickets, "name", searchTerm)
     : sortedTickets;
 
   return (

@@ -37,8 +37,8 @@ export const formatDateTH = date => {
 };
 
 export const searchBy = (objects, field, searchString) => {
-  const string = searchString.toLowerCase();
-  return objects.filter(obj => obj[field].toLowerCase().includes(string));
+  const searched = searchString.toLowerCase();
+  return objects.filter(obj => obj[field].toLowerCase().includes(searched));
 };
 
 export const fromToday = (numDays, withTime = false) => {
