@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout as logoutService } from "../../services/apiAuth";
-import { keycloakLogoutURL } from "../../services/axios";
+import { baseURL } from "../../services/axios";
 
 export function useLogout() {
   const queryClient = useQueryClient();
@@ -12,7 +12,7 @@ export function useLogout() {
   } = useMutation({
     mutationFn: logoutService,
     onSuccess: () => {
-      window.location.href = `${keycloakLogoutURL}`;
+      window.location.href = `${baseURL}/auth/logout`;
 
       queryClient.removeQueries();
     },

@@ -10,9 +10,7 @@ const StyledHeaderMenu = styled.ul`
 function HeaderMenu() {
   return (
     <StyledHeaderMenu>
-      <li>
-        <UserAvatar />
-      </li>
+      <li>{/* <UserAvatar /> */}</li>
       <li>
         <Logout />
       </li>

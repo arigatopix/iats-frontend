@@ -40,9 +40,9 @@ function App() {
           <Routes>
             <Route
               element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
+                // <ProtectedRoute>
+                <AppLayout />
+                // </ProtectedRoute>
               }
             >
               <Route index element={<Navigate replace to="tickets" />}></Route>

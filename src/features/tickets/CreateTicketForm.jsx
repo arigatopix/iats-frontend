@@ -55,9 +55,9 @@ function CreateTicketForm({
 
   const navigate = useNavigate();
 
-  const {
-    user: { role },
-  } = useUser();
+  // const {
+  //   user: { role },
+  // } = useUser();
 
   const { id: editId, ...editValues } = ticketToEdit;
 
@@ -325,11 +325,10 @@ function CreateTicketForm({
             <Checkbox
               checked={confirmed}
               onChange={() => {
-                if (role === "admin" || role === "manager" || !confirmed) {
-                  setConfirmed(confirmed => !confirmed);
-                }
-
-                if (role === "user" && confirmed) return;
+                // if (role === "admin" || role === "manager" || !confirmed) {
+                //   setConfirmed(confirmed => !confirmed);
+                // }
+                // if (role === "user" && confirmed) return;
               }}
               id="status"
             >

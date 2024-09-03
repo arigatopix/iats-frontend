@@ -1,20 +1,10 @@
 import axios from "axios";
 import { getEmployee } from "./apiEmployee";
-import { appURL, keycloakLogoutURL } from "./axios";
+import { baseURL } from "./axios";
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function login() {
-  let { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "keycloak",
-    options: {
-      scopes: "openid",
-      redirectTo: `${appURL}/tickets`,
-    },
-  });
-
-  if (error) throw new Error(error.message);
-
-  return data;
+  window.location.href = `${baseURL}/auth/login`;
 }
 
 export async function getCurrentUser() {
