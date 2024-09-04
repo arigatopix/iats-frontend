@@ -24,14 +24,14 @@ const Avatar = styled.img`
 function UserAvatar() {
   const { user } = useUser();
 
-  const { employee_id, name, position, department } = user;
-
-  const avatar = "";
+  const { employee_id, name, role } = user;
 
   return (
     <StyledUserAvatar>
-      <span>{`${name} ${position} ${department} (${employee_id}) `}</span>
-      <Avatar src={avatar || "default-user.jpg"} alt={`Avator of ${name}`} />
+      <span>
+        {`(${employee_id}) ${name}`} &mdash; {role}
+      </span>
+      <Avatar src={"default-user.jpg"} alt={`Avator of ${name}`} />
     </StyledUserAvatar>
   );
 }

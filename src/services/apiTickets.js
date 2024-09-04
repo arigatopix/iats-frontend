@@ -1,11 +1,10 @@
-import axios from "axios";
-import { baseURL } from "./axios";
 import { removeTicketAttachmentByTicketId } from "./apiAttatchments";
 import { removeTicketAdditionalRemarksByTicketId } from "./apiRemark";
+import { axiosInstance, BACKEND_URL } from "./axios";
 
 async function getTickets() {
   try {
-    const response = await axios.get(`${baseURL}/tickets`);
+    const response = await axiosInstance.get(`${BACKEND_URL}/tickets`);
 
     const { data } = response;
 
@@ -22,7 +21,7 @@ async function getTickets() {
 
 async function getTicket(id) {
   try {
-    const response = await axios.get(`${baseURL}/tickets/${id}`);
+    const response = await axiosInstance.get(`${BACKEND_URL}/tickets/${id}`);
 
     const { data } = response;
 
@@ -56,20 +55,23 @@ async function editTicket({ ticket, editId }) {
   const { ticket_attachments = [], ticket_additional_remarks = [] } = ticket;
 
   try {
-    const response = await axios.patch(`${baseURL}/tickets/${editId}`, {
-      name,
-      name_eng,
-      email,
-      phone_number,
-      position,
-      department,
-      contact_name,
-      status,
-      remark,
-      employee_id,
-      title,
-      title_eng,
-    });
+    const response = await axiosInstance.patch(
+      `${BACKEND_URL}/tickets/${editId}`,
+      {
+        name,
+        name_eng,
+        email,
+        phone_number,
+        position,
+        department,
+        contact_name,
+        status,
+        remark,
+        employee_id,
+        title,
+        title_eng,
+      }
+    );
 
     const { data } = response;
 
@@ -111,9 +113,12 @@ async function createTicketAdditionalRemarks(
   });
 
   try {
-    const response = await axios.post(`${baseURL}/ticket-additional-remarks`, {
-      remarks,
-    });
+    const response = await axiosInstance.post(
+      `${BACKEND_URL}/ticket-additional-remarks`,
+      {
+        remarks,
+      }
+    );
 
     const { data } = response;
 
@@ -138,9 +143,12 @@ async function createTicketAttachments(ticket_id, ticketAttachments) {
   });
 
   try {
-    const response = await axios.post(`${baseURL}/ticket-attachments`, {
-      attachments,
-    });
+    const response = await axiosInstance.post(
+      `${BACKEND_URL}/ticket-attachments`,
+      {
+        attachments,
+      }
+    );
 
     const { data } = response;
 
@@ -157,7 +165,7 @@ async function createTicketAttachments(ticket_id, ticketAttachments) {
 
 async function deleteTicket(id) {
   try {
-    await axios.delete(`${baseURL}/tickets/${id}`);
+    await axiosInstance.delete(`${BACKEND_URL}/tickets/${id}`);
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
@@ -181,7 +189,7 @@ async function createTicket({ projectId: project_id, ticket }) {
   } = ticket;
 
   try {
-    const response = await axios.post(`${baseURL}/tickets`, {
+    const response = await axiosInstance.post(`${BACKEND_URL}/tickets`, {
       project_id,
       title,
       name,
@@ -230,7 +238,7 @@ async function createTickets(project_id, tickets) {
   });
 
   try {
-    const response = await axios.post(`${baseURL}/tickets`, {
+    const response = await axiosInstance.post(`${BACKEND_URL}/tickets`, {
       tickets: created,
     });
     const { data } = response;

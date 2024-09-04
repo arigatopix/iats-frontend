@@ -17,7 +17,7 @@ import { useEditTicket } from "./useEditTicket";
 import { parseEmployee } from "../../utils/helpers";
 import { getEmployee } from "../../services/apiEmployee";
 import { useCreateTicket } from "./useCreateTicket";
-// import { useUser } from "../authentication/useUser";
+import { useUser } from "../authentication/useUser";
 import { useNavigate } from "react-router-dom";
 
 const StyledFormGrid = styled.div`
@@ -55,9 +55,9 @@ function CreateTicketForm({
 
   const navigate = useNavigate();
 
-  // const {
-  //   user: { role },
-  // } = useUser();
+  const {
+    user: { role },
+  } = useUser();
 
   const { id: editId, ...editValues } = ticketToEdit;
 
@@ -325,10 +325,10 @@ function CreateTicketForm({
             <Checkbox
               checked={confirmed}
               onChange={() => {
-                // if (role === "admin" || role === "manager" || !confirmed) {
-                //   setConfirmed(confirmed => !confirmed);
-                // }
-                // if (role === "user" && confirmed) return;
+                if (role === "admin" || role === "manager") {
+                  setConfirmed(confirmed => !confirmed);
+                } else if (defaultValues.status === "unconfirmed")
+                  setConfirmed(confirmed => !confirmed);
               }}
               id="status"
             >

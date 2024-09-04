@@ -1,42 +1,29 @@
 // import axios from "axios";
-import { getEmployee } from "./apiEmployee";
-import { baseURL } from "./axios";
-import supabase, { supabaseUrl } from "./supabase";
+import { axiosInstance, BACKEND_URL } from "./axios";
+import supabase, { supaBACKEND_URL } from "./supabase";
+import { clearSession } from "../utils/session";
 
 export async function login() {
-  window.location.href = `${baseURL}/auth/login`;
+  window.location.href = `${BACKEND_URL}/auth/login`;
 }
 
 export async function getCurrentUser() {
-  const { data: session, error: errorSession } =
-    await supabase.auth.getSession();
+  try {
+    const { data } = await axiosInstance.get(
+      `${BACKEND_URL}/auth/getCurrentUser`
+    );
 
-  if (errorSession) throw new Error(errorSession.message);
+    const { isAuthenticated, token, user } = data;
 
-  if (!session.session) return null;
-
-  const { data, error: errorGetUser } = await supabase.auth.getUser();
-
-  if (errorGetUser) throw new Error(errorGetUser.message);
-
-  const employee_id = data?.user?.user_metadata.provider_id.split(":")[2];
-
-  const emp = await getEmployee(employee_id);
-
-  const user = {
-    ...data?.user,
-    employee_id,
-    name: `${emp?.first_name} ${emp.last_name}`,
-    position: emp.stell_text_short,
-    department: emp.dept_short,
-  };
-
-  return user;
+    return { isAuthenticated, token, ...user };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 }
 
 export async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  clearSession();
+  window.location.href = `${BACKEND_URL}/auth/logout`;
 }
 
 export async function updateCurrentUser({ password, fullName, avatar }) {
@@ -66,7 +53,7 @@ export async function updateCurrentUser({ password, fullName, avatar }) {
   const { data: updatedUser, error: avatarUpdateError } =
     await supabase.auth.updateUser({
       data: {
-        avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+        avatar: `${supaBACKEND_URL}/storage/v1/object/public/avatars/${fileName}`,
       },
     });
 

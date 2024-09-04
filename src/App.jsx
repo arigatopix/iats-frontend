@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { StyleSheetManager } from "styled-components";
-// import ProtectedRoute from "./ui/ProtectedRoute";
+import ProtectedRoute from "./ui/ProtectedRoute";
 import Projects from "./pages/Projects";
 import Tickets from "./pages/Tickets";
 import Ticket from "./pages/Ticket";
@@ -35,9 +35,9 @@ function App() {
           <Routes>
             <Route
               element={
-                // <ProtectedRoute>
-                <AppLayout />
-                // </ProtectedRoute>
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
               }
             >
               <Route index element={<Navigate replace to="tickets" />}></Route>
@@ -49,6 +49,7 @@ function App() {
             </Route>
 
             <Route path="login" element={<Login />}></Route>
+            <Route path="not-found" element={<PageNotFound />}></Route>
             <Route path="*" element={<PageNotFound />}></Route>
           </Routes>
         </BrowserRouter>

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout as logoutService } from "../../services/apiAuth";
-import { baseURL } from "../../services/axios";
+import { BACKEND_URL } from "../../services/axios";
 
 export function useLogout() {
   const queryClient = useQueryClient();
@@ -12,8 +12,6 @@ export function useLogout() {
   } = useMutation({
     mutationFn: logoutService,
     onSuccess: () => {
-      window.location.href = `${baseURL}/auth/logout`;
-
       queryClient.removeQueries();
     },
   });

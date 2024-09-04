@@ -1,6 +1,6 @@
-import { supabaseUrl } from "../services/supabase";
+import { supaBACKEND_URL } from "../services/supabase";
 
-const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabin-images/`;
+const imageUrl = `${supaBACKEND_URL}/storage/v1/object/public/cabin-images/`;
 
 export const cabins = [
   {

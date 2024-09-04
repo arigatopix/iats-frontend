@@ -8,6 +8,7 @@ import Spinner from "../../ui/Spinner";
 import styled from "styled-components";
 import TicketTagStatus from "./TicketTagStatus";
 import ProjectDataBox from "../projects/ProjectDataBox";
+import { ErrorFallback } from "../../ui/ErrorFallback";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -22,7 +23,25 @@ function TicketDetail() {
 
   const navigate = useNavigate();
 
-  if (isLoading || error) return <Spinner />;
+  if (isLoading) return <Spinner />;
+
+  if (error)
+    return (
+      <ErrorFallback
+        header="ไม่สามารถเข้าถึงหมายเลขเดินทางนี้ได้"
+        body={
+          <ButtonText
+            onClick={() =>
+              navigate("/", {
+                replace: true,
+              })
+            }
+          >
+            &larr; กลับ
+          </ButtonText>
+        }
+      />
+    );
 
   return (
     <>

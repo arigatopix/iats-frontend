@@ -17,6 +17,6 @@ export function useUser() {
     user,
     isLoading,
     error,
-    isAuthenticated: user?.role === "authenticated",
+    isAuthenticated: user?.isAuthenticated,
   };
 }

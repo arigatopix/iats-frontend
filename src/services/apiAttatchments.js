@@ -1,5 +1,4 @@
-import axios from "axios";
-import { baseURL } from "./axios";
+import { BACKEND_URL, axiosInstance } from "./axios";
 
 async function deleteAttachment({ id, type }) {
   if (type === "project_attachments") {
@@ -13,7 +12,7 @@ async function deleteAttachment({ id, type }) {
 
 async function removeProjectAttachments(id) {
   try {
-    await axios.delete(`${baseURL}/project-attachments-id/${id}`);
+    await axiosInstance.delete(`${BACKEND_URL}/project-attachments-id/${id}`);
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
@@ -22,7 +21,7 @@ async function removeProjectAttachments(id) {
 
 async function removeTicketAttachments(id) {
   try {
-    await axios.delete(`${baseURL}/ticket-attachments-id/${id}`);
+    await axiosInstance.delete(`${BACKEND_URL}/ticket-attachments-id/${id}`);
     return null;
   } catch (error) {
     console.error(error.message);
@@ -35,7 +34,9 @@ async function removeProjectAttachmentByProjectId(projectId) {
     const data = await getProjectAttachmentByProjectId(projectId);
 
     if (data.length) {
-      await axios.delete(`${baseURL}/project-attachments/${projectId}`);
+      await axiosInstance.delete(
+        `${BACKEND_URL}/project-attachments/${projectId}`
+      );
     }
   } catch (error) {
     console.error(error.message);
@@ -44,8 +45,8 @@ async function removeProjectAttachmentByProjectId(projectId) {
 }
 async function getProjectAttachmentByProjectId(projectId) {
   try {
-    const { data } = await axios.get(
-      `${baseURL}/project-attachments/${projectId}`
+    const { data } = await axiosInstance.get(
+      `${BACKEND_URL}/project-attachments/${projectId}`
     );
     return data;
   } catch (error) {
@@ -58,7 +59,9 @@ async function removeTicketAttachmentByTicketId(ticketId) {
     const data = await getTicketAttachmentByTicketId(ticketId);
 
     if (data.length) {
-      await axios.delete(`${baseURL}/ticket-attachments/${ticketId}`);
+      await axiosInstance.delete(
+        `${BACKEND_URL}/ticket-attachments/${ticketId}`
+      );
     }
   } catch (error) {
     console.error(error.message);
@@ -68,8 +71,8 @@ async function removeTicketAttachmentByTicketId(ticketId) {
 
 async function getTicketAttachmentByTicketId(ticketId) {
   try {
-    const { data } = await axios.get(
-      `${baseURL}/ticket-attachments/${ticketId}`
+    const { data } = await axiosInstance.get(
+      `${BACKEND_URL}/ticket-attachments/${ticketId}`
     );
     return data;
   } catch (error) {

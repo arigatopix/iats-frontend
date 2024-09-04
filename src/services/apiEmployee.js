@@ -1,12 +1,10 @@
-import axios from "axios";
-
-// Create an instance of axios with custom configuration
-
-const url = `${import.meta.env.VITE_API_URL}/api/employee`;
+import { axiosInstance, BACKEND_URL } from "./axios";
 
 async function getEmployee(emp_id) {
   try {
-    const response = await axios.get(`${url}/${emp_id}`);
+    const response = await axiosInstance.get(
+      `${BACKEND_URL}/employee/${emp_id}`
+    );
 
     const { data } = response.data;
 

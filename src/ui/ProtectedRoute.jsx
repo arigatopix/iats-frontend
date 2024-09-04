@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUser } from "../features/authentication/useUser";
 import Spinner from "./Spinner";
 import styled from "styled-components";
 import { useEffect } from "react";
+import { setToken } from "../utils/session";
 
 const FullPage = styled.div`
   height: 100vh;
@@ -13,6 +14,12 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ children }) {
+  const [searchParams] = useSearchParams();
+
+  const token = searchParams.get("token");
+
+  token && setToken(token);
+
   const { isLoading, isAuthenticated } = useUser();
 
   const navigate = useNavigate();

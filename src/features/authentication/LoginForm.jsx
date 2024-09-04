@@ -7,7 +7,7 @@ function LoginForm() {
 
   function handleClick() {
     login();
-    // window.location.href = `${baseURL}/auth/login`;
+    // window.location.href = `${BACKEND_URL}/auth/login`;
   }
 
   return (

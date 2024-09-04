@@ -1,12 +1,11 @@
-import axios from "axios";
 import { createTickets } from "./apiTickets";
-import { baseURL } from "./axios";
+import { BACKEND_URL, axiosInstance } from "./axios";
 import { removeProjectAdditionalRemarksByProjectId } from "./apiRemark";
 import { removeProjectAttachmentByProjectId } from "./apiAttatchments";
 
 async function getProjects() {
   try {
-    const response = await axios.get(`${baseURL}/projects`);
+    const response = await axiosInstance.get(`${BACKEND_URL}/projects`);
 
     const { data } = response;
 
@@ -23,7 +22,7 @@ async function getProjects() {
 
 async function getProject(id) {
   try {
-    const response = await axios.get(`${baseURL}/projects/${id}`);
+    const response = await axiosInstance.get(`${BACKEND_URL}/projects/${id}`);
 
     const { data } = response;
 
@@ -40,7 +39,9 @@ async function getProject(id) {
 
 async function deleteProject(id) {
   try {
-    const response = await axios.delete(`${baseURL}/projects/${id}`);
+    const response = await axiosInstance.delete(
+      `${BACKEND_URL}/projects/${id}`
+    );
 
     const { data } = response;
 
@@ -62,7 +63,7 @@ async function createProject(newProject) {
     newProject;
 
   try {
-    const response = await axios.post(`${baseURL}/projects`, {
+    const response = await axiosInstance.post(`${BACKEND_URL}/projects`, {
       name,
       description,
       country,
@@ -125,9 +126,12 @@ async function createProjectAdditionalRemarks(
   });
 
   try {
-    const response = await axios.post(`${baseURL}/project-additional-remarks`, {
-      remarks,
-    });
+    const response = await axiosInstance.post(
+      `${BACKEND_URL}/project-additional-remarks`,
+      {
+        remarks,
+      }
+    );
 
     const { data } = response;
 
@@ -152,9 +156,12 @@ async function createProjectAttachments(project_id, projectAttachments) {
   });
 
   try {
-    const response = await axios.post(`${baseURL}/project-attachments`, {
-      attachments,
-    });
+    const response = await axiosInstance.post(
+      `${BACKEND_URL}/project-attachments`,
+      {
+        attachments,
+      }
+    );
 
     const { data } = response;
 
@@ -174,13 +181,16 @@ async function editProject({ project, editId }) {
   const { project_attachments = [], project_additional_remarks = [] } = project;
 
   try {
-    const response = await axios.patch(`${baseURL}/projects/${editId}`, {
-      name,
-      description,
-      country,
-      date_start,
-      date_end,
-    });
+    const response = await axiosInstance.patch(
+      `${BACKEND_URL}/projects/${editId}`,
+      {
+        name,
+        description,
+        country,
+        date_start,
+        date_end,
+      }
+    );
 
     const { data } = response;
 

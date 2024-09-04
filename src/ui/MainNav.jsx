@@ -2,6 +2,7 @@ import { HiOutlineHome } from "react-icons/hi";
 import { HiOutlineCalendarDays } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { useUser } from "../features/authentication/useUser";
 
 const NavList = styled.ul`
   display: flex;
@@ -53,6 +54,10 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function MainNav({ $size }) {
+  const {
+    user: { role },
+  } = useUser();
+
   return (
     <nav>
       <NavList>
@@ -62,12 +67,15 @@ function MainNav({ $size }) {
             <span>ข้อมูลผู้เดินทาง</span>
           </StyledNavLink>
         </li>
-        <li>
-          <StyledNavLink $size={$size} to="projects">
-            <HiOutlineCalendarDays />
-            <span>จัดการโครงการ</span>
-          </StyledNavLink>
-        </li>
+
+        {(role === "admin" || role === "manager") && (
+          <li>
+            <StyledNavLink $size={$size} to="projects">
+              <HiOutlineCalendarDays />
+              <span>จัดการโครงการ</span>
+            </StyledNavLink>
+          </li>
+        )}
       </NavList>
     </nav>
   );

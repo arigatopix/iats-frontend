@@ -1,5 +1,4 @@
-import axios from "axios";
-import { baseURL } from "./axios";
+import { BACKEND_URL, axiosInstance } from "./axios";
 
 async function deleteRemark({ id, type }) {
   if (type === "project_additional_remarks") {
@@ -13,7 +12,9 @@ async function deleteRemark({ id, type }) {
 
 async function removeProjectAdditionalRemarks(id) {
   try {
-    await axios.delete(`${baseURL}/project-additional-remarks-id/${id}`);
+    await axiosInstance.delete(
+      `${BACKEND_URL}/project-additional-remarks-id/${id}`
+    );
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
@@ -22,7 +23,9 @@ async function removeProjectAdditionalRemarks(id) {
 
 async function removeTicketAdditionalRemarks(id) {
   try {
-    await axios.delete(`${baseURL}/ticket-additional-remarks-id/${id}`);
+    await axiosInstance.delete(
+      `${BACKEND_URL}/ticket-additional-remarks-id/${id}`
+    );
     return null;
   } catch (error) {
     console.error(error.message);
@@ -35,7 +38,9 @@ async function removeProjectAdditionalRemarksByProjectId(projectId) {
     const data = await getProjectAdditionalRemarks(projectId);
 
     if (data.length) {
-      await axios.delete(`${baseURL}/project-additional-remarks/${projectId}`);
+      await axiosInstance.delete(
+        `${BACKEND_URL}/project-additional-remarks/${projectId}`
+      );
     }
   } catch (error) {
     console.error(error.message);
@@ -45,8 +50,8 @@ async function removeProjectAdditionalRemarksByProjectId(projectId) {
 
 async function getProjectAdditionalRemarks(projectId) {
   try {
-    const { data } = await axios.get(
-      `${baseURL}/project-additional-remarks/${projectId}`
+    const { data } = await axiosInstance.get(
+      `${BACKEND_URL}/project-additional-remarks/${projectId}`
     );
     return data;
   } catch (error) {
@@ -59,7 +64,9 @@ async function removeTicketAdditionalRemarksByTicketId(ticketId) {
     const data = await getTicketAdditionalRemarksByTicketId(ticketId);
 
     if (data.length) {
-      await axios.delete(`${baseURL}/ticket-additional-remarks/${ticketId}`);
+      await axiosInstance.delete(
+        `${BACKEND_URL}/ticket-additional-remarks/${ticketId}`
+      );
     }
   } catch (error) {
     console.error(error.message);
@@ -69,8 +76,8 @@ async function removeTicketAdditionalRemarksByTicketId(ticketId) {
 
 async function getTicketAdditionalRemarksByTicketId(ticketId) {
   try {
-    const { data } = await axios.get(
-      `${baseURL}/ticket-additional-remarks/${ticketId}`
+    const { data } = await axiosInstance.get(
+      `${BACKEND_URL}/ticket-additional-remarks/${ticketId}`
     );
     return data;
   } catch (error) {

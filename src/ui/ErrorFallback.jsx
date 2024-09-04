@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledErrorFallback = styled.main`
@@ -24,8 +25,18 @@ const Box = styled.div`
   }
 
   & p {
-    font-family: "Sono";
     margin-bottom: 3.2rem;
     color: var(--color-grey-500);
   }
 `;
+
+export function ErrorFallback({ header, body }) {
+  return (
+    <StyledErrorFallback>
+      <Box>
+        <h1>{header}</h1>
+        {body}
+      </Box>
+    </StyledErrorFallback>
+  );
+}

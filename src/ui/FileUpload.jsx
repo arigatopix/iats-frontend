@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { supabaseUrl } from "../services/supabase";
+import { supaBACKEND_URL } from "../services/supabase";
 import FileInput from "./FileInput";
 import Table from "./Table";
 import Input from "./Input";
@@ -72,7 +72,7 @@ function FileUpload({ id, control, disabled = false }) {
           onSuccess: data => {
             append({
               title: fileTitle,
-              url: `${supabaseUrl}/storage/v1/object/public/${data.fullPath}`,
+              url: `${supaBACKEND_URL}/storage/v1/object/public/${data.fullPath}`,
             });
 
             setFile(null);
