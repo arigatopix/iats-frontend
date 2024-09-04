@@ -11,8 +11,6 @@ function AdminAndManagerRoute({ children }) {
 
   const navigate = useNavigate();
 
-  console.log(role !== "manager");
-
   useEffect(() => {
     if (!roles.includes(role)) {
       return navigate("/tickets");
