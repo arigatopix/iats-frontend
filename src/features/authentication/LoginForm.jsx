@@ -1,4 +1,3 @@
-import { baseURL } from "../../services/axios";
 import Button from "../../ui/Button";
 import SpinnerMini from "../../ui/SpinnerMini";
 import useLogin from "./useLogin";

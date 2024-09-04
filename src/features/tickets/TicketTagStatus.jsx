@@ -1,5 +1,13 @@
 import Tag from "../../ui/Tag";
-import { parseStatus } from "../../utils/helpers";
+
+const parseStatus = status => {
+  switch (status) {
+    case "confirmed":
+      return "ยืนยัน";
+    default:
+      return "รอยืนยัน";
+  }
+};
 
 function TicketTagStatus({ status }) {
   const statusToTagName = {

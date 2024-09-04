@@ -97,3 +97,12 @@ function parseEnglishName(eng_name_full) {
 
   return { title_eng, name_eng };
 }
+
+export const parseStatus = status => {
+  switch (status) {
+    case "confirmed":
+      return "ยืนยัน";
+    default:
+      return "รอยืนยัน";
+  }
+};
