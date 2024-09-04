@@ -16,6 +16,7 @@ import Tickets from "./pages/Tickets";
 import Ticket from "./pages/Ticket";
 import Project from "./pages/Project";
 import ProjectCreate from "./pages/ProjectCreate";
+import AdminAndManagerRoute from "./ui/AdminAndManagerRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,15 +42,35 @@ function App() {
               }
             >
               <Route index element={<Navigate replace to="tickets" />}></Route>
-              <Route path="projects" element={<Projects />}></Route>
-              <Route path="projects/create" element={<ProjectCreate />}></Route>
-              <Route path="projects/:projectId" element={<Project />}></Route>
+              <Route
+                path="projects"
+                element={
+                  <AdminAndManagerRoute>
+                    <Projects />
+                  </AdminAndManagerRoute>
+                }
+              ></Route>
+              <Route
+                path="projects/create"
+                element={
+                  <AdminAndManagerRoute>
+                    <ProjectCreate />
+                  </AdminAndManagerRoute>
+                }
+              ></Route>
+              <Route
+                path="projects/:projectId"
+                element={
+                  <AdminAndManagerRoute>
+                    <Project />
+                  </AdminAndManagerRoute>
+                }
+              ></Route>
               <Route path="tickets" element={<Tickets />}></Route>
               <Route path="tickets/:ticketId" element={<Ticket />}></Route>
             </Route>
 
             <Route path="login" element={<Login />}></Route>
-            <Route path="not-found" element={<PageNotFound />}></Route>
             <Route path="*" element={<PageNotFound />}></Route>
           </Routes>
         </BrowserRouter>
