@@ -10,6 +10,7 @@ import Modal from "../../ui/Modal";
 import CreateTicketForm from "../tickets/CreateTicketForm";
 import { useDeleteTicket } from "../tickets/useDeleteTicket";
 import { useParams } from "react-router-dom";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const WrapButton = styled.div`
   display: flex;
@@ -97,16 +98,25 @@ function TicketRow({ ticket, index, remove, disabled }) {
       </Stacked>
       <TicketTagStatus status={status} />
       <WrapButton>
-        <Button
-          size="small"
-          variation="danger"
-          onClick={() => {
-            remove(index);
-            if (id) deleteTicket(id);
-          }}
-        >
-          ลบ
-        </Button>
+        <Modal>
+          <Modal.Open opens={`delete-ticket-${index}`}>
+            <Button type="button" size="small" variation="danger">
+              ลบ
+            </Button>
+          </Modal.Open>
+          <Modal.Window name={`delete-ticket-${index}`}>
+            {/* <CreateTicketForm ticketToEdit={ticket} />
+             */}
+            <ConfirmDelete
+              resourceName={`หมายเลขเดินทาง #${index}`}
+              disabled={disabled}
+              onConfirm={() => {
+                remove(index);
+                if (id) deleteTicket(id);
+              }}
+            />
+          </Modal.Window>
+        </Modal>
 
         {id && (
           <Modal>

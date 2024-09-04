@@ -7,6 +7,7 @@ import { useTicket } from "./useTicket";
 import Spinner from "../../ui/Spinner";
 import styled from "styled-components";
 import TicketTagStatus from "./TicketTagStatus";
+import ProjectDataBox from "../projects/ProjectDataBox";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -22,17 +23,21 @@ function TicketDetail() {
   const navigate = useNavigate();
 
   if (isLoading || error) return <Spinner />;
+
   return (
     <>
       <Row type="horizontal">
         <HeadingGroup>
-          <Heading as="h1">หมายเลขเดินทาง #{ticketId} </Heading>
+          <Heading as="h1">
+            หมายเลขเดินทาง #{ticketId} &mdash; {ticket.title}
+            {ticket.name}
+          </Heading>
           <TicketTagStatus status={ticket.status} />
         </HeadingGroup>
         <ButtonText onClick={() => navigate(-1)}>&larr; กลับ</ButtonText>
       </Row>
 
-      {/* TODO เพิ่มข้อมูลโครงการ */}
+      <ProjectDataBox project={ticket.project} status={ticket.status} />
 
       <CreateTicketForm ticketToEdit={ticket} />
     </>
