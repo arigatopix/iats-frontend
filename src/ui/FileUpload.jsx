@@ -55,8 +55,12 @@ function FileUpload({ id, control, disabled = false }) {
 
   async function handleUpload(e) {
     e.preventDefault();
+
+    const type = file.type.split("/")[1];
+
     if (file) {
-      const fileName = `${Math.random()}-${file.name}`.replace("/", "");
+      const fileName =
+        `${Math.random()}`.replace("/", "").replace(" ", "") + `.${type}`;
 
       fileUpload(
         {
@@ -82,7 +86,12 @@ function FileUpload({ id, control, disabled = false }) {
     <WrapFileUpload>
       <FormHeader>อัพโหลดไฟล์ที่เกี่ยวข้อง</FormHeader>
       <FormRow label="">
-        <FileInput id={id} onChange={handleFileChange} disabled={isDisable} />
+        <FileInput
+          id={id}
+          onChange={handleFileChange}
+          disabled={isDisable}
+          accept="application/pdf,image/png,image/jpg"
+        />
       </FormRow>
 
       {file && (
