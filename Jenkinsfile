@@ -36,11 +36,16 @@ pipeline {
         stage('build images latest') {
             steps {
                 script {
+                    withCredentials([file(credentialsId: 'iast-frontend-env', variable: 'ENV_FILE')]) {
                         sh '''
-                            echo "$PROD_ENV" > .env.production
+                            # Copy the secret file to .env.production
+                            cp $ENV_FILE .env.production
                             cat .env.production
+
+                            # Build and push the Docker image
                             docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile .
                         '''
+                    }
                 }
             }
         }
@@ -82,7 +87,7 @@ pipeline {
             script {
                 sh """
           docker rm -f ${containerName} || true
-          docker image rm -f ${registryName}:${env.BUILD_TAG} || true
+          docker image rm -f ${registryName}:${buildTag} || true
           docker logout
         """
             }
