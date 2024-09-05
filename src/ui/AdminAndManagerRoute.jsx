@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../features/authentication/useUser";
 import { useEffect } from "react";
-
-const roles = ["admin", "manager"];
+import { roles } from "../utils/roles";
 
 function AdminAndManagerRoute({ children }) {
   const {
