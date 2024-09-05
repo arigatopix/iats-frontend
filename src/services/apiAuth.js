@@ -17,6 +17,9 @@ export async function getCurrentUser() {
 
     return { isAuthenticated, token, ...user };
   } catch (error) {
+    if (error.status === 500) {
+      return { isAuthenticated: false };
+    }
     throw new Error(error.message);
   }
 }

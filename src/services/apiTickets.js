@@ -9,13 +9,13 @@ async function getTickets() {
     const { data } = response;
 
     if (response.statusText !== "OK") {
-      throw new Error("Cabins could not be loaded");
+      throw new Error("Tickets could not be loaded");
     }
 
     return data;
   } catch (error) {
     console.error(error.message);
-    throw new Error("Cabins could not be loaded");
+    throw new Error("Tickets could not be loaded");
   }
 }
 
@@ -26,13 +26,13 @@ async function getTicket(id) {
     const { data } = response;
 
     if (response.statusText !== "OK") {
-      throw new Error("Cabins could not be loaded");
+      throw new Error("Tickets could not be loaded");
     }
 
     return data;
   } catch (error) {
     console.error(error.message);
-    throw new Error("Cabins could not be loaded");
+    throw new Error("Tickets could not be loaded");
   }
 }
 
