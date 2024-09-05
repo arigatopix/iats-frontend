@@ -184,7 +184,9 @@ function CreateProjectForm({ projectToEdit = {} }) {
             </Modal>
           )}
 
-          <Button>{isEditSession ? "แก้ไข" : "บันทึก"}</Button>
+          <Button disabled={isDisabled}>
+            {isEditSession ? "แก้ไข" : "บันทึก"}
+          </Button>
         </FormRow>
       </Form>
     </>

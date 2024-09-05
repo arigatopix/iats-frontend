@@ -302,12 +302,17 @@ function CreateTicketForm({
             />
           </FormRowVertical>
         </StyledFormGrid>
-        <FormRowVertical label="หมายเหตุ">
-          <Textarea {...register("remark")} disabled={isDisabled} id="remark" />
-        </FormRowVertical>
 
         {!onCloseModal && (
           <>
+            <FormRowVertical label="หมายเหตุ">
+              <Textarea
+                {...register("remark")}
+                disabled={isDisabled}
+                id="remark"
+              />
+            </FormRowVertical>
+
             <FileUpload
               disabled={isDisabled}
               id="ticket_attachments"
