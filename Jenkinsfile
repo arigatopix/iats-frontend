@@ -57,7 +57,7 @@ pipeline {
 
                         // Update the REGISTRY_NAME and IMAGE_TAG in the copied .env file
                         sh "sed -i 's|^REGISTRY_NAME=.*|REGISTRY_NAME=${registryName}|' .env"
-                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${env.BUILD_TAG}|' .env"
+                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${buildTag}|' .env"
 
                         // Ensure .env file exists on production server or pass environment variables
                         sh "ssh -o StrictHostKeyChecking=no ${server} mkdir -p ${APP_PATH}"
