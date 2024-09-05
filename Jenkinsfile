@@ -35,8 +35,13 @@ pipeline {
         stage('build images latest') {
             steps {
                 script {
-                    sh "docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile ."
-                    env.BUILD_TAG = buildTag
+                    withCredentials([string(credentialsId: 'env-production', variable: 'ENV_PRODUCTION')]) {
+                        // Write .env.production from Jenkins credentials
+                        sh '''
+                            echo "$ENV_PRODUCTION" > .env.production
+                            docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile .
+                        '''
+                    }
                 }
             }
         }
@@ -69,10 +74,10 @@ pipeline {
 
     post {
         success {
-            notifyLINE('🎉',"succeed > https://${serverIP}")
+            // notifyLINE('🎉',"succeed > https://${serverIP}")
         }
         failure {
-            notifyLINE('😰', 'failed')
+            // notifyLINE('😰', 'failed')
         }
         always {
             script {
