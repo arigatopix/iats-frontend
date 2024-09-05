@@ -23,6 +23,7 @@ pipeline {
         server = "${user}@${serverIP}"
         buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
+        PROD_ENV = credentials('iast-frontend-env')
     }
 
     stages {
@@ -35,13 +36,11 @@ pipeline {
         stage('build images latest') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'env-production', variable: 'ENV_PRODUCTION')]) {
-                        // Write .env.production from Jenkins credentials
                         sh '''
-                            echo "$ENV_PRODUCTION" > .env.production
+                            echo "$PROD_ENV" > .env.production
+                            cat .env.production
                             docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile .
                         '''
-                    }
                 }
             }
         }
@@ -73,12 +72,12 @@ pipeline {
     }
 
     post {
-        success {
-            // notifyLINE('🎉',"succeed > https://${serverIP}")
-        }
-        failure {
-            // notifyLINE('😰', 'failed')
-        }
+        // success {
+        //     notifyLINE('🎉',"succeed > https://${serverIP}")
+        // }
+        // failure {
+        //     notifyLINE('😰', 'failed')
+        // }
         always {
             script {
                 sh """
