@@ -51,7 +51,7 @@ function CreateTicketForm({
 
   const [searchEmployeeError, setSearchEmployeeError] = useState("");
 
-  const { createTicket } = useCreateTicket();
+  const { createTicket, isCreatingTicket } = useCreateTicket();
 
   const navigate = useNavigate();
 
@@ -102,7 +102,7 @@ function CreateTicketForm({
     setConfirmed(getValues("status") === "confirmed");
   }, [getValues]);
 
-  const isDisabled = confirmed || isEditing;
+  const isDisabled = confirmed || isEditing || isCreatingTicket;
 
   const onSubmit = async event => {
     if (event) {
@@ -353,7 +353,7 @@ function CreateTicketForm({
           >
             ยกเลิก
           </Button>
-          <Button>บันทึก</Button>
+          <Button disabled={isDisabled}>บันทึก</Button>
         </FormRow>
       </Form>
     </>
