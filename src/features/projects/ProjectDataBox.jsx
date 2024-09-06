@@ -5,14 +5,15 @@ import {
   HiOutlineFolder,
   HiOutlineGlobeAmericas,
   HiOutlineMegaphone,
-  HiOutlinePaperClip,
   HiOutlineRocketLaunch,
 } from "react-icons/hi2";
 import { formatDateTH } from "../../utils/helpers";
 import DataItem from "../../ui/DataItem";
 import Row from "../../ui/Row";
 import Empty from "../../ui/Empty";
-import ButtonIcon from "../../ui/ButtonIcon";
+import FileUpload from "../../ui/FileUpload";
+import { useForm } from "react-hook-form";
+import Box from "../../ui/Box";
 
 const StyledProjectDataBox = styled.section`
   /* Box */
@@ -94,12 +95,6 @@ const Remarks = styled.ul`
   }
 `;
 
-const Footer = styled.footer`
-  padding: 1.6rem 4rem;
-  font-size: 1.2rem;
-  color: var(--color-grey-500);
-  text-align: right;
-`;
 function ProjectDataBox({ project, status }) {
   const {
     country,
@@ -110,6 +105,10 @@ function ProjectDataBox({ project, status }) {
     project_attachments,
     project_additional_remarks,
   } = project;
+
+  const { control } = useForm({
+    defaultValues: project_attachments,
+  });
 
   return (
     <>
@@ -142,39 +141,10 @@ function ProjectDataBox({ project, status }) {
           </DataItem>
 
           <Row>
-            <Info $status="confirmed">
-              <DataItem
-                icon={<HiOutlineFolder />}
-                label={`เอกสารโครงการ`}
-              ></DataItem>
-            </Info>
-
-            {project_attachments.length > 0 ? (
-              <Remarks>
-                {project_attachments.map(file => (
-                  <li key={file.id}>
-                    {file.title}{" "}
-                    <ButtonIcon
-                      as="a"
-                      href={file.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <HiOutlinePaperClip />
-                    </ButtonIcon>
-                  </li>
-                ))}
-              </Remarks>
-            ) : (
-              <Empty />
-            )}
-          </Row>
-
-          <Row>
             <Info $status={status}>
               <DataItem
                 icon={<HiOutlineMegaphone />}
-                label={`ข้อมูลที่ต้องอัพโหลดเพื่อประกอบการเดินทาง`}
+                label={`ข้อมูลผู้เดินทางต้องส่งให้ กกบ.`}
               ></DataItem>
             </Info>
 
@@ -189,9 +159,17 @@ function ProjectDataBox({ project, status }) {
             )}
           </Row>
         </Section>
-
-        <Footer></Footer>
       </StyledProjectDataBox>
+
+      <Box>
+        <DataItem
+          icon={<HiOutlineFolder />}
+          label="เอกสารประกอบโครงการ"
+        ></DataItem>
+        <FileUpload control={control} disabled={true} id="project_attachments">
+          <FileUpload.Table />
+        </FileUpload>
+      </Box>
     </>
   );
 }
