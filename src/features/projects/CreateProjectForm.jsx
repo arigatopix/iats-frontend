@@ -80,6 +80,10 @@ function CreateProjectForm({ projectToEdit = {} }) {
             type="text"
             {...register("name", {
               required: "กรุณาระบุชื่อโครงการ",
+              maxLength: {
+                value: 60,
+                message: "กำหนดชื่อโครงการไม่เกิน 60 ตัวอักษร",
+              },
             })}
             id="name"
           />
@@ -93,6 +97,10 @@ function CreateProjectForm({ projectToEdit = {} }) {
             type="text"
             {...register("description", {
               required: "กรุณาระบุรายละเอียด",
+              maxLength: {
+                value: 60,
+                message: "ระบุรายละเอียดได้ไม่เกิน 60 ตัวอักษร",
+              },
             })}
             id="description"
           />
@@ -104,6 +112,10 @@ function CreateProjectForm({ projectToEdit = {} }) {
               type="text"
               {...register("country", {
                 required: "กรุณาระบุประเทศที่จะเดินทางไป",
+                maxLength: {
+                  value: 19,
+                  message: "ระยุประเทศได้ไม่เกิน 19 ตัวอักษร",
+                },
               })}
               id="country"
             />

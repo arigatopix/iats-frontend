@@ -64,7 +64,7 @@ function AdditionalRemark({ control, disabled, name, label, resourceName }) {
               <FormAdditional>
                 <Controller
                   render={({ field }) => (
-                    <Input {...field} disabled={disabled} />
+                    <Input {...field} disabled={disabled} maxLength="60" />
                   )}
                   name={`${name}.${index}.remark`}
                   control={control}
