@@ -13,6 +13,7 @@ import FormHeader from "./FormHeader";
 import { useUpload } from "../hooks/useUpload";
 import SpinnerMini from "./SpinnerMini";
 import { useDeleteAttachment } from "../features/attachment/useDeleteAttachment";
+import { allowedExtensions } from "../utils/helpers";
 
 const WrapFileUpload = styled.section`
   margin-top: 3rem;
@@ -32,10 +33,6 @@ const WrapIconButton = styled.div`
 `;
 
 const FileUploadContext = createContext();
-
-// function FileUploadParent({ children }) {
-//   return <FileuploadContext.Provider>{children}</FileuploadContext.Provider>;
-// }
 
 function FileUpload({
   id,
@@ -77,14 +74,31 @@ function Upload() {
 
   const [file, setFile] = useState(null);
   const [fileTitle, setFileTitle] = useState("");
+  const [error, setError] = useState("");
 
   const { fileUpload, isUploading } = useUpload();
 
   const isDisable = disabled || isUploading;
 
   function handleFileChange(e) {
+    setError("");
+
     const files = e.target?.files;
+
     if (files) {
+      if (!allowedExtensions.includes(files[0].type)) {
+        setFile(null);
+        setFileTitle("");
+        setError("อัพโหลดได้เฉพาะไฟล์ pdf, png, jpg เท่านั้น");
+
+        if (inputFile.current) {
+          inputFile.current.value = "";
+          inputFile.current.type = "text";
+          inputFile.current.type = "file";
+        }
+        return;
+      }
+
       setFile(files[0]);
       setFileTitle(files[0]?.name);
     }
@@ -122,6 +136,7 @@ function Upload() {
   function handleReset() {
     setFile(null);
     setFileTitle("");
+    setError("");
 
     if (inputFile.current) {
       inputFile.current.value = "";
@@ -132,13 +147,13 @@ function Upload() {
 
   return (
     <>
-      <FormRow label="">
+      <FormRow label="" error={error}>
         <FileInput
           ref={inputFile}
           id={id}
           onChange={handleFileChange}
           disabled={isDisable}
-          accept="application/pdf,image/png,image/jpg"
+          accept={allowedExtensions.toString()}
         />
       </FormRow>
       {file && (

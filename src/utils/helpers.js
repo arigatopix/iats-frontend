@@ -115,3 +115,5 @@ export function stopEventBubble(event) {
     event.stopPropagation();
   }
 }
+
+export const allowedExtensions = ["application/pdf", "image/png", "image/jpg"];
