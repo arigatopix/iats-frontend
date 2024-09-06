@@ -106,3 +106,12 @@ export const parseStatus = status => {
       return "รอยืนยัน";
   }
 };
+
+export function stopEventBubble(event) {
+  if (typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+  if (typeof event.stopPropagation === "function") {
+    event.stopPropagation();
+  }
+}

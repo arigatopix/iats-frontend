@@ -108,7 +108,10 @@ function CreateProjectForm({ projectToEdit = {} }) {
               id="country"
             />
           </FormRowVertical>
-          <FormRowVertical label="วันที่ไป" error={errors?.date_start?.message}>
+          <FormRowVertical
+            label="วันที่เดินทางไป"
+            error={errors?.date_start?.message}
+          >
             <Input
               type="date"
               {...register("date_start", {
@@ -119,7 +122,10 @@ function CreateProjectForm({ projectToEdit = {} }) {
             />
           </FormRowVertical>
 
-          <FormRowVertical label="วันที่กลับ" error={errors?.date_end?.message}>
+          <FormRowVertical
+            label="วันที่เดินทางกลับ"
+            error={errors?.date_end?.message}
+          >
             <Input
               type="date"
               {...register("date_end", {
@@ -135,17 +141,22 @@ function CreateProjectForm({ projectToEdit = {} }) {
         </StyledFormGrid>
 
         <FileUpload
+          disabled={isDisabled}
           id="project_attachments"
           control={control}
-          disabled={isDisabled}
-        />
+          label="กรุณาอัพโหลดเอกสารประกอบโครงการ"
+        >
+          <FileUpload.Label />
+          <FileUpload.Upload />
+          <FileUpload.Table />
+        </FileUpload>
 
         <AdditionalRemark
           control={control}
           disabled={isDisabled}
           name="project_additional_remarks"
-          label="ข้อมูลประกอบการเดินทาง"
-          resourceName="ข้อมูลประกอบการเดินทาง"
+          label="ข้อมูลที่ต้องการจากผู้เดินทาง"
+          resourceName="ข้อมูลที่ต้องการจากผู้เดินทาง"
         />
 
         <CreateProjcetTicketsForm

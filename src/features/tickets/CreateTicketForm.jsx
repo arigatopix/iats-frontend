@@ -14,7 +14,7 @@ import FormHeader from "../../ui/FormHeader";
 import ButtonIcon from "../../ui/ButtonIcon";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useEditTicket } from "./useEditTicket";
-import { parseEmployee } from "../../utils/helpers";
+import { parseEmployee, stopEventBubble } from "../../utils/helpers";
 import { getEmployee } from "../../services/apiEmployee";
 import { useCreateTicket } from "./useCreateTicket";
 import { useUser } from "../authentication/useUser";
@@ -106,12 +106,7 @@ function CreateTicketForm({
 
   const onSubmit = async event => {
     if (event) {
-      if (typeof event.preventDefault === "function") {
-        event.preventDefault();
-      }
-      if (typeof event.stopPropagation === "function") {
-        event.stopPropagation();
-      }
+      stopEventBubble(event);
     }
 
     return handleSubmit(async data => {
@@ -183,6 +178,13 @@ function CreateTicketForm({
     }
   }
 
+  function handleKeydown(event) {
+    if (event && event.key === "Enter") {
+      stopEventBubble(event);
+      handleSearchEmployee();
+    }
+  }
+
   return (
     <>
       {!isEditSession && (
@@ -194,6 +196,7 @@ function CreateTicketForm({
                 id="search-employee"
                 onChange={e => setSearchEmployeeId(e.target.value)}
                 value={searchEmployeeId}
+                onKeyDown={handleKeydown}
               />
             </FormRow>
             <ButtonIcon type="button" onClick={handleSearchEmployee}>
@@ -305,27 +308,32 @@ function CreateTicketForm({
 
         {!onCloseModal && (
           <>
-            <FormRowVertical label="หมายเหตุ">
+            <FileUpload
+              disabled={isDisabled}
+              id="ticket_attachments"
+              control={control}
+              label="กรุณาอัพโหลดเอกสารเพื่อให้ กบบ. พิจารณา"
+            >
+              <FileUpload.Label />
+              <FileUpload.Upload />
+              <FileUpload.Table />
+            </FileUpload>
+
+            <AdditionalRemark
+              control={control}
+              disabled={isDisabled}
+              name="ticket_additional_remarks"
+              label="ข้อมูลที่ส่งให้ กกบ."
+              resourceName=""
+            />
+
+            <FormRowVertical label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม">
               <Textarea
                 {...register("remark")}
                 disabled={isDisabled}
                 id="remark"
               />
             </FormRowVertical>
-
-            <FileUpload
-              disabled={isDisabled}
-              id="ticket_attachments"
-              control={control}
-            />
-
-            <AdditionalRemark
-              control={control}
-              disabled={isDisabled}
-              name="ticket_additional_remarks"
-              label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม"
-              resourceName="หมายเหตุ"
-            />
 
             <Checkbox
               checked={confirmed}
