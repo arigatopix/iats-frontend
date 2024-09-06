@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { supaBACKEND_URL } from "../services/supabase";
+import React, { createContext, useContext, useRef, useState } from "react";
+import { supabaseURL } from "../services/supabase";
 import FileInput from "./FileInput";
 import Table from "./Table";
 import Input from "./Input";
@@ -31,17 +31,54 @@ const WrapIconButton = styled.div`
   align-items: start;
 `;
 
-function FileUpload({ id, control, disabled = false }) {
-  const [file, setFile] = useState(null);
-  const [fileTitle, setFileTitle] = useState("");
+const FileUploadContext = createContext();
 
-  const { fileUpload, isUploading } = useUpload();
+// function FileUploadParent({ children }) {
+//   return <FileuploadContext.Provider>{children}</FileuploadContext.Provider>;
+// }
 
+function FileUpload({
+  id,
+  control,
+  disabled = false,
+  label = "อัพโหลดไฟล์ที่เกี่ยวข้อง",
+  children,
+}) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: id,
     keyName: "fieldId",
   });
+
+  return (
+    <FileUploadContext.Provider
+      value={{
+        control,
+        disabled,
+        label,
+        id,
+        append,
+        remove,
+        fields,
+      }}
+    >
+      <WrapFileUpload>{children}</WrapFileUpload>
+    </FileUploadContext.Provider>
+  );
+}
+
+function Label() {
+  const { label } = useContext(FileUploadContext);
+  return <FormHeader>{label}</FormHeader>;
+}
+function Upload() {
+  const inputFile = useRef();
+  const { id, disabled, append } = useContext(FileUploadContext);
+
+  const [file, setFile] = useState(null);
+  const [fileTitle, setFileTitle] = useState("");
+
+  const { fileUpload, isUploading } = useUpload();
 
   const isDisable = disabled || isUploading;
 
@@ -72,7 +109,7 @@ function FileUpload({ id, control, disabled = false }) {
           onSuccess: data => {
             append({
               title: fileTitle,
-              url: `${supaBACKEND_URL}/storage/v1/object/public/${data.fullPath}`,
+              url: `${supabaseURL}/storage/v1/object/public/${data.fullPath}`,
             });
 
             setFile(null);
@@ -82,18 +119,28 @@ function FileUpload({ id, control, disabled = false }) {
     }
   }
 
+  function handleReset() {
+    setFile(null);
+    setFileTitle("");
+
+    if (inputFile.current) {
+      inputFile.current.value = "";
+      inputFile.current.type = "text";
+      inputFile.current.type = "file";
+    }
+  }
+
   return (
-    <WrapFileUpload>
-      <FormHeader>อัพโหลดไฟล์ที่เกี่ยวข้อง</FormHeader>
+    <>
       <FormRow label="">
         <FileInput
+          ref={inputFile}
           id={id}
           onChange={handleFileChange}
           disabled={isDisable}
           accept="application/pdf,image/png,image/jpg"
         />
       </FormRow>
-
       {file && (
         <WrapFormRow>
           <FormRow label="ชื่อไฟล์">
@@ -112,38 +159,42 @@ function FileUpload({ id, control, disabled = false }) {
           <Button
             variation="secondary"
             disabled={isDisable}
-            onClick={() => setFile(null)}
+            onClick={handleReset}
           >
             ยกเลิก
           </Button>
         </WrapFormRow>
       )}
-
-      <Table columns="1fr auto">
-        <Table.Header>
-          <div>ชื่อไฟล์</div>
-        </Table.Header>
-        <Table.Body
-          data={fields}
-          render={(file, index) => (
-            <FileRow
-              key={file.fieldId}
-              file={file}
-              index={index}
-              remove={remove}
-              disabled={isDisable}
-              name={id}
-            />
-          )}
-        />
-      </Table>
-    </WrapFileUpload>
+    </>
   );
 }
 
-export default FileUpload;
+function FileTable() {
+  const { fields, remove, disabled, id } = useContext(FileUploadContext);
 
-const FileRow = ({ file, index, remove, disabled, name }) => {
+  return (
+    <Table columns="1fr auto">
+      <Table.Header>
+        <div>ชื่อไฟล์</div>
+      </Table.Header>
+      <Table.Body
+        data={fields}
+        render={(file, index) => (
+          <FileRow
+            key={file.fieldId}
+            file={file}
+            index={index}
+            remove={remove}
+            disabled={disabled}
+            name={id}
+          />
+        )}
+      />
+    </Table>
+  );
+}
+
+function FileRow({ file, index, remove, disabled, name }) {
   const { deleteAttachment } = useDeleteAttachment();
 
   return (
@@ -168,4 +219,10 @@ const FileRow = ({ file, index, remove, disabled, name }) => {
       </WrapIconButton>
     </Table.Row>
   );
-};
+}
+
+FileUpload.Label = Label;
+FileUpload.Upload = Upload;
+FileUpload.Table = FileTable;
+
+export default FileUpload;
