@@ -1,21 +1,17 @@
 import { axiosInstance, BACKEND_URL } from "./axios";
 
-async function getEmployee(emp_id) {
+async function getEmployee(employee_id) {
   try {
     const response = await axiosInstance.get(
-      `${BACKEND_URL}/employee/${emp_id}`
+      `${BACKEND_URL}/employee/${employee_id}`
     );
 
-    const { data } = response.data;
+    const { employee } = response.data;
 
-    if (!data.ServiceStatus) {
-      throw new Error(data.ServiceMessage);
-    }
-
-    return data.dataDetail[0];
+    return employee;
   } catch (error) {
     console.error("Error fetching employee details:", error);
-    throw error;
+    throw new Error("ไม่พบข้อมูลพนักงาน");
   }
 }
 
