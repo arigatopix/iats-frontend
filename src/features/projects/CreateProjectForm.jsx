@@ -5,7 +5,7 @@ import FormRow from "../../ui/FormRow";
 import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
 import FileUpload from "../../ui/FileUpload";
-import { HiOutlineMegaphone } from "react-icons/hi2";
+import { HiArrowPath, HiOutlineMegaphone } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
@@ -171,7 +171,7 @@ function CreateProjectForm({ projectToEdit = {} }) {
             variation="secondary"
             onClick={() => reset(defaultValues)}
           >
-            ยกเลิก
+            <HiArrowPath /> <span>ล้างข้อมูล</span>
           </Button>
           {isEditSession && (
             <Modal>

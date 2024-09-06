@@ -12,7 +12,7 @@ import Textarea from "../../ui/Textarea";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import ButtonIcon from "../../ui/ButtonIcon";
-import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiArrowPath, HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useEditTicket } from "./useEditTicket";
 import { parseEmployee, stopEventBubble } from "../../utils/helpers";
 import { getEmployee } from "../../services/apiEmployee";
@@ -359,7 +359,7 @@ function CreateTicketForm({
               setConfirmed(getValues("status") === "confirmed");
             }}
           >
-            ยกเลิก
+            <HiArrowPath /> <span>ล้างข้อมูล</span>
           </Button>
           <Button disabled={isDisabled}>บันทึก</Button>
         </FormRow>
