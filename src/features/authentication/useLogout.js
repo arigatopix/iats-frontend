@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout as logoutService } from "../../services/apiAuth";
-import { BACKEND_URL } from "../../services/axios";
 
 export function useLogout() {
   const queryClient = useQueryClient();

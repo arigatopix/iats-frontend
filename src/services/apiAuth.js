@@ -1,6 +1,6 @@
 // import axios from "axios";
 import { axiosInstance, BACKEND_URL } from "./axios";
-import supabase, { supaBACKEND_URL } from "./supabase";
+import supabase, { supabaseURL } from "./supabase";
 import { clearSession } from "../utils/session";
 
 export async function login() {
@@ -56,7 +56,7 @@ export async function updateCurrentUser({ password, fullName, avatar }) {
   const { data: updatedUser, error: avatarUpdateError } =
     await supabase.auth.updateUser({
       data: {
-        avatar: `${supaBACKEND_URL}/storage/v1/object/public/avatars/${fileName}`,
+        avatar: `${supabaseURL}/storage/v1/object/public/avatars/${fileName}`,
       },
     });
 

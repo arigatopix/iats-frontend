@@ -1,4 +1,4 @@
-import supabase, { supaBACKEND_URL } from "./supabase";
+import supabase, { supabaseURL } from "./supabase";
 
 async function getCabins() {
   const { data, error } = await supabase.from("cabins").select("*");
@@ -22,14 +22,14 @@ async function deleteCabin(id) {
 }
 
 async function createOrEditCabin(newCabin, id) {
-  const hasImagePath = newCabin.image?.startsWith?.(supaBACKEND_URL);
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseURL);
 
   const imageName = `${Math.random()}-${newCabin.image.name}`.replace("/", "");
 
   // https://zrzupdjycakvahffevxw.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
   const imagePath = hasImagePath
     ? newCabin.image
-    : `${supaBACKEND_URL}/storage/v1/object/public/cabin-images/${imageName}`;
+    : `${supabaseURL}/storage/v1/object/public/cabin-images/${imageName}`;
 
   // 1) create cabin record และ อ่าน imagePath แล้ว upload ไปยัง table
   let query = supabase.from("cabins");
