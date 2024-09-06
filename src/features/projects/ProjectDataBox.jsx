@@ -107,7 +107,9 @@ function ProjectDataBox({ project, status }) {
   } = project;
 
   const { control } = useForm({
-    defaultValues: project_attachments,
+    defaultValues: {
+      project_attachments,
+    },
   });
 
   return (

@@ -105,10 +105,8 @@ function TicketRow({ ticket, index, remove, disabled }) {
             </Button>
           </Modal.Open>
           <Modal.Window name={`delete-ticket-${index}`}>
-            {/* <CreateTicketForm ticketToEdit={ticket} />
-             */}
             <ConfirmDelete
-              resourceName={`หมายเลขเดินทาง #${index}`}
+              resourceName={`หมายเลขเดินทาง`}
               disabled={disabled}
               onConfirm={() => {
                 remove(index);
