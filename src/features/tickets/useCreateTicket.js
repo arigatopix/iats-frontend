@@ -9,7 +9,7 @@ export function useCreateTicket() {
     mutationFn: ({ projectId, ticket }) =>
       createTicketService({ projectId, ticket }),
     onSuccess: data => {
-      toast.success("เพิ่มผู้เดินทาสำเร็จ");
+      toast.success("เพิ่มผู้เดินทางสำเร็จ");
       queryClient.invalidateQueries({
         queryKey: ["projects"],
       });

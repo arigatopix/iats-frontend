@@ -4,6 +4,8 @@ import Button from "../../ui/Button";
 import { useNavigate } from "react-router-dom";
 import { formatDateTH } from "../../utils/helpers";
 import TicketTagStatus from "./TicketTagStatus";
+import { useUser } from "../authentication/useUser";
+import { roles } from "../../utils/roles";
 
 const Stacked = styled.div`
   display: flex;
@@ -23,6 +25,10 @@ const Stacked = styled.div`
 function TicketRow({ ticket }) {
   const navigate = useNavigate();
 
+  const {
+    user: { role },
+  } = useUser();
+
   if (ticket) {
     const {
       id: ticketId,
@@ -40,7 +46,7 @@ function TicketRow({ ticket }) {
     return (
       <Table.Row>
         <div>{ticketId}</div>
-        <div>{`${title}${name}`}</div>
+        {roles.includes(role) && <div>{`${title}${name}`}</div>}
         <Stacked>
           <span>{`${projectName} `}</span>
           <span>

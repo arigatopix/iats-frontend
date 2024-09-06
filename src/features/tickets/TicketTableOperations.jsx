@@ -1,8 +1,14 @@
 import TableOperations from "../../ui/TableOperations";
 import Filter from "../../ui/Filter";
 import Search from "../../ui/Search";
+import { useUser } from "../authentication/useUser";
+import { roles } from "../../utils/roles";
 
 function TicketTableOperations() {
+  const {
+    user: { role },
+  } = useUser();
+
   const filterOptions = [
     {
       value: "all",
@@ -21,7 +27,9 @@ function TicketTableOperations() {
   return (
     <TableOperations>
       <Filter filterField="status" options={filterOptions} />
-      <Search placeholder="ค้นหาชื่อ" searchField="name" />
+      {roles.includes(role) && (
+        <Search placeholder="ค้นหาชื่อ" searchField="name" />
+      )}
     </TableOperations>
   );
 }

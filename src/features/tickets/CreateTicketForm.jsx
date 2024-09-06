@@ -19,6 +19,7 @@ import { getEmployee } from "../../services/apiEmployee";
 import { useCreateTicket } from "./useCreateTicket";
 import { useUser } from "../authentication/useUser";
 import { useNavigate } from "react-router-dom";
+import { roles } from "../../utils/roles";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -104,6 +105,11 @@ function CreateTicketForm({
 
   const isDisabled = confirmed || isEditing || isCreatingTicket;
 
+  const isLoading = isEditing || isCreatingTicket;
+
+  const disableButton =
+    (defaultValues.status === "confirmed" && role === "user") || isLoading;
+
   const onSubmit = async event => {
     if (event) {
       stopEventBubble(event);
@@ -182,6 +188,15 @@ function CreateTicketForm({
     if (event && event.key === "Enter") {
       stopEventBubble(event);
       handleSearchEmployee();
+    }
+  }
+
+  function handleConfirm() {
+    if (roles.includes(role)) {
+      setConfirmed(confirmed => !confirmed);
+    } else if (role === "user") {
+      defaultValues.status === "unconfirmed" &&
+        setConfirmed(confirmed => !confirmed);
     }
   }
 
@@ -335,16 +350,7 @@ function CreateTicketForm({
               />
             </FormRowVertical>
 
-            <Checkbox
-              checked={confirmed}
-              onChange={() => {
-                if (role === "admin" || role === "manager") {
-                  setConfirmed(confirmed => !confirmed);
-                } else if (defaultValues.status === "unconfirmed")
-                  setConfirmed(confirmed => !confirmed);
-              }}
-              id="status"
-            >
+            <Checkbox checked={confirmed} onChange={handleConfirm} id="status">
               ยืนยันข้อมูลครบถ้วน ถูกต้อง
             </Checkbox>
           </>
@@ -354,6 +360,7 @@ function CreateTicketForm({
           <Button
             type="button"
             variation="secondary"
+            disabled={disableButton}
             onClick={() => {
               reset(defaultValues);
               setConfirmed(getValues("status") === "confirmed");
@@ -361,7 +368,7 @@ function CreateTicketForm({
           >
             <HiArrowPath /> <span>ล้างข้อมูล</span>
           </Button>
-          <Button disabled={isDisabled}>บันทึก</Button>
+          <Button disabled={disableButton}>บันทึก</Button>
         </FormRow>
       </Form>
     </>

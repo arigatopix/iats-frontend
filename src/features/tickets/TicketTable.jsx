@@ -6,9 +6,15 @@ import Empty from "../../ui/Empty";
 import { useTickets } from "./useTickets";
 import TicketRow from "./TicketRow";
 import { searchBy } from "../../utils/helpers";
+import { roles } from "../../utils/roles";
+import { useUser } from "../authentication/useUser";
 
 function TicketTable() {
   const { tickets, isLoading, error } = useTickets();
+
+  const {
+    user: { role },
+  } = useUser();
 
   const [searchParams] = useSearchParams();
 
@@ -44,10 +50,16 @@ function TicketTable() {
 
   return (
     <Menus>
-      <Table columns="0.6fr 1fr 2.2fr 1fr 1fr 1fr">
+      <Table
+        columns={
+          roles.includes(role)
+            ? "0.6fr 1fr 2.2fr 1fr 1fr 1fr"
+            : "0.6fr 2.2fr 1fr 1fr 1fr"
+        }
+      >
         <Table.Header>
           <div>เลขที่เดินทาง</div>
-          <div>ชื่อผู้เดินทาง</div>
+          {roles.includes(role) && <div>ชื่อผู้เดินทาง</div>}
           <div>ข้อมูลโครงการ</div>
           <div>ประเทศ</div>
           <div>สถานะ</div>
