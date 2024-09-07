@@ -5,7 +5,6 @@ import FormRow from "../../ui/FormRow";
 import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
 import Checkbox from "../../ui/Checkbox";
-import FileUpload from "../../ui/FileUpload";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Textarea from "../../ui/Textarea";
@@ -20,6 +19,7 @@ import { useCreateTicket } from "./useCreateTicket";
 import { useUser } from "../authentication/useUser";
 import { useNavigate } from "react-router-dom";
 import { roles } from "../../utils/roles";
+import FileUpload from "../files/FileUpload";
 
 const StyledFormGrid = styled.div`
   display: grid;

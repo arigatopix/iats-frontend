@@ -11,9 +11,9 @@ import { formatDateTH } from "../../utils/helpers";
 import DataItem from "../../ui/DataItem";
 import Row from "../../ui/Row";
 import Empty from "../../ui/Empty";
-import FileUpload from "../../ui/FileUpload";
 import { useForm } from "react-hook-form";
 import Box from "../../ui/Box";
+import FileUpload from "../files/FileUpload";
 
 const StyledProjectDataBox = styled.section`
   /* Box */

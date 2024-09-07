@@ -4,7 +4,6 @@ import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
 import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
-import FileUpload from "../../ui/FileUpload";
 import { HiArrowPath, HiOutlineMegaphone } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
 import AdditionalRemark from "../../ui/AdditionalRemark";
@@ -16,6 +15,7 @@ import { useDeleteProject } from "./useDeleteProject";
 import { useNavigate } from "react-router-dom";
 import { useCreateProject } from "./useCreateProject";
 import { useEditProject } from "./useEditProject";
+import FileUpload from "../files/FileUpload";
 
 const StyledFormGrid = styled.div`
   display: grid;

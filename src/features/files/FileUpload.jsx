@@ -1,19 +1,20 @@
 import React, { createContext, useContext, useRef, useState } from "react";
-import { supabaseURL } from "../services/supabase";
-import FileInput from "./FileInput";
-import Table from "./Table";
-import Input from "./Input";
-import ButtonIcon from "./ButtonIcon";
+import FileInput from "../../ui/FileInput";
+import Table from "../../ui/Table";
+import Input from "../../ui/Input";
+import ButtonIcon from "../../ui/ButtonIcon";
 import { HiOutlinePaperClip, HiOutlineTrash } from "react-icons/hi2";
 import styled from "styled-components";
-import FormRow from "./FormRow";
-import Button from "./Button";
+import FormRow from "../../ui/FormRow";
+import Button from "../../ui/Button";
 import { useFieldArray } from "react-hook-form";
-import FormHeader from "./FormHeader";
-import { useUpload } from "../hooks/useUpload";
-import SpinnerMini from "./SpinnerMini";
-import { useDeleteAttachment } from "../features/attachment/useDeleteAttachment";
-import { allowedExtensions } from "../utils/helpers";
+import FormHeader from "../../ui/FormHeader";
+import { useUpload } from "./useUpload";
+import SpinnerMini from "../../ui/SpinnerMini";
+import { useDeleteAttachment } from "../attachment/useDeleteAttachment";
+import { allowedExtensions } from "../../utils/helpers";
+import { useReadFile } from "./useReadFile";
+import { useDeleteFile } from "./useDeleteFile";
 
 const WrapFileUpload = styled.section`
   margin-top: 3rem;
@@ -107,23 +108,22 @@ function Upload() {
   async function handleUpload(e) {
     e.preventDefault();
 
-    const type = file.type.split("/")[1];
+    const formData = new FormData();
+    formData.append("file", file);
 
     if (file) {
-      const fileName =
-        `${Math.random()}`.replace("/", "").replace(" ", "") + `.${type}`;
-
       fileUpload(
         {
-          fileName,
-          file,
-          folder: "project_files",
+          formData,
         },
         {
           onSuccess: data => {
+            const { url, path } = data;
+
             append({
               title: fileTitle,
-              url: `${supabaseURL}/storage/v1/object/public/${data.fullPath}`,
+              url: url,
+              path: path,
             });
 
             setFile(null);
@@ -210,23 +210,47 @@ function FileTable() {
 }
 
 function FileRow({ file, index, remove, disabled, name }) {
-  const { deleteAttachment } = useDeleteAttachment();
+  const { deleteAttachment, isDeleting } = useDeleteAttachment();
+  const { readFile, isReadingFile } = useReadFile();
+  const { deleteFile, isDeletingFile } = useDeleteFile();
+
+  const isProcess = isDeleting || isReadingFile || isDeletingFile;
+
+  function handleReadFile() {
+    console.log(file);
+    readFile(
+      { path: file.path },
+      {
+        onSuccess: data => {
+          const { url } = data;
+          window.open(url, "_blank");
+        },
+      }
+    );
+  }
+
+  function handleDeleteFile() {
+    remove(index);
+
+    if (file.id) {
+      deleteAttachment({ id: file.id, type: name });
+      deleteFile({ path: file.path });
+    }
+  }
 
   return (
     <Table.Row>
       <p>{file.title}</p>
 
       <WrapIconButton>
-        <ButtonIcon as="a" href={file.url} target="_blank" rel="noreferrer">
+        <ButtonIcon onClick={handleReadFile} disabled={isProcess} type="button">
           <HiOutlinePaperClip />
         </ButtonIcon>
         {!disabled && (
           <ButtonIcon
-            onClick={() => {
-              remove(index);
-
-              if (file.id) deleteAttachment({ id: file.id, type: name });
-            }}
+            disabled={isProcess}
+            type="button"
+            onClick={handleDeleteFile}
           >
             <HiOutlineTrash />
           </ButtonIcon>

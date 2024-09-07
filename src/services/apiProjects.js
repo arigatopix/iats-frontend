@@ -152,6 +152,7 @@ async function createProjectAttachments(project_id, projectAttachments) {
       project_id,
       title: el.title,
       url: el.url,
+      path: el.path,
     };
   });
 
