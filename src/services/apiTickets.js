@@ -12,7 +12,7 @@ async function getTickets() {
       throw new Error("Tickets could not be loaded");
     }
 
-    return data;
+    return data.data;
   } catch (error) {
     console.error(error.message);
     throw new Error("Tickets could not be loaded");

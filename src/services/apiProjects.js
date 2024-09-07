@@ -13,7 +13,7 @@ async function getProjects() {
       throw new Error("Projects could not be loaded");
     }
 
-    return data;
+    return data.data;
   } catch (error) {
     console.error(error.message);
     throw new Error("Projects could not be loaded");
