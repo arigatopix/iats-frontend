@@ -1,8 +1,9 @@
 import { HiOutlineHome } from "react-icons/hi";
-import { HiOutlineCalendarDays } from "react-icons/hi2";
+import { HiOutlineCalendarDays, HiOutlineUser } from "react-icons/hi2";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { useUser } from "../features/authentication/useUser";
+import { roles } from "../utils/roles";
 
 const NavList = styled.ul`
   display: flex;
@@ -68,11 +69,20 @@ function MainNav({ $size }) {
           </StyledNavLink>
         </li>
 
-        {(role === "admin" || role === "manager") && (
+        {roles.includes(role) && (
           <li>
             <StyledNavLink $size={$size} to="projects">
               <HiOutlineCalendarDays />
               <span>จัดการโครงการ</span>
+            </StyledNavLink>
+          </li>
+        )}
+
+        {role === "admin" && (
+          <li>
+            <StyledNavLink $size={$size} to="users">
+              <HiOutlineUser />
+              <span>จัดการผู้ใช้งาน</span>
             </StyledNavLink>
           </li>
         )}

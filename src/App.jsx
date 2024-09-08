@@ -17,6 +17,8 @@ import Ticket from "./pages/Ticket";
 import Project from "./pages/Project";
 import ProjectCreate from "./pages/ProjectCreate";
 import AdminAndManagerRoute from "./ui/AdminAndManagerRoute";
+import AdminRoute from "./ui/AdminRoute";
+import Users from "./pages/Users";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,7 +43,14 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<Navigate replace to="tickets" />}></Route>
+              <Route
+                path="users"
+                element={
+                  <AdminRoute>
+                    <Users />
+                  </AdminRoute>
+                }
+              />
               <Route
                 path="projects"
                 element={
@@ -66,6 +75,8 @@ function App() {
                   </AdminAndManagerRoute>
                 }
               ></Route>
+
+              <Route index element={<Navigate replace to="tickets" />}></Route>
               <Route path="tickets" element={<Tickets />}></Route>
               <Route path="tickets/:ticketId" element={<Ticket />}></Route>
             </Route>

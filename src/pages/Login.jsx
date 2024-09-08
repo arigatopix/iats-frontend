@@ -2,7 +2,7 @@ import styled from "styled-components";
 import LoginForm from "../features/authentication/LoginForm";
 import Logo from "../ui/Logo";
 import Heading from "../ui/Heading";
-import AdmiLogin from "../features/admin/AdmiLogin";
+import AdminLogin from "../features/admin/AdminLogin";
 
 const LoginLayout = styled.main`
   min-height: 100vh;
@@ -22,7 +22,7 @@ function Login() {
       <Heading as="h4">ระบบติดตามงานด้านวิเทศสัมพันธ์</Heading>
       <LoginForm />
 
-      {import.meta.env.VITE_APP_ENV === "development" && <AdmiLogin />}
+      {import.meta.env.VITE_APP_ENV !== "production" && <AdminLogin />}
     </LoginLayout>
   );
 }
