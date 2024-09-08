@@ -95,13 +95,13 @@ function Upload() {
     const files = e.target?.files;
 
     const limit = files[0].size > allowedFileSize;
-    const typeNotAllowed = allowedExtensions.includes(files[0].type);
+    const typeAllowed = allowedExtensions.includes(files[0].type);
 
     if (files) {
-      if (typeNotAllowed || limit) {
+      if (!typeAllowed || limit) {
         setFile(null);
         setFileTitle("");
-        const message = typeNotAllowed
+        const message = typeAllowed
           ? "อัพโหลดได้เฉพาะไฟล์ pdf, png, jpg เท่านั้น"
           : "อัพโหลดไฟล์ได้ไม่เกิน 5MB";
 
