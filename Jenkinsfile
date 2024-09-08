@@ -77,12 +77,12 @@ pipeline {
     }
 
     post {
-        // success {
-        //     notifyLINE('🎉',"succeed > https://${serverIP}")
-        // }
-        // failure {
-        //     notifyLINE('😰', 'failed')
-        // }
+        success {
+            notifyLINE('🎉',"succeed > https://${serverIP}")
+        }
+        failure {
+            notifyLINE('😰', 'failed')
+        }
         always {
             script {
                 sh """
