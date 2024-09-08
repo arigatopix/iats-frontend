@@ -3,7 +3,11 @@ import { login as loginService } from "../../services/apiAuth";
 import toast from "react-hot-toast";
 
 function useLogin() {
-  const { mutate: login, isLoading } = useMutation({
+  const {
+    mutate: login,
+    error,
+    isLoading,
+  } = useMutation({
     mutationFn: loginService,
     onSuccess: () => {},
     onError: error => {
@@ -12,7 +16,7 @@ function useLogin() {
     },
   });
 
-  return { login, isLoading };
+  return { login, error, isLoading };
 }
 
 export default useLogin;
