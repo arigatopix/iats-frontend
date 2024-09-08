@@ -20,7 +20,6 @@ async function fileUpload(formData) {
 }
 
 async function readFile(path) {
-  console.log(path);
   try {
     const response = await axiosInstance.get(`${BACKEND_URL}/files/${path}`);
 

@@ -164,13 +164,7 @@ async function createProjectAttachments(project_id, projectAttachments) {
       }
     );
 
-    const { data } = response;
-
-    if (response.statusText !== "Created") {
-      throw new Error("attachments could not be created");
-    }
-
-    return data;
+    return response.data;
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);

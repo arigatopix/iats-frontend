@@ -217,7 +217,6 @@ function FileRow({ file, index, remove, disabled, name }) {
   const isProcess = isDeleting || isReadingFile || isDeletingFile;
 
   function handleReadFile() {
-    console.log(file);
     readFile(
       { path: file.path },
       {

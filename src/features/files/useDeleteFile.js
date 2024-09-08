@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export function useDeleteFile() {
   const { mutate: deleteFile, isLoading: isDeletingFile } = useMutation({
-    mutationFn: ({ fileName }) => deleteFileService(fileName),
+    mutationFn: ({ path }) => deleteFileService(path),
     onSuccess: () => {
       toast.success("ลบไฟล์สำเร็จ");
     },

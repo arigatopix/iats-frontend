@@ -139,6 +139,7 @@ async function createTicketAttachments(ticket_id, ticketAttachments) {
       ticket_id,
       title: el.title,
       url: el.url,
+      path: el.path,
     };
   });
 
