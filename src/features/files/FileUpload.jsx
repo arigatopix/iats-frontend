@@ -12,9 +12,10 @@ import FormHeader from "../../ui/FormHeader";
 import { useUpload } from "./useUpload";
 import SpinnerMini from "../../ui/SpinnerMini";
 import { useDeleteAttachment } from "../attachment/useDeleteAttachment";
-import { allowedExtensions } from "../../utils/helpers";
+import { allowedExtensions, allowedFileSize } from "../../utils/helpers";
 import { useReadFile } from "./useReadFile";
 import { useDeleteFile } from "./useDeleteFile";
+import Stacked from "../../ui/Stacked";
 
 const WrapFileUpload = styled.section`
   margin-top: 3rem;
@@ -67,7 +68,14 @@ function FileUpload({
 
 function Label() {
   const { label } = useContext(FileUploadContext);
-  return <FormHeader>{label}</FormHeader>;
+  return (
+    <>
+      <Stacked>
+        <FormHeader>{label}</FormHeader>
+        <span>&mdash; รองรับไฟล์ประเภท pdf, jpg, png ขนาดไม่เกิน 5 MB</span>
+      </Stacked>
+    </>
+  );
 }
 function Upload() {
   const inputFile = useRef();
@@ -86,11 +94,18 @@ function Upload() {
 
     const files = e.target?.files;
 
+    const limit = files[0].size > allowedFileSize;
+    const typeNotAllowed = allowedExtensions.includes(files[0].type);
+
     if (files) {
-      if (!allowedExtensions.includes(files[0].type)) {
+      if (typeNotAllowed || limit) {
         setFile(null);
         setFileTitle("");
-        setError("อัพโหลดได้เฉพาะไฟล์ pdf, png, jpg เท่านั้น");
+        const message = typeNotAllowed
+          ? "อัพโหลดได้เฉพาะไฟล์ pdf, png, jpg เท่านั้น"
+          : "อัพโหลดไฟล์ได้ไม่เกิน 5MB";
+
+        setError(message);
 
         if (inputFile.current) {
           inputFile.current.value = "";

@@ -117,3 +117,5 @@ export function stopEventBubble(event) {
 }
 
 export const allowedExtensions = ["application/pdf", "image/png", "image/jpg"];
+
+export const allowedFileSize = 5000000;
