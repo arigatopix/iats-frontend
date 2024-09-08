@@ -1,18 +1,43 @@
+import { PAGE_SIZE } from "../utils/constants";
 import { removeTicketAttachmentByTicketId } from "./apiAttatchments";
 import { removeTicketAdditionalRemarksByTicketId } from "./apiRemark";
 import { axiosInstance, BACKEND_URL } from "./axios";
 
-async function getTickets() {
-  try {
-    const response = await axiosInstance.get(`${BACKEND_URL}/tickets`);
+async function getTickets({
+  filter,
+  sortBy,
+  searchByName,
+  searchByProjectname,
+  page,
+}) {
+  const { field, direction } = sortBy;
 
-    const { data } = response;
+  const pageQuery = page ? `page=${page}&page_size=${PAGE_SIZE}` : "";
+  const sortQuery = sortBy ? `&sort=${field},${direction}` : "";
+  const filterQuery = filter ? `&${filter.field}=${filter.value}` : "";
+  const queryName = searchByName
+    ? `&${searchByName.field}=${searchByName.value}`
+    : "";
+  const queryProjectName = searchByProjectname
+    ? `&${searchByProjectname.field}=${searchByProjectname.value}`
+    : "";
+
+  try {
+    const queryString = `${pageQuery}${sortQuery}${filterQuery}${queryName}${queryProjectName}`;
+
+    const response = await axiosInstance.get(
+      `${BACKEND_URL}/tickets?${queryString}`
+    );
 
     if (response.statusText !== "OK") {
       throw new Error("Tickets could not be loaded");
     }
 
-    return data.data;
+    const { data } = response;
+
+    const { data: tickets, total } = data;
+
+    return { tickets, total };
   } catch (error) {
     console.error(error.message);
     throw new Error("Tickets could not be loaded");

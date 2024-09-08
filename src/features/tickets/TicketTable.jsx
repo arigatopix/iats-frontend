@@ -1,55 +1,27 @@
 import Spinner from "../../ui/Spinner";
 import Table from "../../ui/Table";
-import Menus from "../../ui/Menus";
-import { useSearchParams } from "react-router-dom";
 import Empty from "../../ui/Empty";
 import { useTickets } from "./useTickets";
 import TicketRow from "./TicketRow";
-import { searchBy } from "../../utils/helpers";
 import { roles } from "../../utils/roles";
 import { useUser } from "../authentication/useUser";
+import Pagination from "../../ui/Pagination";
 
 function TicketTable() {
-  const { tickets, isLoading, error } = useTickets();
+  const { data, isLoading, error } = useTickets();
 
   const {
     user: { role },
   } = useUser();
 
-  const [searchParams] = useSearchParams();
-
   if (isLoading || error) return <Spinner />;
+
+  const { tickets, total } = data;
 
   if (!tickets.length) return <Empty resourceName="tickets" />;
 
-  const sortBy = searchParams.get("sortBy") || "date_start-asc";
-
-  const filterValue = searchParams.get("status") || "all";
-
-  const searchTerm = searchParams.get("name");
-
-  // FILTER
-  let filteredTickets;
-  if (filterValue === "all") filteredTickets = tickets;
-  if (filterValue === "unconfirmed")
-    filteredTickets = tickets.filter(ticket => ticket.status !== "confirmed");
-  if (filterValue === "confirmed")
-    filteredTickets = tickets.filter(ticket => ticket.status === "confirmed");
-
-  // SORT
-  const [field, direction] = sortBy.split("-");
-  const modifier = direction === "asc" ? 1 : -1;
-  const sortedTickets = filteredTickets.sort((a, b) => {
-    return (a[field] - b[field]) * modifier;
-  });
-
-  // SEARCH
-  const searched = searchTerm
-    ? searchBy(sortedTickets, "name", searchTerm)
-    : sortedTickets;
-
   return (
-    <Menus>
+    <>
       <Table
         columns={
           roles.includes(role)
@@ -67,11 +39,15 @@ function TicketTable() {
         </Table.Header>
 
         <Table.Body
-          data={searched}
+          data={tickets}
           render={ticket => <TicketRow key={ticket.id} ticket={ticket} />}
         />
+
+        <Table.Footer>
+          <Pagination count={total} />
+        </Table.Footer>
       </Table>
-    </Menus>
+    </>
   );
 }
 

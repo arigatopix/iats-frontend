@@ -30,6 +30,7 @@ function TicketTableOperations() {
       {roles.includes(role) && (
         <Search placeholder="ค้นหาชื่อ" searchField="name" />
       )}
+      <Search placeholder="ค้นหาชื่อโครงการ" searchField="project_name" />
     </TableOperations>
   );
 }

@@ -20,7 +20,7 @@ function ProjectTableOperations() {
         เพิ่มโครงการ
       </Button>
       {/* <SortBy options={sortOptions} /> */}
-      <Search placeholder="ค้นหาชื่อโครงการ" searchField="projectName" />
+      <Search placeholder="ค้นหาชื่อโครงการ" searchField="name" />
     </TableOperations>
   );
 }

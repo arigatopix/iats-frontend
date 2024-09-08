@@ -1,16 +1,102 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getTickets } from "../../services/apiTickets";
+import { useSearchParams } from "react-router-dom";
+import { PAGE_SIZE } from "../../utils/constants";
 
 export function useTickets() {
-  const {
-    data: tickets,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["tickets"],
-    queryFn: getTickets,
+  const queryClient = useQueryClient();
+
+  const [searchParams] = useSearchParams();
+
+  const filterValue = searchParams.get("status");
+
+  const isUseDefault = !filterValue || filterValue === "all";
+
+  const filterOption = {
+    field: "status",
+    value: filterValue,
+  };
+
+  const filter = isUseDefault ? null : filterOption;
+
+  const sortByRaw = searchParams.get("sortBy") || "created_at-desc";
+  const [field, direction] = sortByRaw.split("-");
+
+  const sortBy = { field, direction };
+
+  const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+
+  const searchByName = searchParams.get("name") && {
+    field: "name",
+    value: searchParams.get("name"),
+  };
+
+  const searchByProjectname = searchParams.get("project_name") && {
+    field: "project_name",
+    value: searchParams.get("project_name"),
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: [
+      "tickets",
+      filter,
+      sortBy,
+      searchByName,
+      searchByProjectname,
+      page,
+    ],
+    queryFn: () =>
+      getTickets({ filter, sortBy, searchByName, searchByProjectname, page }),
   });
 
-  return { tickets, isLoading, error };
+  if (data) {
+    const { total } = data;
+
+    const pageCount = total / PAGE_SIZE;
+
+    if (page < pageCount) {
+      queryClient.prefetchQuery({
+        queryKey: [
+          "users",
+          filter,
+          sortBy,
+          searchByName,
+          searchByProjectname,
+          page + 1,
+        ],
+        queryFn: () =>
+          getTickets({
+            filter,
+            sortBy,
+            searchByName,
+            searchByProjectname,
+            page: page + 1,
+          }),
+      });
+    }
+
+    if (page > 1) {
+      queryClient.prefetchQuery({
+        queryKey: [
+          "users",
+          filter,
+          sortBy,
+          searchByName,
+          searchByProjectname,
+          page - 1,
+        ],
+        queryFn: () =>
+          getTickets({
+            filter,
+            sortBy,
+            searchByName,
+            searchByProjectname,
+            page: page - 1,
+          }),
+      });
+    }
+  }
+
+  return { data, isLoading, error };
 }

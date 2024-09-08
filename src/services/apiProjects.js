@@ -2,10 +2,23 @@ import { createTickets } from "./apiTickets";
 import { BACKEND_URL, axiosInstance } from "./axios";
 import { removeProjectAdditionalRemarksByProjectId } from "./apiRemark";
 import { removeProjectAttachmentByProjectId } from "./apiAttatchments";
+import { PAGE_SIZE } from "../utils/constants";
 
-async function getProjects() {
+async function getProjects({ sortBy, page, searchByName }) {
+  const { field, direction } = sortBy;
+
+  const pageQuery = page ? `page=${page}&page_size=${PAGE_SIZE}` : "";
+  const sortQuery = sortBy ? `&sort=${field},${direction}` : "";
+  const queryName = searchByName
+    ? `&${searchByName.field}=${searchByName.value}`
+    : "";
+
+  const queryString = `${pageQuery}${sortQuery}${queryName}`;
+
   try {
-    const response = await axiosInstance.get(`${BACKEND_URL}/projects`);
+    const response = await axiosInstance.get(
+      `${BACKEND_URL}/projects?${queryString}`
+    );
 
     const { data } = response;
 
@@ -13,7 +26,9 @@ async function getProjects() {
       throw new Error("Projects could not be loaded");
     }
 
-    return data.data;
+    const { data: projects, total } = data;
+
+    return { projects, total };
   } catch (error) {
     console.error(error.message);
     throw new Error("Projects could not be loaded");

@@ -2,6 +2,9 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { PAGE_SIZE } from "../utils/constants";
+import Select from "./Select";
+import FormRow from "./FormRow";
+import { useEffect, useState } from "react";
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -62,6 +65,8 @@ const PaginationButton = styled.button`
 function Pagination({ count }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  searchParams.set("page_size", PAGE_SIZE);
+
   const pageParams = searchParams.get("page");
 
   const currentPage = !pageParams ? 1 : Number(pageParams);
@@ -89,19 +94,19 @@ function Pagination({ count }) {
   return (
     <StyledPagination>
       <P>
-        Showing <span>{from}</span> to <span>{to}</span> of <span>{count}</span>
-        results
+        แสดงข้อมูลที่ <span>{from}</span> ถึง <span>{to}</span> จากทั้งหมด{" "}
+        <span>{count}</span> ข้อมูล
       </P>
 
       <Buttons>
         <PaginationButton onClick={prevPage} disabled={currentPage === 1}>
-          <HiChevronLeft /> <span>Previous</span>
+          <HiChevronLeft /> <span>กลับ</span>
         </PaginationButton>
         <PaginationButton
           onClick={nextPage}
           disabled={currentPage === pageCount}
         >
-          <span>Next</span>
+          <span>ถัดไป</span>
           <HiChevronRight />
         </PaginationButton>
       </Buttons>

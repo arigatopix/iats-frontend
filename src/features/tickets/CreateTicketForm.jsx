@@ -10,16 +10,15 @@ import { useForm } from "react-hook-form";
 import Textarea from "../../ui/Textarea";
 import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
-import ButtonIcon from "../../ui/ButtonIcon";
-import { HiArrowPath, HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiArrowPath } from "react-icons/hi2";
 import { useEditTicket } from "./useEditTicket";
-import { parseEmployee, stopEventBubble } from "../../utils/helpers";
-import { getEmployee } from "../../services/apiEmployee";
+import { stopEventBubble } from "../../utils/helpers";
 import { useCreateTicket } from "./useCreateTicket";
 import { useUser } from "../authentication/useUser";
 import { useNavigate } from "react-router-dom";
 import { roles } from "../../utils/roles";
 import FileUpload from "../files/FileUpload";
+import SearchEmployeeForm from "../users/SearchEmployeeForm";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -32,14 +31,6 @@ const StyledFormGrid = styled.div`
   }
 `;
 
-const WrapFormRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-`;
-
 function CreateTicketForm({
   ticketToEdit = {},
   onCloseModal,
@@ -47,10 +38,6 @@ function CreateTicketForm({
   projectId = null,
 }) {
   const [confirmed, setConfirmed] = useState(false);
-
-  const [searchEmployeeId, setSearchEmployeeId] = useState("");
-
-  const [searchEmployeeError, setSearchEmployeeError] = useState("");
 
   const { createTicket, isCreatingTicket } = useCreateTicket();
 
@@ -146,49 +133,26 @@ function CreateTicketForm({
     })(event);
   };
 
-  async function handleSearchEmployee() {
-    try {
-      setSearchEmployeeError("");
-
-      if (searchEmployeeId === "") return;
-
-      const employeeResponse = await getEmployee(searchEmployeeId);
-
-      if (employeeResponse) {
-        const {
-          employee_id,
-          title,
-          name,
-          title_eng,
-          name_eng,
-          department,
-          email,
-          position,
-          phone_number,
-        } = parseEmployee(employeeResponse);
-
-        setValue("employee_id", employee_id);
-        setValue("title", title);
-        setValue("name", name);
-        setValue("name_eng", name_eng);
-        setValue("title_eng", title_eng);
-        setValue("department", department);
-        setValue("email", email);
-        setValue("position", position);
-        setValue("phone_number", phone_number);
-
-        setSearchEmployeeId("");
-      }
-    } catch (error) {
-      setSearchEmployeeError(error.message);
-    }
-  }
-
-  function handleKeydown(event) {
-    if (event && event.key === "Enter") {
-      stopEventBubble(event);
-      handleSearchEmployee();
-    }
+  function setSearchEmployee({
+    employee_id,
+    title,
+    name,
+    title_eng,
+    name_eng,
+    department,
+    email,
+    position,
+    phone_number,
+  }) {
+    setValue("employee_id", employee_id);
+    setValue("title", title);
+    setValue("name", name);
+    setValue("name_eng", name_eng);
+    setValue("title_eng", title_eng);
+    setValue("department", department);
+    setValue("email", email);
+    setValue("position", position);
+    setValue("phone_number", phone_number);
   }
 
   function handleConfirm() {
@@ -203,22 +167,10 @@ function CreateTicketForm({
   return (
     <>
       {!isEditSession && (
-        <Form type={onCloseModal ? "modal" : "regular"}>
-          <WrapFormRow>
-            <FormRow label="ค้นหาด้วยรหัสพนักงาน" error={searchEmployeeError}>
-              <Input
-                type="text"
-                id="search-employee"
-                onChange={e => setSearchEmployeeId(e.target.value)}
-                value={searchEmployeeId}
-                onKeyDown={handleKeydown}
-              />
-            </FormRow>
-            <ButtonIcon type="button" onClick={handleSearchEmployee}>
-              <HiOutlineMagnifyingGlass />
-            </ButtonIcon>
-          </WrapFormRow>
-        </Form>
+        <SearchEmployeeForm
+          onCloseModal={onCloseModal}
+          setSearchEmployee={setSearchEmployee}
+        />
       )}
 
       <Form onSubmit={onSubmit} type={onCloseModal ? "modal" : "regular"}>

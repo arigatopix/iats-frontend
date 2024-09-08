@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import styled from "styled-components";
 
 const StyledSelect = styled.select`
@@ -14,16 +15,17 @@ const StyledSelect = styled.select`
   box-shadow: var(--shadow-sm);
 `;
 
-function Select({ options, value, onChange, ...props }) {
-  return (
-    <StyledSelect value={value} {...props} onChange={onChange}>
-      {options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </StyledSelect>
-  );
-}
+const Select = forwardRef(({ value, onChange, options, ...props }, ref) => (
+  <StyledSelect value={value} ref={ref} {...props} onChange={onChange}>
+    {options.map(option => (
+      <option key={option.value} value={option.value}>
+        {option.label}
+      </option>
+    ))}
+  </StyledSelect>
+));
+
+// Add display name for debugging
+Select.displayName = "Select";
 
 export default Select;
