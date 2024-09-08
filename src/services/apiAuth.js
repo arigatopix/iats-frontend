@@ -3,7 +3,7 @@ import { axiosInstance, BACKEND_URL } from "./axios";
 import supabase, { supabaseURL } from "./supabase";
 import { clearSession } from "../utils/session";
 
-export async function login() {
+export function login() {
   window.location.href = `${BACKEND_URL}/auth/login`;
 }
 
