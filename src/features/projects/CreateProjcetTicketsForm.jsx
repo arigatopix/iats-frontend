@@ -35,7 +35,6 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
   });
 
   function handleConfirm(ticket) {
-    console.log(ticket);
     const isDuplicate =
       ticket.employee_id !== "" &&
       fields.map(el => el.employee_id).includes(ticket.employee_id);
