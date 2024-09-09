@@ -13,13 +13,15 @@ export function useEditTicket() {
     isLoading: isEditing,
   } = useMutation({
     mutationFn: ({ ticket, editId }) => editTicketService({ ticket, editId }),
-    onSuccess: data => {
+    onSettled: data => {
       toast.success("แก้ไขข้อมูลผู้เดินทางสำเร็จ");
       queryClient.invalidateQueries({
         queryKey: ["tickets"],
       });
 
-      queryClient.invalidateQueries(["ticket", data.id.toString()]);
+      queryClient.invalidateQueries({
+        queryKey: ["ticket", data.id.toString()],
+      });
     },
     onError: error => {
       toast.error(error.message);

@@ -107,15 +107,22 @@ function CreateTicketForm({
         ...data,
         status: confirmed ? "confirmed" : "unconfirmed",
       };
-
       if (!isEditSession) {
-        onConfirm(data);
-
         if (projectId) {
-          createTicket({ projectId, ticket: data });
+          createTicket(
+            { projectId, ticket: data },
+            {
+              onSuccess: data => {
+                onConfirm(data);
+                onCloseModal?.();
+              },
+            }
+          );
+          return;
+        } else {
+          onConfirm(data);
+          onCloseModal?.();
         }
-
-        onCloseModal?.();
       } else {
         editTicket(
           { ticket: dataForm, editId },

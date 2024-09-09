@@ -8,7 +8,7 @@ export function useCreateTicket() {
   const { mutate: createTicket, isLoading: isCreatingTicket } = useMutation({
     mutationFn: ({ projectId, ticket }) =>
       createTicketService({ projectId, ticket }),
-    onSuccess: data => {
+    onSettled: data => {
       toast.success("เพิ่มผู้เดินทางสำเร็จ");
       queryClient.invalidateQueries({
         queryKey: ["projects"],

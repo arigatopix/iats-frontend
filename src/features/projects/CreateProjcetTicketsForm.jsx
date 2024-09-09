@@ -34,14 +34,15 @@ function CreateProjcetTicketsForm({ control, name, disabled }) {
     keyName: "fieldId",
   });
 
-  function handleConfirm(data) {
+  function handleConfirm(ticket) {
+    console.log(ticket);
     const isDuplicate =
-      data.employee_id !== "" &&
-      fields.map(el => el.employee_id).includes(data.employee_id);
+      ticket.employee_id !== "" &&
+      fields.map(el => el.employee_id).includes(ticket.employee_id);
 
     if (isDuplicate) return;
 
-    append(data);
+    append(ticket);
   }
 
   return (
@@ -116,18 +117,16 @@ function TicketRow({ ticket, index, remove, disabled }) {
           </Modal.Window>
         </Modal>
 
-        {id && (
-          <Modal>
-            <Modal.Open opens={`edit-ticket-${index}`}>
-              <Button type="button" size="small" variation="secondary">
-                แก้ไข
-              </Button>
-            </Modal.Open>
-            <Modal.Window name={`edit-ticket-${index}`}>
-              <CreateTicketForm ticketToEdit={ticket} />
-            </Modal.Window>
-          </Modal>
-        )}
+        <Modal>
+          <Modal.Open opens={`edit-ticket-${index}`}>
+            <Button type="button" size="small" variation="secondary">
+              แก้ไข
+            </Button>
+          </Modal.Open>
+          <Modal.Window name={`edit-ticket-${index}`}>
+            <CreateTicketForm ticketToEdit={ticket} />
+          </Modal.Window>
+        </Modal>
       </WrapButton>
     </Table.Row>
   );
