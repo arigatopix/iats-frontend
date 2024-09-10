@@ -47,13 +47,18 @@ function CreateTicketForm({
     user: { role },
   } = useUser();
 
+  let is_require_passport = false;
+  let is_require_visa = false;
+
   const { id: editId, ...editValues } = ticketToEdit;
 
-  const {
-    project: { is_require_passport, is_require_visa },
-  } = ticketToEdit;
-
   const isEditSession = Boolean(editId);
+
+  if (isEditSession) {
+    const { project } = ticketToEdit;
+    is_require_passport = project.is_require_passport;
+    is_require_visa = project.is_require_visa;
+  }
 
   const defaultValues = isEditSession
     ? editValues
