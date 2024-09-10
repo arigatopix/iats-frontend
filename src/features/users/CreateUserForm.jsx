@@ -87,7 +87,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal, onConfirm }) {
             })}
           />
         </FormRow>
-
+        {/* 
         <FormRow label="Email">
           <Input
             {...register("email", {
@@ -95,7 +95,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal, onConfirm }) {
             })}
             disabled
           />
-        </FormRow>
+        </FormRow> */}
 
         <FormRow label="สิทธิ์">
           <Controller
