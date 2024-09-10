@@ -37,6 +37,16 @@ export function useTickets() {
     value: searchParams.get("project_name"),
   };
 
+  const searchByCountry = searchParams.get("country") && {
+    field: "country",
+    value: searchParams.get("country"),
+  };
+
+  const searchByDateStart = searchParams.get("date_start") && {
+    field: "date_start",
+    value: searchParams.get("date_start"),
+  };
+
   const { data, isLoading, error } = useQuery({
     queryKey: [
       "tickets",
@@ -45,9 +55,19 @@ export function useTickets() {
       searchByName,
       searchByProjectname,
       page,
+      searchByCountry,
+      searchByDateStart,
     ],
     queryFn: () =>
-      getTickets({ filter, sortBy, searchByName, searchByProjectname, page }),
+      getTickets({
+        filter,
+        sortBy,
+        searchByName,
+        searchByProjectname,
+        page,
+        searchByCountry,
+        searchByDateStart,
+      }),
   });
 
   if (data) {
@@ -64,6 +84,8 @@ export function useTickets() {
           searchByName,
           searchByProjectname,
           page + 1,
+          searchByCountry,
+          searchByDateStart,
         ],
         queryFn: () =>
           getTickets({
@@ -72,6 +94,8 @@ export function useTickets() {
             searchByName,
             searchByProjectname,
             page: page + 1,
+            searchByCountry,
+            searchByDateStart,
           }),
       });
     }
@@ -85,6 +109,8 @@ export function useTickets() {
           searchByName,
           searchByProjectname,
           page - 1,
+          searchByCountry,
+          searchByDateStart,
         ],
         queryFn: () =>
           getTickets({
@@ -93,6 +119,8 @@ export function useTickets() {
             searchByName,
             searchByProjectname,
             page: page - 1,
+            searchByCountry,
+            searchByDateStart,
           }),
       });
     }

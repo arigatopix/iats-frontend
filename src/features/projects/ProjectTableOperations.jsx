@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 function ProjectTableOperations() {
   const navigate = useNavigate();
 
-  var curr = new Date();
-  curr.setDate(curr.getDate() + 3);
-  var date = curr.toISOString().substring(0, 10);
+  // var curr = new Date();
+  // curr.setDate(curr.getDate() + 3);
+  // var date = curr.toISOString().substring(0, 10);
 
   // const sortOptions = [
   //   { value: "project_name-asc", label: "เรียงตามชื่อโครงการ (ก-ฮ)" },

@@ -9,6 +9,8 @@ async function getTickets({
   searchByName,
   searchByProjectname,
   page,
+  searchByCountry,
+  searchByDateStart,
 }) {
   const { field, direction } = sortBy;
 
@@ -22,8 +24,16 @@ async function getTickets({
     ? `&${searchByProjectname.field}=${searchByProjectname.value}`
     : "";
 
+  const queryCountryName = searchByCountry
+    ? `&${searchByCountry.field}=${searchByCountry.value}`
+    : "";
+
+  const queryStartDate = searchByDateStart
+    ? `&${searchByDateStart.field}=${searchByDateStart.value}`
+    : "";
+
   try {
-    const queryString = `${pageQuery}${sortQuery}${filterQuery}${queryName}${queryProjectName}`;
+    const queryString = `${pageQuery}${sortQuery}${filterQuery}${queryName}${queryProjectName}${queryCountryName}${queryStartDate}`;
 
     const response = await axiosInstance.get(
       `${BACKEND_URL}/tickets?${queryString}`
