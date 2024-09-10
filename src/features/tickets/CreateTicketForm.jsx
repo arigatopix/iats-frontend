@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 import { roles } from "../../utils/roles";
 import FileUpload from "../files/FileUpload";
 import SearchEmployeeForm from "../users/SearchEmployeeForm";
-import FileInput from "../../ui/FileInput";
 
 const StyledFormGrid = styled.div`
   display: grid;
