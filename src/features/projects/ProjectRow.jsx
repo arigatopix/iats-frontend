@@ -25,9 +25,15 @@ function ProjectRow({ project }) {
       description,
       date_start: dateStart,
       date_end: dateEnd,
-
+      tickets,
       country,
     } = project;
+
+    const numsTicket = tickets.length;
+
+    const numsTicketConfirmed = tickets.filter(
+      el => el.status === "confirmed"
+    ).length;
 
     return (
       <Table.Row>
@@ -42,6 +48,9 @@ function ProjectRow({ project }) {
         </div>
 
         <div>{country}</div>
+
+        <div>{`${numsTicket} คน`}</div>
+        <div>{`${numsTicketConfirmed} คน`}</div>
         <WrapButton>
           <Button
             size="small"

@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 function ProjectTableOperations() {
   const navigate = useNavigate();
 
+  var curr = new Date();
+  curr.setDate(curr.getDate() + 3);
+  var date = curr.toISOString().substring(0, 10);
+
   // const sortOptions = [
   //   { value: "project_name-asc", label: "เรียงตามชื่อโครงการ (ก-ฮ)" },
   //   { value: "project_name-desc", label: "เรียงตามชื่อโครงการ (ฮ-ก)" },
@@ -21,6 +25,8 @@ function ProjectTableOperations() {
       </Button>
       {/* <SortBy options={sortOptions} /> */}
       <Search placeholder="ค้นหาชื่อโครงการ" searchField="name" />
+      <Search placeholder="ค้นหาตามประเทศ" searchField="country" />
+      <Search searchField="date_start" type="date" />
     </TableOperations>
   );
 }

@@ -4,7 +4,13 @@ import { removeProjectAdditionalRemarksByProjectId } from "./apiRemark";
 import { removeProjectAttachmentByProjectId } from "./apiAttatchments";
 import { PAGE_SIZE } from "../utils/constants";
 
-async function getProjects({ sortBy, page, searchByName }) {
+async function getProjects({
+  sortBy,
+  page,
+  searchByName,
+  searchByCountry,
+  searchByDateStart,
+}) {
   const { field, direction } = sortBy;
 
   const pageQuery = page ? `page=${page}&page_size=${PAGE_SIZE}` : "";
@@ -13,7 +19,15 @@ async function getProjects({ sortBy, page, searchByName }) {
     ? `&${searchByName.field}=${searchByName.value}`
     : "";
 
-  const queryString = `${pageQuery}${sortQuery}${queryName}`;
+  const queryCountryName = searchByCountry
+    ? `&${searchByCountry.field}=${searchByCountry.value}`
+    : "";
+
+  const queryStartDate = searchByDateStart
+    ? `&${searchByDateStart.field}=${searchByDateStart.value}`
+    : "";
+
+  const queryString = `${pageQuery}${sortQuery}${queryName}${queryCountryName}${queryStartDate}`;
 
   try {
     const response = await axiosInstance.get(

@@ -20,13 +20,32 @@ export function useProjects() {
     value: searchParams.get("name"),
   };
 
+  const searchByCountry = searchParams.get("country") && {
+    field: "country",
+    value: searchParams.get("country"),
+  };
+
+  const searchByDateStart = searchParams.get("date_start") && {
+    field: "date_start",
+    value: searchParams.get("date_start"),
+  };
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["projects", sortBy, page, searchByName],
+    queryKey: [
+      "projects",
+      sortBy,
+      page,
+      searchByName,
+      searchByCountry,
+      searchByDateStart,
+    ],
     queryFn: () =>
       getProjects({
         sortBy,
         page,
         searchByName,
+        searchByCountry,
+        searchByDateStart,
       }),
   });
 
@@ -37,15 +56,43 @@ export function useProjects() {
 
     if (page < pageCount) {
       queryClient.prefetchQuery({
-        queryKey: ["projects", sortBy, page + 1, searchByName],
-        queryFn: () => getProjects({ sortBy, page: page + 1, searchByName }),
+        queryKey: [
+          "projects",
+          sortBy,
+          page + 1,
+          searchByName,
+          searchByCountry,
+          searchByDateStart,
+        ],
+        queryFn: () =>
+          getProjects({
+            sortBy,
+            page: page + 1,
+            searchByName,
+            searchByCountry,
+            searchByDateStart,
+          }),
       });
     }
 
     if (page > 1) {
       queryClient.prefetchQuery({
-        queryKey: ["projects", sortBy, page - 1, searchByName],
-        queryFn: () => getProjects({ sortBy, page: page - 1, searchByName }),
+        queryKey: [
+          "projects",
+          sortBy,
+          page - 1,
+          searchByName,
+          searchByCountry,
+          searchByDateStart,
+        ],
+        queryFn: () =>
+          getProjects({
+            sortBy,
+            page: page - 1,
+            searchByName,
+            searchByCountry,
+            searchByDateStart,
+          }),
       });
     }
   }

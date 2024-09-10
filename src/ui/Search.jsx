@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import Input from "./Input";
 
-function Search({ placeholder, searchField }) {
+function Search({ placeholder, searchField, type = "text" }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const init = searchParams.get(searchField) || "";
@@ -24,7 +24,13 @@ function Search({ placeholder, searchField }) {
 
   return (
     <div>
-      <Input placeholder={placeholder} onChange={handleChange} value={init} />
+      <Input
+        type={type}
+        id={searchField}
+        placeholder={placeholder}
+        onChange={handleChange}
+        value={init}
+      />
     </div>
   );
 }

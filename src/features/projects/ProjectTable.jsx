@@ -16,12 +16,14 @@ function ProjectTable() {
 
   return (
     <>
-      <Table columns="1fr 4fr 3fr 1fr 1fr">
+      <Table columns="1fr 4fr 3fr 1fr 1fr 1fr 1fr">
         <Table.Header>
           <div>เลขที่โครงการ</div>
           <div>ข้อมูลโครงการ</div>
           <div>วันที่เดินทาง</div>
           <div>ประเทศ</div>
+          <div>จำนวนคณะเดินทาง</div>
+          <div>จำนวนคณะเดินทางที่ยืนยันแล้ว</div>
           <div></div>
         </Table.Header>
 
