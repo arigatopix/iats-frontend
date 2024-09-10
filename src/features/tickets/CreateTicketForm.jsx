@@ -263,9 +263,12 @@ function CreateTicketForm({
           <FormRowVertical label="E-mail" error={errors?.email?.message}>
             <Input
               type="email"
-              {...register("email", {
-                required: "กรุณาระบุ E-Mail",
-              })}
+              {...register(
+                "email",
+                !onCloseModal && {
+                  required: "กรุณาระบุ E-Mail",
+                }
+              )}
               disabled={isDisabled}
               id="email"
             />

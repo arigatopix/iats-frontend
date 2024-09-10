@@ -53,10 +53,10 @@ export const parseEmployee = employeeResponse => {
     title_s_desc,
     first_name,
     last_name,
-    dept_short,
-    stell_text_short,
+    dept_sap_full,
+    plans_text_full,
     eng_name_full,
-    email,
+    // email,
     tel_mobile,
   } = employeeResponse;
 
@@ -70,9 +70,9 @@ export const parseEmployee = employeeResponse => {
     name: `${first_name} ${last_name}`,
     title_eng: `${title_eng}`,
     name_eng,
-    department: dept_short,
-    email,
-    position: stell_text_short,
+    department: dept_sap_full,
+    // email,
+    position: plans_text_full,
     phone_number: tel_mobile,
   };
   return employee;
