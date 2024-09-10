@@ -224,67 +224,99 @@ function CreateTicketForm({
           </FormRowVertical>
         </StyledFormGrid>
 
-        <StyledFormGrid $columns="1fr 1fr">
-          <FormRowVertical
-            label="รหัสพนักงาน"
-            error={errors?.employee_id?.message}
-          >
-            <Input
-              type="text"
-              {...register("employee_id")}
-              disabled={isEditSession}
-              id="employee_id"
-            />
-          </FormRowVertical>
-          <FormRowVertical label="ตำแหน่ง">
-            <Input
-              type="text"
-              {...register("position")}
-              disabled={isDisabled}
-              id="position"
-            />
-          </FormRowVertical>
-          <FormRowVertical label="สังกัด">
-            <Input
-              type="text"
-              {...register("department")}
-              disabled={isDisabled}
-              id="department"
-            />
-          </FormRowVertical>
-          <FormRowVertical label="เบอร์ติดต่อ" error="">
-            <Input
-              type="text"
-              {...register("phone_number")}
-              disabled={isDisabled}
-              id="phone_number"
-            />
-          </FormRowVertical>
-          <FormRowVertical label="E-mail" error={errors?.email?.message}>
-            <Input
-              type="email"
-              {...register(
-                "email",
-                !onCloseModal && {
-                  required: "กรุณาระบุ E-Mail",
-                }
-              )}
-              disabled={isDisabled}
-              id="email"
-            />
-          </FormRowVertical>
-          <FormRowVertical label="ผู้ประสานงาน/ผู้ให้ข้อมูล" error="">
-            <Input
-              type="text"
-              {...register("contact_name")}
-              disabled={isDisabled}
-              id="contact_name"
-            />
-          </FormRowVertical>
-        </StyledFormGrid>
-
         {!onCloseModal && (
           <>
+            <StyledFormGrid $columns="1fr 1fr">
+              <FormRowVertical
+                label="รหัสพนักงาน"
+                error={errors?.employee_id?.message}
+              >
+                <Input
+                  type="text"
+                  {...register("employee_id")}
+                  disabled
+                  id="employee_id"
+                />
+              </FormRowVertical>
+              <FormRowVertical
+                label="ตำแหน่ง"
+                error={errors?.position?.message}
+              >
+                <Input
+                  type="text"
+                  {...register(
+                    "position",
+                    !onCloseModal && {
+                      required: "ต้องระบุตำแหน่ง",
+                    }
+                  )}
+                  disabled={isDisabled}
+                  id="position"
+                />
+              </FormRowVertical>
+              <FormRowVertical
+                label="สังกัด"
+                error={errors?.department?.message}
+              >
+                <Input
+                  type="text"
+                  {...register(
+                    "department",
+                    !onCloseModal && {
+                      required: "ต้องระบุสังกัด",
+                    }
+                  )}
+                  disabled={isDisabled}
+                  id="department"
+                />
+              </FormRowVertical>
+              <FormRowVertical
+                label="เบอร์ติดต่อ"
+                error={errors?.phone_number?.message}
+              >
+                <Input
+                  type="text"
+                  {...register(
+                    "phone_number",
+                    !onCloseModal && {
+                      required: "ต้องระบุเบอร์ติดต่อ",
+                    }
+                  )}
+                  disabled={isDisabled}
+                  id="phone_number"
+                />
+              </FormRowVertical>
+              <FormRowVertical label="E-mail" error={errors?.email?.message}>
+                <Input
+                  type="email"
+                  {...register(
+                    "email",
+                    !onCloseModal && {
+                      required: "กรุณาระบุ E-Mail",
+                    }
+                  )}
+                  disabled={isDisabled}
+                  id="email"
+                />
+              </FormRowVertical>
+              <FormRowVertical
+                label="ผู้ประสานงาน/ผู้ให้ข้อมูล"
+                error={errors?.contact_name?.message}
+              >
+                <Input
+                  type="text"
+                  {...register(
+                    "contact_name",
+                    !onCloseModal && {
+                      required: "ต้องระบุเบอร์ติดต่อ",
+                    }
+                  )}
+                  disabled={isDisabled}
+                  id="contact_name"
+                />
+              </FormRowVertical>
+            </StyledFormGrid>
+
             <FileUpload
               disabled={isDisabled}
               id="ticket_attachments"
