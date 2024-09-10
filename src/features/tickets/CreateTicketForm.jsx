@@ -8,7 +8,7 @@ import Checkbox from "../../ui/Checkbox";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Textarea from "../../ui/Textarea";
-import AdditionalRemark from "../../ui/AdditionalRemark";
+// import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import { HiArrowPath } from "react-icons/hi2";
 import { useEditTicket } from "./useEditTicket";
@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { roles } from "../../utils/roles";
 import FileUpload from "../files/FileUpload";
 import SearchEmployeeForm from "../users/SearchEmployeeForm";
+import FileInput from "../../ui/FileInput";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -49,6 +50,10 @@ function CreateTicketForm({
 
   const { id: editId, ...editValues } = ticketToEdit;
 
+  const {
+    project: { is_require_passport, is_require_visa },
+  } = ticketToEdit;
+
   const isEditSession = Boolean(editId);
 
   const defaultValues = isEditSession
@@ -68,6 +73,12 @@ function CreateTicketForm({
         status: "unconfirmed",
         ticket_additional_remarks: [],
         ticket_attachments: [],
+        visa_number: "",
+        visa_url: "",
+        visa_path: "",
+        passport_number: "",
+        passport_url: "",
+        passport_path: "",
       };
 
   const {
@@ -292,13 +303,14 @@ function CreateTicketForm({
                   {...register(
                     "email",
                     !onCloseModal && {
-                      required: "กรุณาระบุ E-Mail",
+                      required: "ต้องระบุ email",
                     }
                   )}
                   disabled={isDisabled}
                   id="email"
                 />
               </FormRowVertical>
+
               <FormRowVertical
                 label="ผู้ประสานงาน/ผู้ให้ข้อมูล"
                 error={errors?.contact_name?.message}
@@ -315,26 +327,95 @@ function CreateTicketForm({
                   id="contact_name"
                 />
               </FormRowVertical>
+
+              {/* TODO ADD */}
+              {/* PASSPORT */}
+              {is_require_passport && (
+                <>
+                  <FormRowVertical
+                    label="หมายเลขเดินทางราชการ"
+                    error={errors?.is_require_passport?.message}
+                  >
+                    <Input
+                      type="text"
+                      {...register(
+                        "is_require_passport",
+                        !onCloseModal &&
+                          is_require_passport && {
+                            required: "กรุณาระบุหมายเลขเดินทางราชการ",
+                          }
+                      )}
+                      disabled={isDisabled}
+                      id="is_require_passport"
+                    />
+                  </FormRowVertical>
+
+                  {/* <FormRowVertical
+                    label="รูปประกอบเดินทางราชการ"
+                    error={errors?.is_require_passport?.message}
+                  >
+                    <FileInput />
+
+                  </FormRowVertical> */}
+                </>
+              )}
+
+              {/* VISA */}
+
+              {is_require_visa && (
+                <>
+                  <FormRowVertical
+                    label="หมายเลข VISA"
+                    error={errors?.is_require_passport?.message}
+                  >
+                    <Input
+                      type="text"
+                      {...register(
+                        "is_require_visa",
+                        !onCloseModal &&
+                          is_require_visa && {
+                            required: "กรุณาระบุหมายเลขหมายเลข VISA",
+                          }
+                      )}
+                      disabled={isDisabled}
+                      id="is_require_visa"
+                    />
+                  </FormRowVertical>
+
+                  {/* <FormRowVertical
+                    label="รูปประกอบหนังสือ VISA"
+                    error={errors?.is_require_visa?.message}
+                  >
+                    <FileInput />
+                  </FormRowVertical> */}
+                </>
+              )}
             </StyledFormGrid>
 
-            <FileUpload
-              disabled={isDisabled}
-              id="ticket_attachments"
-              control={control}
-              label="กรุณาอัพโหลดเอกสารเพื่อให้ กบบ. พิจารณา"
-            >
-              <FileUpload.Label />
-              <FileUpload.Upload />
-              <FileUpload.Table />
-            </FileUpload>
+            {(is_require_passport || is_require_visa) && (
+              <FileUpload
+                disabled={isDisabled}
+                id="ticket_attachments"
+                control={control}
+                label={`กรุณาอัพโหลด ${
+                  is_require_passport ? "รูปประกอบเดินทางราชการ" : ""
+                }
+                ${is_require_visa ? "กรุณาระบุหมายเลขหมายเลข VISA" : ""}`}
+              >
+                <FileUpload.Label />
+                <FileUpload.Upload />
+                <FileUpload.Table />
+              </FileUpload>
+            )}
 
+            {/* 
             <AdditionalRemark
               control={control}
               disabled={isDisabled}
               name="ticket_additional_remarks"
               label="ข้อมูลที่ส่งให้ กกบ."
               resourceName=""
-            />
+            /> */}
 
             <FormRowVertical label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม">
               <Textarea

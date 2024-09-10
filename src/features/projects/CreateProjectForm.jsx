@@ -6,7 +6,7 @@ import FormRowVertical from "../../ui/FormRowVertical";
 import styled from "styled-components";
 import { HiArrowPath, HiOutlineMegaphone } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
-import AdditionalRemark from "../../ui/AdditionalRemark";
+// import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import CreateProjcetTicketsForm from "./CreateProjcetTicketsForm";
 import Modal from "../../ui/Modal";
@@ -16,6 +16,10 @@ import { useNavigate } from "react-router-dom";
 import { useCreateProject } from "./useCreateProject";
 import { useEditProject } from "./useEditProject";
 import FileUpload from "../files/FileUpload";
+import Checkbox from "../../ui/Checkbox";
+import Box from "../../ui/Box";
+// import CheckboxNormal from "../../ui/CheckboxNormal";
+import { useEffect, useState } from "react";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -31,7 +35,11 @@ const StyledFormGrid = styled.div`
 function CreateProjectForm({ projectToEdit = {} }) {
   const navigate = useNavigate();
 
+  const [isRequirePassport, setIsRequirePassport] = useState(false);
+  const [isRequireVisa, setIsRequireVisa] = useState(false);
+
   const { id: editId, ...editValues } = projectToEdit;
+  console.log("editValues", editValues);
   const isEditSession = Boolean(editId);
   const defaultValues = isEditSession
     ? editValues
@@ -39,6 +47,8 @@ function CreateProjectForm({ projectToEdit = {} }) {
         name: "",
         description: "",
         country: "",
+        is_require_passport: false,
+        is_require_visa: false,
         date_start: new Date().toISOString().slice(0, 10),
         date_end: new Date().toISOString().slice(0, 10),
         project_attachments: [],
@@ -51,6 +61,11 @@ function CreateProjectForm({ projectToEdit = {} }) {
       defaultValues,
     });
 
+  useEffect(() => {
+    setIsRequirePassport(getValues("is_require_passport"));
+    setIsRequireVisa(getValues("is_require_visa"));
+  }, [getValues]);
+
   const { errors } = formState;
 
   const { createProject, isCreating } = useCreateProject();
@@ -61,11 +76,25 @@ function CreateProjectForm({ projectToEdit = {} }) {
 
   const isDisabled = isDeleting || isCreating || isEditing;
 
+  function handleRequirePassport() {
+    setIsRequirePassport(isRequirePassport => !isRequirePassport);
+  }
+
+  function handleRequireVisa() {
+    setIsRequireVisa(isRequireVisa => !isRequireVisa);
+  }
+
   function onSubmit(data) {
+    const project = {
+      ...data,
+      is_require_passport: isRequirePassport,
+      is_require_visa: isRequireVisa,
+    };
+
     if (isEditSession) {
-      editProject({ project: data, editId });
+      editProject({ project: project, editId });
     } else {
-      createProject(data);
+      createProject(project);
     }
   }
 
@@ -163,13 +192,69 @@ function CreateProjectForm({ projectToEdit = {} }) {
           <FileUpload.Table />
         </FileUpload>
 
+        <Box>
+          <Checkbox
+            checked={isRequirePassport}
+            onChange={handleRequirePassport}
+            id="is_require_passport"
+          >
+            ต้องการหมายเลขเดินทางราชการ และรูปประกอบ
+          </Checkbox>
+        </Box>
+
+        <Box>
+          <Checkbox
+            checked={isRequireVisa}
+            onChange={handleRequireVisa}
+            id="is_require_visa"
+          >
+            ต้องการหมายเลข VISA และรูปประกอบ
+          </Checkbox>
+        </Box>
+        {/* 
+        <Controller
+          name="is_require_passport"
+          control={control}
+          render={({ field }) => (
+            <Box>
+              <CheckboxNormal id="is_require_passport" {...field}>
+                ต้องการหมายเลขเดินทางราชการ และรูปประกอบ
+              </CheckboxNormal>
+            </Box>
+          )}
+        />
+
+        <Controller
+          name="is_require_visa"
+          control={control}
+          render={({ field }) => (
+            <Box>
+              <CheckboxNormal id="is_require_visa" {...field}>
+                ต้องการหมายเลข VISA และรูปประกอบ
+              </CheckboxNormal>
+            </Box>
+          )}
+        />
+         */}
+        {/* 
+        <Checkbox id="is_require_passport">
+          ต้องการหมายเลขเดินทางราชการ และรูปประกอบ
+        </Checkbox>
+
+        <Box>
+          <Checkbox id="is_require_visa">
+            ต้องการหมายเลข VISA และรูปประกอบ
+          </Checkbox>
+        </Box> */}
+
+        {/* 
         <AdditionalRemark
           control={control}
           disabled={isDisabled}
           name="project_additional_remarks"
           label="ข้อมูลที่ต้องการจากผู้เดินทาง"
           resourceName="ข้อมูลที่ต้องการจากผู้เดินทาง"
-        />
+        /> */}
 
         <CreateProjcetTicketsForm
           name="tickets"

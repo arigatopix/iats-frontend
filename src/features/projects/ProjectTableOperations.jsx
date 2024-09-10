@@ -3,6 +3,7 @@ import TableOperations from "../../ui/TableOperations";
 import Button from "../../ui/Button";
 import Search from "../../ui/Search";
 import { useNavigate } from "react-router-dom";
+import DateFilter from "../../ui/DateFilter";
 
 function ProjectTableOperations() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function ProjectTableOperations() {
       {/* <SortBy options={sortOptions} /> */}
       <Search placeholder="ค้นหาชื่อโครงการ" searchField="name" />
       <Search placeholder="ค้นหาตามประเทศ" searchField="country" />
-      <Search searchField="date_start" type="date" />
+      <DateFilter searchField="date_start" type="date" />
     </TableOperations>
   );
 }

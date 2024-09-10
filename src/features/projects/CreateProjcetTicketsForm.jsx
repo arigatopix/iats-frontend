@@ -22,6 +22,7 @@ const StyledFormHeader = styled(FormHeader)`
   gap: 1rem;
   align-items: center;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 `;
 
 function CreateProjcetTicketsForm({ control, name, disabled }) {

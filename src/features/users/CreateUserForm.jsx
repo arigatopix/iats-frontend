@@ -115,14 +115,6 @@ function CreateUserForm({ userToEdit = {}, onCloseModal, onConfirm }) {
         </FormRow>
 
         <FormRow>
-          <Button
-            onClick={reset}
-            type="button"
-            variation="secondary"
-            disabled={isProcessing}
-          >
-            ล้างข้อมูล
-          </Button>
           <Button disabled={isProcessing}>
             {isEditSession ? "แก้ไขสิทธิ์" : "สร้างผู้ใช้งาน"}
           </Button>

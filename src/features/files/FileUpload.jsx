@@ -42,6 +42,7 @@ function FileUpload({
   disabled = false,
   label = "อัพโหลดไฟล์ที่เกี่ยวข้อง",
   children,
+  required = false,
 }) {
   const { fields, append, remove } = useFieldArray({
     control,

@@ -86,7 +86,15 @@ async function deleteProject(id) {
 }
 
 async function createProject(newProject) {
-  const { name, description, country, date_start, date_end } = newProject;
+  const {
+    name,
+    description,
+    country,
+    date_start,
+    date_end,
+    is_require_passport,
+    is_require_visa,
+  } = newProject;
 
   const { project_attachments, project_additional_remarks, tickets } =
     newProject;
@@ -98,6 +106,8 @@ async function createProject(newProject) {
       country,
       date_start,
       date_end,
+      is_require_visa,
+      is_require_passport,
     });
 
     const { data } = response;
@@ -201,7 +211,15 @@ async function createProjectAttachments(project_id, projectAttachments) {
 }
 
 async function editProject({ project, editId }) {
-  const { name, description, country, date_start, date_end } = project;
+  const {
+    name,
+    description,
+    country,
+    date_start,
+    date_end,
+    is_require_visa,
+    is_require_passport,
+  } = project;
   const { project_attachments = [], project_additional_remarks = [] } = project;
 
   try {
@@ -213,6 +231,8 @@ async function editProject({ project, editId }) {
         country,
         date_start,
         date_end,
+        is_require_visa,
+        is_require_passport,
       }
     );
 

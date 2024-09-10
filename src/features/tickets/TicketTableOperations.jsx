@@ -3,6 +3,7 @@ import Filter from "../../ui/Filter";
 import Search from "../../ui/Search";
 import { useUser } from "../authentication/useUser";
 import { roles } from "../../utils/roles";
+import DateFilter from "../../ui/DateFilter";
 
 function TicketTableOperations() {
   const {
@@ -32,7 +33,7 @@ function TicketTableOperations() {
       )}
       <Search placeholder="ค้นหาชื่อโครงการ" searchField="project_name" />
       <Search placeholder="ค้นหาตามประเทศ" searchField="country" />
-      <Search searchField="date_start" type="date" />
+      <DateFilter searchField="date_start" type="date" />
     </TableOperations>
   );
 }
