@@ -95,7 +95,7 @@ function TicketRow({ ticket, index, remove, disabled }) {
       <p>{employee_id ? employee_id : <span>&mdash;</span>}</p>
       <Stacked>
         <span>{`${title}${name}`}</span>
-        <span>{`${position} ${department}`}</span>
+        {(position || department) && <span>{`${position} ${department}`}</span>}
       </Stacked>
       <TicketTagStatus status={status} />
       <WrapButton>
@@ -117,7 +117,7 @@ function TicketRow({ ticket, index, remove, disabled }) {
           </Modal.Window>
         </Modal>
 
-        {/* <Modal>
+        <Modal>
           <Modal.Open opens={`edit-ticket-${index}`}>
             <Button type="button" size="small" variation="secondary">
               แก้ไข
@@ -126,7 +126,7 @@ function TicketRow({ ticket, index, remove, disabled }) {
           <Modal.Window name={`edit-ticket-${index}`}>
             <CreateTicketForm ticketToEdit={ticket} />
           </Modal.Window>
-        </Modal> */}
+        </Modal>
       </WrapButton>
     </Table.Row>
   );

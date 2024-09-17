@@ -7,7 +7,7 @@ function Tickets() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">ข้อมูลผู้เดินทาง</Heading>
+        <Heading as="h1">ผู้เดินทาง</Heading>
         <TicketTableOperations />
       </Row>
       <Row>

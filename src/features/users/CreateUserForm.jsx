@@ -44,7 +44,7 @@ function CreateUserForm({ userToEdit = {}, onCloseModal, onConfirm }) {
     if (isEditSession) {
       updateUser({ employee_id, user: { employee_id, name, email, role } });
     } else {
-      createUser({ employee_id, name, email, role });
+      // createUser({ employee_id, name, email, role });
     }
 
     onCloseModal?.();
@@ -87,15 +87,15 @@ function CreateUserForm({ userToEdit = {}, onCloseModal, onConfirm }) {
             })}
           />
         </FormRow>
-        {/* 
-        <FormRow label="Email">
+        <FormRow label="Email" error={errors.email?.message}>
           <Input
+            type="email"
             {...register("email", {
               required: "ต้องกรอก email",
             })}
             disabled
           />
-        </FormRow> */}
+        </FormRow>
 
         <FormRow label="สิทธิ์">
           <Controller

@@ -43,14 +43,24 @@ function ProjectRow({ project }) {
           <span>{description}</span>
         </Stacked>
 
-        <div>
+        <Stacked>
           {`${formatDateTH(dateStart)}`} &mdash; {`${formatDateTH(dateEnd)}`}
-        </div>
+          <span>ประเทศ {country}</span>
+        </Stacked>
 
-        <div>{country}</div>
+        <Stacked>
+          {numsTicket !== 0 ? (
+            <span>{`จำนวนคณะเดินทาง ${numsTicket} คน`}</span>
+          ) : (
+            <span>&mdash;</span>
+          )}
+          {numsTicketConfirmed !== 0 ? (
+            <span>{`ยืนยันแล้ว ${numsTicketConfirmed} คน`}</span>
+          ) : (
+            <span>&mdash;</span>
+          )}
+        </Stacked>
 
-        <div>{`${numsTicket} คน`}</div>
-        <div>{`${numsTicketConfirmed} คน`}</div>
         <WrapButton>
           <Button
             size="small"

@@ -10,7 +10,10 @@ async function getAllUser({
 }) {
   const { field, direction } = sortBy;
 
-  const pageQuery = page ? `page=${page}&page_size=${PAGE_SIZE}` : "";
+  const pageQuery =
+    page !== 1 && page
+      ? `page=${page}&page_size=${PAGE_SIZE}`
+      : `page=1&page_size=${PAGE_SIZE}`;
   const sortQuery = sortBy ? `&sort=${field},${direction}` : "";
   const filterQuery = filter ? `&${filter.field}=${filter.value}` : "";
   const queryName = searchByName

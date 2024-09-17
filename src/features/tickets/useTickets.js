@@ -70,7 +70,7 @@ export function useTickets() {
       }),
   });
 
-  if (data) {
+  if (!isLoading) {
     const { total } = data;
 
     const pageCount = total / PAGE_SIZE;
@@ -78,7 +78,7 @@ export function useTickets() {
     if (page < pageCount) {
       queryClient.prefetchQuery({
         queryKey: [
-          "users",
+          "tickets",
           filter,
           sortBy,
           searchByName,
@@ -103,7 +103,7 @@ export function useTickets() {
     if (page > 1) {
       queryClient.prefetchQuery({
         queryKey: [
-          "users",
+          "tickets",
           filter,
           sortBy,
           searchByName,

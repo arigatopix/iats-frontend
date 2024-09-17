@@ -56,11 +56,9 @@ export const parseEmployee = employeeResponse => {
     dept_sap_full,
     plans_text_full,
     eng_name_full,
-    // email,
+    email,
     tel_mobile,
   } = employeeResponse;
-
-  // eng_name_full.start;
 
   const { title_eng, name_eng } = parseEnglishName(eng_name_full);
 
@@ -71,7 +69,7 @@ export const parseEmployee = employeeResponse => {
     title_eng: `${title_eng}`,
     name_eng,
     department: dept_sap_full,
-    // email,
+    email,
     position: plans_text_full,
     phone_number: tel_mobile,
   };

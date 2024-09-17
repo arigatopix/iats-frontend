@@ -39,8 +39,8 @@ function CreateProjectForm({ projectToEdit = {} }) {
   const [isRequireVisa, setIsRequireVisa] = useState(false);
 
   const { id: editId, ...editValues } = projectToEdit;
-  console.log("editValues", editValues);
   const isEditSession = Boolean(editId);
+  console.log("edit project", editValues, "isEditSession", isEditSession);
   const defaultValues = isEditSession
     ? editValues
     : {

@@ -141,7 +141,7 @@ function ProjectDataBox({ project, status }) {
           >
             {description}
           </DataItem>
-
+          {/* 
           <Row>
             <Info $status={status}>
               <DataItem
@@ -160,6 +160,7 @@ function ProjectDataBox({ project, status }) {
               <Empty />
             )}
           </Row>
+           */}
         </Section>
       </StyledProjectDataBox>
 

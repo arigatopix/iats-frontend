@@ -27,14 +27,14 @@ function UserTableOperations() {
 
   return (
     <TableOperations>
-      {/* <Modal>
+      <Modal>
         <Modal.Open opens={`add-user`}>
           <Button type="button">สร้างผู้ใช้งาน</Button>
         </Modal.Open>
         <Modal.Window name={`add-user`}>
           <CreateUserForm />
         </Modal.Window>
-      </Modal> */}
+      </Modal>
 
       <Filter filterField="role" options={filterOptions} />
 

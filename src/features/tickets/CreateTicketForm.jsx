@@ -47,15 +47,14 @@ function CreateTicketForm({
     user: { role },
   } = useUser();
 
-  let is_require_passport = false;
-  let is_require_visa = false;
-
   const { id: editId, ...editValues } = ticketToEdit;
 
   const isEditSession = Boolean(editId);
 
-  if (isEditSession) {
-    const { project } = ticketToEdit;
+  let is_require_passport = false;
+  let is_require_visa = false;
+  const { project = null } = ticketToEdit;
+  if (isEditSession && project) {
     is_require_passport = project.is_require_passport;
     is_require_visa = project.is_require_visa;
   }
@@ -404,7 +403,7 @@ function CreateTicketForm({
                 label={`กรุณาอัพโหลด ${
                   is_require_passport ? "รูปประกอบเดินทางราชการ" : ""
                 }
-                ${is_require_visa ? "กรุณาระบุหมายเลขหมายเลข VISA" : ""}`}
+                ${is_require_visa ? "รูป VISA" : ""}`}
               >
                 <FileUpload.Label />
                 <FileUpload.Upload />

@@ -24,13 +24,13 @@ function DateFilter({ placeholder, searchField }) {
 
   return (
     <div>
-      <label>ค้นหาจากวันเดินทาง </label>
       <Input
-        type="date"
+        type="text"
         id={searchField}
         placeholder={placeholder}
         onChange={handleChange}
         value={init}
+        onFocus={e => (e.target.type = "date")}
       />
     </div>
   );

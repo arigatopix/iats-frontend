@@ -27,7 +27,11 @@ function ProjectTableOperations() {
       {/* <SortBy options={sortOptions} /> */}
       <Search placeholder="ค้นหาชื่อโครงการ" searchField="name" />
       <Search placeholder="ค้นหาตามประเทศ" searchField="country" />
-      <DateFilter searchField="date_start" type="date" />
+      <DateFilter
+        placeholder="ค้นหาจากวันเดินทาง"
+        searchField="date_start"
+        type="text"
+      />
     </TableOperations>
   );
 }

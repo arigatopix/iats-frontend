@@ -27,13 +27,17 @@ function TicketTableOperations() {
 
   return (
     <TableOperations>
-      {/* <Filter filterField="status" options={filterOptions} /> */}
+      <Filter filterField="status" options={filterOptions} />
       {roles.includes(role) && (
         <Search placeholder="ค้นหาชื่อ" searchField="name" />
       )}
       <Search placeholder="ค้นหาชื่อโครงการ" searchField="project_name" />
       <Search placeholder="ค้นหาตามประเทศ" searchField="country" />
-      <DateFilter searchField="date_start" type="date" />
+      <DateFilter
+        placeholder="ค้นหาจากวันเดินทาง"
+        searchField="date_start"
+        type="text"
+      />
     </TableOperations>
   );
 }
