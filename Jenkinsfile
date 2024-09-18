@@ -21,7 +21,6 @@ pipeline {
         user = credentials('n2itchallenge-server-user')
         serverIP = credentials('n2itchallenge-server-ip')
         server = "${user}@${serverIP}"
-        // buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
         PROD_ENV = credentials('iast-frontend-env')
         BRANCH = "${env.GIT_BRANCH ?: env.BRANCH_NAME ?: 'unknown'}"
@@ -31,11 +30,19 @@ pipeline {
         stage('READ environment') {
             steps {
                 script {
-                    // def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}-${BUILD_NUMBER}"
-                    def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}"
+                    def branchName = env.BRANCH.replaceAll('^origin/', '')
+
+                    def buildTag = ''
+                    if (branchName == 'sit-dev') {
+                        buildTag = 'sit-dev'
+    } else if (branchName.startsWith('release-')) {
+                        buildTag = branchName.replaceAll('^release-v', '')
+    } else {
+                        buildTag = "${branchName}-${env.BUILD_NUMBER}"
+                    }
+
                     echo "Build tag is: ${buildTag}"
 
-                    // Store the build tag for later use
                     env.BUILD_TAG = buildTag
                 }
             }
@@ -55,6 +62,8 @@ pipeline {
                             cp $ENV_FILE .env.production
                         '''
 
+                        sh "echo ${env.BUILD_TAG}"
+
                         sh "sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${env.BUILD_TAG}|' .env.production"
 
                         sh """
@@ -69,17 +78,13 @@ pipeline {
             steps {
                 sshagent([prodCredentials]) {
                     script {
-                        // Update docker-compose file with new image tag
                         sh "sed -i 's#${registryName}:.*#${registryName}:${env.BUILD_TAG}#' ./docker/docker-compose-prod.yaml"
 
-                        // Copy existing .env file from production server
                         sh "scp -o StrictHostKeyChecking=no ${server}:${APP_PATH}/.env ./.env"
 
-                        // Update the REGISTRY_NAME and IMAGE_TAG in the copied .env file
                         sh "sed -i 's|^REGISTRY_NAME=.*|REGISTRY_NAME=${registryName}|' .env"
                         sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${env.BUILD_TAG}|' .env"
 
-                        // Ensure .env file exists on production server or pass environment variables
                         sh "ssh -o StrictHostKeyChecking=no ${server} mkdir -p ${APP_PATH}"
                         sh "scp -o StrictHostKeyChecking=no ./docker/docker-compose-prod.yaml ${server}:${APP_PATH}/docker-compose-prod.yaml"
                         sh "scp -o StrictHostKeyChecking=no .env ${server}:${APP_PATH}/.env"
