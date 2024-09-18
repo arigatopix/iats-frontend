@@ -52,17 +52,14 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'iast-frontend-env', variable: 'ENV_FILE')]) {
                         sh '''
-                            # Copy the secret file to .env.production
                             cp $ENV_FILE .env.production
                         '''
+
                         sh "sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${env.BUILD_TAG}|' .env.production"
 
-                        sh '''
-                            cat .env.production
-
-                            # Build and push the Docker image
+                        sh """
                             docker buildx build --push -t ${registryName}:${env.BUILD_TAG} --platform=linux/amd64 -f ./docker/Dockerfile .
-                        '''
+                        """
                     }
                 }
             }
