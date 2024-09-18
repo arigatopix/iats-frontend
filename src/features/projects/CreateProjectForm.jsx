@@ -142,7 +142,7 @@ function CreateProjectForm({ projectToEdit = {} }) {
                 required: "กรุณาระบุประเทศที่จะเดินทางไป",
                 maxLength: {
                   value: 19,
-                  message: "ระยุประเทศได้ไม่เกิน 19 ตัวอักษร",
+                  message: "ระบุประเทศได้ไม่เกิน 19 ตัวอักษร",
                 },
               })}
               id="country"
