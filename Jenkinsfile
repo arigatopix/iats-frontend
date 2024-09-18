@@ -21,7 +21,7 @@ pipeline {
         user = credentials('n2itchallenge-server-user')
         serverIP = credentials('n2itchallenge-server-ip')
         server = "${user}@${serverIP}"
-        buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
+        // buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
         PROD_ENV = credentials('iast-frontend-env')
         BRANCH = "${env.GIT_BRANCH ?: env.BRANCH_NAME ?: 'unknown'}"
@@ -54,11 +54,11 @@ pipeline {
                         sh '''
                             # Copy the secret file to .env.production
                             cp $ENV_FILE .env.production
+                            sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${env.BUILD_TAG }|' .env.production
                             cat .env.production
-                            sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${buildTag}|' .env.production
 
                             # Build and push the Docker image
-                            docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile .
+                            docker buildx build --push -t ${registryName}:${env.BUILD_TAG } --platform=linux/amd64 -f ./docker/Dockerfile .
                         '''
                     }
                 }
@@ -77,7 +77,7 @@ pipeline {
 
                         // Update the REGISTRY_NAME and IMAGE_TAG in the copied .env file
                         sh "sed -i 's|^REGISTRY_NAME=.*|REGISTRY_NAME=${registryName}|' .env"
-                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${buildTag}|' .env"
+                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${env.BUILD_TAG }|' .env"
 
                         // Ensure .env file exists on production server or pass environment variables
                         sh "ssh -o StrictHostKeyChecking=no ${server} mkdir -p ${APP_PATH}"
@@ -102,7 +102,7 @@ pipeline {
             script {
                 sh """
           docker rm -f ${containerName} || true
-          docker image rm -f ${registryName}:${buildTag} || true
+          docker image rm -f ${registryName}:${env.BUILD_TAG } || true
           docker logout
         """
             }
