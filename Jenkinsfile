@@ -54,11 +54,14 @@ pipeline {
                         sh '''
                             # Copy the secret file to .env.production
                             cp $ENV_FILE .env.production
-                            sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${env.BUILD_TAG }|' .env.production
+                        '''
+                        sh "sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${env.BUILD_TAG}|' .env.production"
+
+                        sh '''
                             cat .env.production
 
                             # Build and push the Docker image
-                            docker buildx build --push -t ${registryName}:${env.BUILD_TAG } --platform=linux/amd64 -f ./docker/Dockerfile .
+                            docker buildx build --push -t ${registryName}:${env.BUILD_TAG} --platform=linux/amd64 -f ./docker/Dockerfile .
                         '''
                     }
                 }
@@ -77,7 +80,7 @@ pipeline {
 
                         // Update the REGISTRY_NAME and IMAGE_TAG in the copied .env file
                         sh "sed -i 's|^REGISTRY_NAME=.*|REGISTRY_NAME=${registryName}|' .env"
-                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${env.BUILD_TAG }|' .env"
+                        sh "sed -i 's|^IMAGE_TAG=.*|IMAGE_TAG=${env.BUILD_TAG}|' .env"
 
                         // Ensure .env file exists on production server or pass environment variables
                         sh "ssh -o StrictHostKeyChecking=no ${server} mkdir -p ${APP_PATH}"
