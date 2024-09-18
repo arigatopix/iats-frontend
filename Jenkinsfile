@@ -31,7 +31,8 @@ pipeline {
         stage('READ environment') {
             steps {
                 script {
-                    def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}-${BUILD_NUMBER}"
+                    // def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}-${BUILD_NUMBER}"
+                    def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}"
                     echo "Build tag is: ${buildTag}"
 
                     // Store the build tag for later use
@@ -53,8 +54,8 @@ pipeline {
                         sh '''
                             # Copy the secret file to .env.production
                             cp $ENV_FILE .env.production
-                            sh "sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${buildTag}|' .env.production"
                             cat .env.production
+                            sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${buildTag}|' .env.production
 
                             # Build and push the Docker image
                             docker buildx build --push -t ${registryName}:${buildTag} --platform=linux/amd64 -f ./docker/Dockerfile .
@@ -69,7 +70,7 @@ pipeline {
                 sshagent([prodCredentials]) {
                     script {
                         // Update docker-compose file with new image tag
-                        sh "sed -i 's#arigatopix/iats-frontend:.*#arigatopix/iats-frontend:${env.BUILD_TAG}#' ./docker/docker-compose-prod.yaml"
+                        sh "sed -i 's#${registryName}:.*#${registryName}:${env.BUILD_TAG}#' ./docker/docker-compose-prod.yaml"
 
                         // Copy existing .env file from production server
                         sh "scp -o StrictHostKeyChecking=no ${server}:${APP_PATH}/.env ./.env"
