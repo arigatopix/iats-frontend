@@ -6,19 +6,9 @@ import Empty from "../../ui/Empty";
 import UserRow from "./UserRow";
 import Pagination from "../../ui/Pagination";
 import Menus from "../../ui/Menus";
-// import TicketRow from "./UserRow";
-// import { searchBy } from "../../utils/helpers";
-// import { roles } from "../../utils/roles";
-// import { useUser } from "../authentication/useUser";
 
 function UserTable() {
   const { data, isLoading, error } = useUsers();
-
-  // const {
-  //   user: { role },
-  // } = useUser();
-
-  // const [searchParams] = useSearchParams();
 
   if (isLoading || error) return <Spinner />;
 
