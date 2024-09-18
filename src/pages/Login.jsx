@@ -8,7 +8,7 @@ import Footer from "../ui/Footer";
 const LoginLayout = styled.main`
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 52rem;
+  grid-template-columns: 60rem;
   align-content: center;
   justify-content: center;
   gap: 3.2rem;
@@ -31,7 +31,7 @@ function Login() {
         <Heading as="h4">ระบบติดตามงานด้านวิเทศสัมพันธ์</Heading>
         <LoginForm />
 
-        {import.meta.env.VITE_APP_ENV !== "production" && <AdminLogin />}
+        {/* {import.meta.env.VITE_APP_ENV !== "production" && <AdminLogin />} */}
 
         <WrapStyledFooter />
       </LoginLayout>
