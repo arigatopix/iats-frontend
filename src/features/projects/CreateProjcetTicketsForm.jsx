@@ -100,6 +100,17 @@ function TicketRow({ ticket, index, remove, disabled }) {
       <TicketTagStatus status={status} />
       <WrapButton>
         <Modal>
+          <Modal.Open opens={`edit-ticket-${index}`}>
+            <Button type="button" size="small" variation="secondary">
+              แก้ไข
+            </Button>
+          </Modal.Open>
+          <Modal.Window name={`edit-ticket-${index}`}>
+            <CreateTicketForm ticketToEdit={ticket} />
+          </Modal.Window>
+        </Modal>
+
+        <Modal>
           <Modal.Open opens={`delete-ticket-${index}`}>
             <Button type="button" size="small" variation="danger">
               ลบ
@@ -114,17 +125,6 @@ function TicketRow({ ticket, index, remove, disabled }) {
                 if (id) deleteTicket(id);
               }}
             />
-          </Modal.Window>
-        </Modal>
-
-        <Modal>
-          <Modal.Open opens={`edit-ticket-${index}`}>
-            <Button type="button" size="small" variation="secondary">
-              แก้ไข
-            </Button>
-          </Modal.Open>
-          <Modal.Window name={`edit-ticket-${index}`}>
-            <CreateTicketForm ticketToEdit={ticket} />
           </Modal.Window>
         </Modal>
       </WrapButton>

@@ -8,7 +8,6 @@ import Checkbox from "../../ui/Checkbox";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Textarea from "../../ui/Textarea";
-// import AdditionalRemark from "../../ui/AdditionalRemark";
 import FormHeader from "../../ui/FormHeader";
 import { HiArrowPath } from "react-icons/hi2";
 import { useEditTicket } from "./useEditTicket";
@@ -19,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { roles } from "../../utils/roles";
 import FileUpload from "../files/FileUpload";
 import SearchEmployeeForm from "../users/SearchEmployeeForm";
+import toast from "react-hot-toast";
 
 const StyledFormGrid = styled.div`
   display: grid;
@@ -127,7 +127,12 @@ function CreateTicketForm({
             { projectId, ticket: data },
             {
               onSuccess: data => {
+                toast.success("เพิ่มผู้เดินทางสำเร็จ");
                 onConfirm(data);
+                onCloseModal?.();
+              },
+              onError: error => {
+                toast.error("เพิ่มผู้เดินทางไม่สำเร็จ");
                 onCloseModal?.();
               },
             }
@@ -331,8 +336,6 @@ function CreateTicketForm({
                 />
               </FormRowVertical>
 
-              {/* TODO ADD */}
-              {/* PASSPORT */}
               {is_require_passport && (
                 <>
                   <FormRowVertical
@@ -352,18 +355,8 @@ function CreateTicketForm({
                       id="is_require_passport"
                     />
                   </FormRowVertical>
-
-                  {/* <FormRowVertical
-                    label="รูปประกอบเดินทางราชการ"
-                    error={errors?.is_require_passport?.message}
-                  >
-                    <FileInput />
-
-                  </FormRowVertical> */}
                 </>
               )}
-
-              {/* VISA */}
 
               {is_require_visa && (
                 <>
@@ -384,13 +377,6 @@ function CreateTicketForm({
                       id="is_require_visa"
                     />
                   </FormRowVertical>
-
-                  {/* <FormRowVertical
-                    label="รูปประกอบหนังสือ VISA"
-                    error={errors?.is_require_visa?.message}
-                  >
-                    <FileInput />
-                  </FormRowVertical> */}
                 </>
               )}
             </StyledFormGrid>
@@ -410,15 +396,6 @@ function CreateTicketForm({
                 <FileUpload.Table />
               </FileUpload>
             )}
-
-            {/* 
-            <AdditionalRemark
-              control={control}
-              disabled={isDisabled}
-              name="ticket_additional_remarks"
-              label="ข้อมูลที่ส่งให้ กกบ."
-              resourceName=""
-            /> */}
 
             <FormRowVertical label="สิ่งที่ให้ กกบ. ดำเนินการเพิ่มเติม">
               <Textarea

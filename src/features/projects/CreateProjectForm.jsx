@@ -40,7 +40,6 @@ function CreateProjectForm({ projectToEdit = {} }) {
 
   const { id: editId, ...editValues } = projectToEdit;
   const isEditSession = Boolean(editId);
-  console.log("edit project", editValues, "isEditSession", isEditSession);
   const defaultValues = isEditSession
     ? editValues
     : {
