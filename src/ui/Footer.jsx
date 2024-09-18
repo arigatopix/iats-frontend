@@ -24,6 +24,7 @@ function Footer({ className }) {
         <SPAN>
           พัฒนาโดย การไฟฟ้าส่วนภูมิภาค เขต 2 ภาคเหนือ จ.พิษณุโลก <br />1
           <sup>st</sup>🥇 PLACE WINNER &mdash; PEA WORK SKILL CONTEST 2024
+          VERSION {import.meta.env.VITE_IMAGE_TAG}
         </SPAN>
       </Stacked>
     </StyledFooter>

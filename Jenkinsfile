@@ -24,9 +24,22 @@ pipeline {
         buildTag = "v1.0.0-${BUILD_NUMBER}" // Dynamic build tag
         APP_PATH = "/home/${user}/app/iats/frontend"
         PROD_ENV = credentials('iast-frontend-env')
+        BRANCH = "${env.GIT_BRANCH ?: env.BRANCH_NAME ?: 'unknown'}"
     }
 
     stages {
+        stage('READ environment') {
+            steps {
+                script {
+                    def buildTag = "${env.BRANCH.replaceAll('^origin/', '')}-${BUILD_NUMBER}"
+                    echo "Build tag is: ${buildTag}"
+
+                    // Store the build tag for later use
+                    env.BUILD_TAG = buildTag
+                }
+            }
+        }
+
         stage('login dockerhub') {
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
@@ -40,6 +53,7 @@ pipeline {
                         sh '''
                             # Copy the secret file to .env.production
                             cp $ENV_FILE .env.production
+                            sh "sed -i 's|^VITE_IMAGE_TAG=.*|VITE_IMAGE_TAG=${buildTag}|' .env.production"
                             cat .env.production
 
                             # Build and push the Docker image
