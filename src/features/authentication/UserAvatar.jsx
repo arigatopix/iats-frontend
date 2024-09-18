@@ -26,12 +26,22 @@ function UserAvatar() {
 
   const { employee_id, name, role } = user;
 
+  const imageUrl = `${
+    import.meta.env.VITE_EMPLOYEE_AVARTAR_URL
+  }?EmpCode=${employee_id}&Type=2&SType=2`;
+
   return (
     <StyledUserAvatar>
       <span>
         {`(${employee_id}) ${name}`} &mdash; {role}
       </span>
-      <Avatar src={"default-user.jpg"} alt={`Avator of ${name}`} />
+      <Avatar
+        src={imageUrl}
+        alt={`Avatar of ${name}`}
+        onError={e => {
+          e.target.src = "default-user.jpg";
+        }}
+      />
     </StyledUserAvatar>
   );
 }
