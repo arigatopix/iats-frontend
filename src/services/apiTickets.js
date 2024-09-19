@@ -252,8 +252,9 @@ async function createTicket({ projectId: project_id, ticket }) {
 
     return data;
   } catch (error) {
-    console.error(error.message);
-    throw new Error("Ticket could not be created");
+    const { message = "Ticket could not be created" } = error.response.data;
+    console.error(error.response);
+    throw new Error(message);
   }
 }
 
