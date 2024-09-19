@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useUser } from "./useUser";
+import { useEffect } from "react";
 
 const StyledUserAvatar = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ function UserAvatar() {
 
   const imageUrl = `${
     import.meta.env.VITE_EMPLOYEE_AVARTAR_URL
-  }?EmpCode=${employee_id}&Type=2&SType=2`;
+  }?EmpCodde=${employee_id}&Type=2&SType=2`;
 
   return (
     <StyledUserAvatar>
@@ -36,11 +37,8 @@ function UserAvatar() {
         {`(${employee_id}) ${name}`} &mdash; {role}
       </span>
       <Avatar
-        src={imageUrl}
+        src={imageUrl ? imageUrl : "default-user.jpg"}
         alt={`Avatar of ${name}`}
-        onError={e => {
-          e.target.src = "default-user.jpg";
-        }}
       />
     </StyledUserAvatar>
   );
