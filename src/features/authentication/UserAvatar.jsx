@@ -29,7 +29,7 @@ function UserAvatar() {
 
   const imageUrl = `${
     import.meta.env.VITE_EMPLOYEE_AVARTAR_URL
-  }?EmpCodde=${employee_id}&Type=2&SType=2`;
+  }?EmpCode=${employee_id}&Type=2&SType=2`;
 
   return (
     <StyledUserAvatar>
